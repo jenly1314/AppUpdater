@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- dialog animation -->
+    <style name="app_dialog_animation" parent="android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/app_dialog_in</item>
+        <item name="android:windowExitAnimation">@anim/app_dialog_out</item>
+    </style>
+
+    <!-- dialog style -->
+    <style name="app_dialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowAnimationStyle">@style/app_dialog_animation</item>
+    </style>
+
+</resources>

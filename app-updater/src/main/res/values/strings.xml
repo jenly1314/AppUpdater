@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">AppUpdater</string>
+
+    <string name="app_updater_start_notification_title">版本更新</string>
+    <string name="app_updater_start_notification_content">正在获取下载数据…</string>
+
+    <string name="app_updater_progress_notification_title">版本更新</string>
+    <string name="app_updater_progress_notification_content">下载更新中…</string>
+
+    <string name="app_updater_finish_notification_title">下载完成</string>
+    <string name="app_updater_finish_notification_content">点击安装</string>
+
+    <string name="app_updater_error_notification_title">下载失败</string>
+    <string name="app_updater_error_notification_content">点击关闭通知</string>
+    <string name="app_updater_error_notification_content_re_download">点击重新下载</string>
+
+
+</resources>

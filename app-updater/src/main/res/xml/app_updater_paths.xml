@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path name="root_path" path="."/>
+    <external-path name="app_updater_path" path=".AppUpdater"/>
+    <cache-path name="data_path" path="data/data"/>
+</paths>

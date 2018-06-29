@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AppDialog</string>
+
+    <string name="app_dialog_title">提示</string>
+    <string name="app_dialog_cancel">取消</string>
+    <string name="app_dialog_ok">确认</string>
+</resources>
