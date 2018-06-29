@@ -1,6 +1,6 @@
 # AppUpdater
 
-![Image](app/ic_launcher-web.png)
+![Image](app/src/main/ic_launcher-web.png = 200x200)
 
 [![Download](https://img.shields.io/badge/download-App-blue.svg)](https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk)
 [![](https://jitpack.io/v/jenly1314/AppUpdater.svg)](https://jitpack.io/#jenly1314/AppUpdater)
