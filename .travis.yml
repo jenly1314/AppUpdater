@@ -27,3 +27,4 @@ script:
     - ./gradlew clean
 #    - ./gradlew bintrayUpload
     - ./gradlew assembleDebug
+
