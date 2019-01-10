@@ -1,1 +1,1 @@
-include ':app', ':app-updater', ':app-updater', ':app-dialog'
+include ':app', ':app-updater', ':app-dialog'

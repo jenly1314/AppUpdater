@@ -14,7 +14,7 @@
         android:minHeight="40dp"
         android:padding="6dp"
         android:lines="1"
-        android:textSize="16sp"
+        android:textSize="@dimen/app_dialog_title_text_size"
         android:textColor="@color/app_dialog_title_color"
         android:text="@string/app_dialog_title"/>
     <TextView
@@ -22,7 +22,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:layout_marginBottom="6dp"
+        android:textSize="@dimen/app_dialog_content_text_size"
+        android:textColor="@color/app_dialog_content_color"
+        android:layout_marginBottom="10dp"
         android:lineSpacingMultiplier="1" />
     <include layout="@layout/app_dialog_line_h"/>
     <LinearLayout
@@ -38,7 +40,7 @@
             android:paddingBottom="10dp"
             android:layout_weight="1"
             android:text="@string/app_dialog_cancel"
-            android:textSize="18sp"
+            android:textSize="@dimen/app_dialog_button_text_size"
             android:textColor="@color/app_dialog_button_color_selector"
             android:background="?android:attr/selectableItemBackground"/>
         <include
@@ -52,7 +54,7 @@
             android:paddingBottom="10dp"
             android:layout_weight="1"
             android:text="@string/app_dialog_ok"
-            android:textSize="18sp"
+            android:textSize="@dimen/app_dialog_button_text_size"
             android:textColor="@color/app_dialog_button_color_selector"
             android:background="?android:attr/selectableItemBackground"/>
     </LinearLayout>

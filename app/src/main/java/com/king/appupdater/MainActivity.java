@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     public final String TAG = this.getClass().getSimpleName();
 
     private String mUrl = "https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk";
-//    private String mUrl = "https://pro-app-qn.fir.im/1ddfe25998acd3d861d746101e6e079e1611b666.apk?attname=app-release.apk_1.2.apk";
 
     private ProgressBar progressBar;
 
@@ -154,11 +153,7 @@ public class MainActivity extends AppCompatActivity {
                 .setOnClickOk(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new AppUpdater.Builder()
-                                .serUrl(mUrl)
-                                .setFilename("AppUpdater.apk")
-                                .build(getContext())
-                                .start();
+                        new AppUpdater(getContext(),mUrl).start();
                         AppDialog.INSTANCE.dismissDialog();
                     }
                 });
@@ -180,14 +175,12 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         new AppUpdater.Builder()
                                 .serUrl(mUrl)
-                                .setFilename(Environment.getExternalStorageDirectory() + "/.AppUpdater")
-                                .setFilename("AppUpdater.apk")
                                 .build(getContext())
                                 .start();
                         AppDialog.INSTANCE.dismissDialog();
                     }
                 });
-        AppDialog.INSTANCE.showDialog(getContext(),AppDialog.INSTANCE.createAppDialogView(getContext(),config),false);
+        AppDialog.INSTANCE.showDialog(getContext(),AppDialog.INSTANCE.createAppDialogView(getContext(),config),true);
     }
 
     /**
@@ -214,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 new AppUpdater.Builder()
                         .serUrl(mUrl)
+                        .setFilename(Environment.getExternalStorageDirectory() + "/.AppUpdater")
                         .setFilename("AppUpdater.apk")
                         .build(getContext())
                         .start();

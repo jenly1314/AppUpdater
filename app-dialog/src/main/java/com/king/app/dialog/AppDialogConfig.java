@@ -8,38 +8,60 @@ import android.view.View;
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public class AppDialogConfig {
-
+    /**
+     * 布局ID
+     */
     private @LayoutRes int layoutId = R.layout.app_dialog;
-
+    /**
+     * 标题视图ID
+     */
     private @IdRes int titleId = R.id.tvDialogTitle;
-
+    /**
+     * 内容视图ID
+     */
     private @IdRes int contentId = R.id.tvDialogContent;
-
+    /**
+     * 取消视图ID（左边按钮）
+     */
     private @IdRes int cancelId = R.id.btnDialogCancel;
-
+    /**
+     * 确定视图ID（右边按钮）
+     */
     private @IdRes int okId = R.id.btnDialogOK;
-
+    /**
+     * 按钮中间分割线ID
+     */
     private @IdRes int line = R.id.line;
-
+    /**
+     * 标题文本
+     */
     private CharSequence title;
-
+    /**
+     * 内容文本
+     */
     private CharSequence content;
-
+    /**
+     * 取消按钮文本
+     */
     private CharSequence cancel;
-
+    /**
+     * 确定按钮文本
+     */
     private CharSequence ok;
-
+    /**
+     * 是否隐藏取消按钮，如果取消则底部只显示一个按钮
+     */
     private boolean isHideCancel;
 
     private View.OnClickListener onClickCancel;
 
     private View.OnClickListener onClickOk;
 
-    public int getLayoutId() {
+    public @LayoutRes int getLayoutId() {
         return layoutId;
     }
 
-    public AppDialogConfig setLayoutId(int layoutId) {
+    public AppDialogConfig setLayoutId(@LayoutRes int layoutId) {
         this.layoutId = layoutId;
         return this;
     }
@@ -48,43 +70,43 @@ public class AppDialogConfig {
         return titleId;
     }
 
-    public AppDialogConfig setTitleId(int titleId) {
+    public AppDialogConfig setTitleId(@IdRes int titleId) {
         this.titleId = titleId;
         return this;
     }
 
-    public int getContentId() {
+    public @IdRes int getContentId() {
         return contentId;
     }
 
-    public AppDialogConfig setContentId(int contentId) {
+    public AppDialogConfig setContentId(@IdRes int contentId) {
         this.contentId = contentId;
         return this;
     }
 
-    public int getCancelId() {
+    public @IdRes int getCancelId() {
         return cancelId;
     }
 
-    public AppDialogConfig setCancelId(int cancelId) {
+    public AppDialogConfig setCancelId(@IdRes int cancelId) {
         this.cancelId = cancelId;
         return this;
     }
 
-    public int getOkId() {
+    public @IdRes int getOkId() {
         return okId;
     }
 
-    public AppDialogConfig setOkId(int okId) {
+    public AppDialogConfig setOkId(@IdRes int okId) {
         this.okId = okId;
         return this;
     }
 
-    public int getLine() {
+    public @IdRes int getLine() {
         return line;
     }
 
-    public AppDialogConfig setLine(int line) {
+    public AppDialogConfig setLine(@IdRes int line) {
         this.line = line;
         return this;
     }

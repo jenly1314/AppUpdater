@@ -9,7 +9,8 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/mit-license.php)
 [![Blog](https://img.shields.io/badge/blog-Jenly-9933CC.svg)](http://blog.csdn.net/jenly121)
 
-AppUpdater for Android 是一个专注于App更新一键傻瓜式集成的开源库，主要包括app-updater和app-dialog。
+AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版本升级的开源库。(无需担心通知栏适配；无需担心重复点击下载；无需担心App安装等问题；这些AppUpdater都已帮您处理好。)
+ 核心库主要包括app-updater和app-dialog。
 > 下载更新和弹框提示分开，是因为这本来就是两个逻辑。完全独立开来能有效的解耦。
 * app-updater 主要负责后台下载更新App，无需担心下载时各种配置相关的细节，一键傻瓜式升级。
 * app-dialog 主要是提供常用的Dialog和DialogFragment，简化弹框提示，样式支持高度自定义。
@@ -36,7 +37,7 @@ AppUpdater for Android 是一个专注于App更新一键傻瓜式集成的开源
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-updater</artifactId>
-      <version>1.0</version>
+      <version>1.0.1</version>
       <type>pom</type>
     </dependency>
     
@@ -44,27 +45,27 @@ AppUpdater for Android 是一个专注于App更新一键傻瓜式集成的开源
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-dialog</artifactId>
-      <version>1.0</version>
+      <version>1.0.1</version>
       <type>pom</type>
     </dependency>
 ```
 ### Gradle:
 ```gradle
     //app-updater
-    compile 'com.king.app:app-updater:1.0'
+    compile 'com.king.app:app-updater:1.0.1'
     
     //app-dialog
-    compile 'com.king.app:app-dialog:1.0'
+    compile 'com.king.app:app-dialog:1.0.1'
 ```
 ### Lvy:
 ```lvy
     //app-updater
-    <dependency org='com.king.app' name='app-dialog' rev='1.0'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.1'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
     
     //app-dialog
-    <dependency org='com.king.app' name='app-dialog' rev='1.0'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.1'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
 ```

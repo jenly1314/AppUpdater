@@ -77,7 +77,7 @@ public class DownloadService extends Service {
                     startDownload(config,null,null);
                 }
             }else{
-                Log.w(Constants.TAG,"已经在下载中,请勿重复下载。");
+                Log.w(Constants.TAG,"Please do not repeat the download.");
             }
         }
 
@@ -105,7 +105,7 @@ public class DownloadService extends Service {
         }
 
         if(isDownloading){
-            Log.w(Constants.TAG,"已经在下载中,请勿重复下载。");
+            Log.w(Constants.TAG,"Please do not repeat the download.");
             return;
         }
 
@@ -154,6 +154,9 @@ public class DownloadService extends Service {
         return context.getCacheDir().getAbsolutePath();
     }
 
+    /**
+     * 停止服务
+     */
     private void stopService(){
         mCount = 0;
         stopSelf();
@@ -300,17 +303,9 @@ public class DownloadService extends Service {
         }
     }
 
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        Log.d(Constants.TAG,"onUnbind");
-        return super.onUnbind(intent);
-    }
-
     @Override
     public void onDestroy() {
         isDownloading = false;
-        Log.d(Constants.TAG,"onDestroy");
         super.onDestroy();
     }
 

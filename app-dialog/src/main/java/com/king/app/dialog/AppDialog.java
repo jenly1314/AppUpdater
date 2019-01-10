@@ -32,6 +32,12 @@ public enum AppDialog {
 
     //-------------------------------------------
 
+    /**
+     * 通过{@link AppDialogConfig} 创建一个视图
+     * @param context
+     * @param config 弹框配置 {@link AppDialogConfig}
+     * @return
+     */
     public View createAppDialogView(Context context,AppDialogConfig config){
         View view = null;
         if(config!=null){
@@ -99,6 +105,11 @@ public enum AppDialog {
 
     //-------------------------------------------
 
+    /**
+     * 显示DialogFragment
+     * @param fragmentManager
+     * @return
+     */
     public String showDialogFragment(FragmentManager fragmentManager,AppDialogConfig config){
         AppDialogFragment dialogFragment = AppDialogFragment.newInstance(config);
         String tag = dialogFragment.getTag() !=null ? dialogFragment.getTag() : dialogFragment.getClass().getSimpleName();
@@ -107,6 +118,12 @@ public enum AppDialog {
         return tag;
     }
 
+    /**
+     * 显示DialogFragment
+     * @param fragmentManager
+     * @param dialogFragment
+     * @return
+     */
     public String showDialogFragment(FragmentManager fragmentManager,DialogFragment dialogFragment){
         String tag = dialogFragment.getTag() !=null ? dialogFragment.getTag() : dialogFragment.getClass().getSimpleName();
         showDialogFragment(fragmentManager,dialogFragment,tag);
@@ -114,6 +131,13 @@ public enum AppDialog {
         return tag;
     }
 
+    /**
+     * 显示DialogFragment
+     * @param fragmentManager
+     * @param dialogFragment
+     * @param tag
+     * @return
+     */
     public String showDialogFragment(FragmentManager fragmentManager,DialogFragment dialogFragment, String tag) {
         dialogFragment.show(fragmentManager,tag);
         mTag = tag;
@@ -122,36 +146,82 @@ public enum AppDialog {
 
     //-------------------------------------------
 
+    /**
+     * 显示弹框
+     * @param context
+     * @param config 弹框配置 {@link AppDialogConfig}
+     */
     public void showDialog(Context context,AppDialogConfig config){
-        showDialog(context,createAppDialogView(context,config));
+        showDialog(context,config,true);
     }
 
+    /**
+     * 显示弹框
+     * @param context
+     * @param config 弹框配置 {@link AppDialogConfig}
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     */
+    public void showDialog(Context context,AppDialogConfig config,boolean isCancel){
+        showDialog(context,createAppDialogView(context,config),R.style.app_dialog,DEFAULT_WIDTH_RATIO,isCancel);
+    }
+
+    /**
+     * 显示弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     */
     public void showDialog(Context context,View contentView){
         showDialog(context,contentView,DEFAULT_WIDTH_RATIO);
     }
 
+    /**
+     * 显示弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     */
     public void showDialog(Context context,View contentView,boolean isCancel){
         showDialog(context,contentView,R.style.app_dialog,DEFAULT_WIDTH_RATIO,isCancel);
     }
 
+    /**
+     * 显示弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
+     */
     public void showDialog(Context context,View contentView,float widthRatio){
         showDialog(context,contentView,widthRatio,true);
     }
 
+    /**
+     * 显示弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     */
     public void showDialog(Context context,View contentView,float widthRatio,boolean isCancel){
         showDialog(context,contentView,R.style.app_dialog,widthRatio,isCancel);
     }
 
+    /**
+     * 显示弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     * @param resId Dialog样式
+     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
+     */
     public void showDialog(Context context, View contentView, @StyleRes int resId, float widthRatio){
         showDialog(context,contentView,resId,widthRatio,true);
     }
 
     /**
-     *
+     * 显示弹框
      * @param context
-     * @param contentView
+     * @param contentView 弹框内容视图
      * @param resId Dialog样式
-     * @param widthRatio
+     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
      */
     public void showDialog(Context context, View contentView, @StyleRes int resId, float widthRatio,final boolean isCancel){

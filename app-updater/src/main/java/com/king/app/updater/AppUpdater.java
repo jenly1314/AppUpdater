@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.king.app.updater.callback.UpdateCallback;
 import com.king.app.updater.constant.Constants;
@@ -21,13 +22,21 @@ import com.king.app.updater.util.PermissionUtils;
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public class AppUpdater {
-
+    /**
+     * {@link #mContext}不强制要求是{@link Activity}，但能传{@link Activity}尽量传。AppUpdater本应该只专注于App更新，尽量不涉及动态权限相关的处理。如果mContext传的是{@link Activity}，则默认会校验一次动态权限。
+     */
     private Context mContext;
-
+    /**
+     * 配置信息
+     */
     private UpdateConfig mConfig;
-
+    /**
+     * 更新回调
+     */
     private UpdateCallback mCallback;
-
+    /**
+     * http管理接口，可自定义实现。如：使用okHttp
+     */
     private IHttpManager mHttpManager;
 
     private ServiceConnection mServiceConnection;
@@ -59,10 +68,15 @@ public class AppUpdater {
      */
     public void start(){
         if(mConfig!=null && !TextUtils.isEmpty(mConfig.getUrl())){
-            //mContext不强制要求是Activity，能传Activity尽量传。AppUpdater本应该只专注于App更新，尽量不涉及动态权限相关的处理。如果mContext不强制要求是Activity是Activity默认会优先校验一次动态权限。
+            //如果mContext是Activity,则默认会校验一次动态权限。
             if(mContext instanceof Activity){
                 PermissionUtils.INSTANCE.verifyReadAndWritePermissions((Activity) mContext,Constants.RE_CODE_STORAGE_PERMISSION);
             }
+
+            if(mConfig.isShowNotification() && !PermissionUtils.INSTANCE.isNotificationEnabled(mContext)){
+                Log.w(Constants.TAG,"Notification permission not enabled.");
+            }
+
             startDownloadService();
         }else{
             throw new NullPointerException("url = null");

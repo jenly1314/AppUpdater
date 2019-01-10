@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="app_dialog_line">0.4dp</dimen>
+    <dimen name="app_dialog_line">0.5dp</dimen>
+    <dimen name="app_dialog_radius">10dp</dimen>
+
+    <dimen name="app_dialog_title_text_size">16sp</dimen>
+    <dimen name="app_dialog_content_text_size">16sp</dimen>
+    <dimen name="app_dialog_button_text_size">18sp</dimen>
 </resources>

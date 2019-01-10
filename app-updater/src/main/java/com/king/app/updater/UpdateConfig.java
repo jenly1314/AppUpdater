@@ -1,6 +1,7 @@
 package com.king.app.updater;
 
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
@@ -24,20 +25,35 @@ public class UpdateConfig implements Parcelable {
      */
     private String mFilename;
 
+    /**
+     * 是否显示通知栏
+     */
     private boolean isShowNotification = true;
     /**
      * 下载完成后是否自动弹出安装
      */
     private boolean isInstallApk = true;
-
+    /**
+     * 通知栏图标：默认取app图标
+     */
     private int mNotificationIcon;
 
+    /**
+     * 通知栏ID
+     */
     private int mNotificationId = Constants.DEFAULT_NOTIFICATION_ID;
 
+    /**
+     * 通知栏渠道ID
+     */
     private String mChannelId;
-
+    /**
+     * 通知栏渠道名称
+     */
     private String mChannelName;
-
+    /**
+     *  默认{@link Context#getPackageName() + ".fileProvider"}
+     */
     private String mAuthority;
     /**
      * 下载失败是否支持点击通知栏重复下载
