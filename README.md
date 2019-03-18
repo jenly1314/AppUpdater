@@ -52,10 +52,10 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 ### Gradle:
 ```gradle
     //app-updater
-    compile 'com.king.app:app-updater:1.0.2'
+    implementation 'com.king.app:app-updater:1.0.2'
     
     //app-dialog
-    compile 'com.king.app:app-dialog:1.0.2'
+    implementation 'com.king.app:app-dialog:1.0.2'
 ```
 ### Lvy:
 ```lvy
