@@ -134,7 +134,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 *  AppDialogConfig新增getView(Context context)方法;
 #### v1.0.1：2019-1-10
 *  升级Gradle到4.6
-#### v1.0：2018-6-29
+#### v1.0  ：2018-6-29
 *  AppUpdater初始版本
 
 ## 关于我
