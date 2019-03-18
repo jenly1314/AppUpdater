@@ -37,7 +37,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-updater</artifactId>
-      <version>1.0.1</version>
+      <version>1.0.2</version>
       <type>pom</type>
     </dependency>
     
@@ -45,27 +45,27 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-dialog</artifactId>
-      <version>1.0.1</version>
+      <version>1.0.2</version>
       <type>pom</type>
     </dependency>
 ```
 ### Gradle:
 ```gradle
     //app-updater
-    compile 'com.king.app:app-updater:1.0.1'
+    compile 'com.king.app:app-updater:1.0.2'
     
     //app-dialog
-    compile 'com.king.app:app-dialog:1.0.1'
+    compile 'com.king.app:app-dialog:1.0.2'
 ```
 ### Lvy:
 ```lvy
     //app-updater
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.1'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.2'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
     
     //app-dialog
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.1'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.2'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
 ```
@@ -129,10 +129,10 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 更多使用示例请查看[App](app)。
 
 ## 版本记录
-#### v1.0.1：2019-3-18
+#### v1.0.2：2019-3-18
 *  新增通知栏是否震动和铃声提示配置
 *  AppDialogConfig新增getView(Context context)方法;
-#### v1.0.1：2019-1-10
+#### v1.0.2：2019-1-10
 *  升级Gradle到4.6
 #### v1.0  ：2018-6-29
 *  AppUpdater初始版本
