@@ -1,5 +1,6 @@
 package com.king.appupdater;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Environment;
@@ -19,6 +20,8 @@ import com.king.app.updater.AppUpdater;
 import com.king.app.updater.UpdateConfig;
 import com.king.app.updater.callback.AppUpdateCallback;
 import com.king.app.updater.callback.UpdateCallback;
+import com.king.app.updater.constant.Constants;
+import com.king.app.updater.util.PermissionUtils;
 
 import java.io.File;
 
@@ -40,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
+
+        PermissionUtils.INSTANCE.verifyReadAndWritePermissions(this,Constants.RE_CODE_STORAGE_PERMISSION);
     }
 
     public Context getContext(){
@@ -209,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
                         .serUrl(mUrl)
                         .setFilename(Environment.getExternalStorageDirectory() + "/.AppUpdater")
                         .setFilename("AppUpdater.apk")
+                        .setVibrate(true)
                         .build(getContext())
                         .start();
                 AppDialog.INSTANCE.dismissDialog();
@@ -231,7 +237,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         new AppUpdater.Builder()
                                 .serUrl(mUrl)
-                                .setFilename("AppUpdater.apk")
+                                .setVibrate(true)
+                                .setSound(true)
                                 .build(getContext())
                                 .start();
                         AppDialog.INSTANCE.dismissDialogFragment(getSupportFragmentManager());

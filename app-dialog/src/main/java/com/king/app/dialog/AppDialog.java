@@ -3,12 +3,12 @@ package com.king.app.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -38,33 +38,30 @@ public enum AppDialog {
      * @param config 弹框配置 {@link AppDialogConfig}
      * @return
      */
-    public View createAppDialogView(Context context,AppDialogConfig config){
-        View view = null;
-        if(config!=null){
-            view = LayoutInflater.from(context).inflate(config.getLayoutId(),null);
-            TextView tvDialogTitle = view.findViewById(config.getTitleId());
-            setText(tvDialogTitle,config.getTitle());
+    public View createAppDialogView(@NonNull Context context,@NonNull AppDialogConfig config){
+        View view = config.getView(context);
+        TextView tvDialogTitle = view.findViewById(config.getTitleId());
+        setText(tvDialogTitle,config.getTitle());
 
-            TextView tvDialogContent = view.findViewById(config.getContentId());
-            setText(tvDialogContent,config.getContent());
+        TextView tvDialogContent = view.findViewById(config.getContentId());
+        setText(tvDialogContent,config.getContent());
 
-            Button btnDialogCancel = view.findViewById(config.getCancelId());
-            setText(btnDialogCancel,config.getCancel());
-            btnDialogCancel.setOnClickListener(config.getOnClickCancel() != null ? config.getOnClickCancel() : mOnClickDismissDialog);
-            btnDialogCancel.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
+        Button btnDialogCancel = view.findViewById(config.getCancelId());
+        setText(btnDialogCancel,config.getCancel());
+        btnDialogCancel.setOnClickListener(config.getOnClickCancel() != null ? config.getOnClickCancel() : mOnClickDismissDialog);
+        btnDialogCancel.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
 
-            try{
-                //不强制要求要有横线
-                View line = view.findViewById(R.id.line);
-                line.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
-            }catch (Exception e){
-
-            }
-
-            Button btnDialogOK = view.findViewById(config.getOkId());
-            setText(btnDialogOK,config.getOk());
-            btnDialogOK.setOnClickListener(config.getOnClickOk() != null ? config.getOnClickOk() : mOnClickDismissDialog);
+        try{
+            //不强制要求要有横线
+            View line = view.findViewById(R.id.line);
+            line.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
+        Button btnDialogOK = view.findViewById(config.getOkId());
+        setText(btnDialogOK,config.getOk());
+        btnDialogOK.setOnClickListener(config.getOnClickOk() != null ? config.getOnClickOk() : mOnClickDismissDialog);
 
         return view;
     }
@@ -225,6 +222,7 @@ public enum AppDialog {
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
      */
     public void showDialog(Context context, View contentView, @StyleRes int resId, float widthRatio,final boolean isCancel){
+        dismissDialog();
         mDialog = new Dialog(context,resId);
         mDialog.setContentView(contentView);
         mDialog.setCanceledOnTouchOutside(false);

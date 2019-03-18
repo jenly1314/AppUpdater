@@ -1,7 +1,10 @@
 package com.king.app.dialog;
 
+import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
 import android.view.View;
 
 /**
@@ -56,6 +59,8 @@ public class AppDialogConfig {
     private View.OnClickListener onClickCancel;
 
     private View.OnClickListener onClickOk;
+
+    private View view;
 
     public @LayoutRes int getLayoutId() {
         return layoutId;
@@ -173,6 +178,14 @@ public class AppDialogConfig {
         this.onClickOk = onClickOk;
         return this;
     }
+
+    public View getView(@NonNull Context context){
+        if(view == null){
+            view = LayoutInflater.from(context).inflate(layoutId,null);
+        }
+        return view;
+    }
+
 
 
 }

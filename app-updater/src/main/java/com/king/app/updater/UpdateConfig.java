@@ -64,6 +64,16 @@ public class UpdateConfig implements Parcelable {
      */
     private boolean isShowPercentage = true;
 
+    /**
+     * 是否震动提示，为true时使用通知默认震动
+     */
+    private boolean isVibrate;
+
+    /**
+     * 是否铃声提示,为true时使用通知默认铃声
+     */
+    private boolean isSound;
+
 
     public UpdateConfig() {
 
@@ -165,6 +175,22 @@ public class UpdateConfig implements Parcelable {
         isReDownload = reDownload;
     }
 
+    public boolean isVibrate() {
+        return isVibrate;
+    }
+
+    public void setVibrate(boolean vibrate) {
+        isVibrate = vibrate;
+    }
+
+    public boolean isSound() {
+        return isSound;
+    }
+
+    public void setSound(boolean sound) {
+        isSound = sound;
+    }
+
     @Override
     public String toString() {
         return "UpdateConfig{" +
@@ -178,10 +204,13 @@ public class UpdateConfig implements Parcelable {
                 ", mChannelId='" + mChannelId + '\'' +
                 ", mChannelName='" + mChannelName + '\'' +
                 ", mAuthority='" + mAuthority + '\'' +
-                ", isShowPercentage=" + isShowPercentage +
                 ", isReDownload=" + isReDownload +
+                ", isShowPercentage=" + isShowPercentage +
+                ", isVibrate=" + isVibrate +
+                ", isSound=" + isSound +
                 '}';
     }
+
 
     @Override
     public int describeContents() {
@@ -202,8 +231,9 @@ public class UpdateConfig implements Parcelable {
         dest.writeString(this.mAuthority);
         dest.writeByte(this.isReDownload ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isShowPercentage ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isVibrate ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isSound ? (byte) 1 : (byte) 0);
     }
-
 
     protected UpdateConfig(Parcel in) {
         this.mUrl = in.readString();
@@ -218,6 +248,8 @@ public class UpdateConfig implements Parcelable {
         this.mAuthority = in.readString();
         this.isReDownload = in.readByte() != 0;
         this.isShowPercentage = in.readByte() != 0;
+        this.isVibrate = in.readByte() != 0;
+        this.isSound = in.readByte() != 0;
     }
 
     public static final Creator<UpdateConfig> CREATOR = new Creator<UpdateConfig>() {

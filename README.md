@@ -128,6 +128,14 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
 更多使用示例请查看[App](app)。
 
+## 版本记录
+#### v1.0.1：2019-3-18
+*  新增通知栏是否震动和铃声提示配置
+*  AppDialogConfig新增getView(Context context)方法;
+#### v1.0.1：2019-1-10
+*  升级Gradle到4.6
+#### v1.0：2018-6-29
+*  AppUpdater初始版本
 
 ## 关于我
    Name: <a title="关于作者" href="https://about.me/jenly1314" target="_blank">Jenly</a>

@@ -138,7 +138,6 @@ public class DownloadService extends Service {
             HttpManager.getInstance().download(url,path,filename,new AppDownloadCallback(config,callback));
         }
 
-
     }
 
     /**
@@ -224,7 +223,7 @@ public class DownloadService extends Service {
             isDownloading = true;
             mLastProgress = 0;
             if(isShowNotification){
-                showStartNotification(notifyId,channelId,channelName,notificationIcon,getString(R.string.app_updater_start_notification_title),getString(R.string.app_updater_start_notification_content));
+                showStartNotification(notifyId,channelId,channelName,notificationIcon,getString(R.string.app_updater_start_notification_title),getString(R.string.app_updater_start_notification_content),config.isVibrate(),config.isSound());
             }
 
             if(callback!=null){
@@ -320,13 +319,21 @@ public class DownloadService extends Service {
      * @param title
      * @param content
      */
-    private void showStartNotification(int notifyId,String channelId, String channelName,@DrawableRes int icon,CharSequence title,CharSequence content){
+    private void showStartNotification(int notifyId,String channelId, String channelName,@DrawableRes int icon,CharSequence title,CharSequence content,boolean isVibrate,boolean isSound){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            createNotificationChannel(channelId,channelName);
+            createNotificationChannel(channelId,channelName,isVibrate,isSound);
         }
         NotificationCompat.Builder builder = buildNotification(channelId,icon,title,content);
-        builder.setAutoCancel(false);
-        notifyNotification(notifyId,builder.build());
+        if(isVibrate && isSound){
+            builder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND);
+        }else if(isVibrate){
+            builder.setDefaults(Notification.DEFAULT_VIBRATE);
+        }else if(isSound){
+            builder.setDefaults(Notification.DEFAULT_SOUND);
+        }
+        Notification notification = builder.build();
+        notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONLY_ALERT_ONCE;
+        notifyNotification(notifyId,notification);
     }
 
     /**
@@ -341,9 +348,8 @@ public class DownloadService extends Service {
      */
     private void showProgressNotification(int notifyId,String channelId,@DrawableRes int icon,CharSequence title,CharSequence content,int progress,int size){
         NotificationCompat.Builder builder = buildNotification(channelId,icon,title,content,progress,size);
-        builder.setAutoCancel(false);
         Notification notification = builder.build();
-        notification.flags = Notification.FLAG_AUTO_CANCEL | Notification.FLAG_ONLY_ALERT_ONCE;
+        notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONLY_ALERT_ONCE;
         notifyNotification(notifyId,notification);
     }
 
@@ -438,8 +444,12 @@ public class DownloadService extends Service {
      * @param channelName
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void createNotificationChannel(String channelId, String channelName){
+    private void createNotificationChannel(String channelId, String channelName,boolean isVibrate,boolean isSound){
         NotificationChannel channel = new NotificationChannel(channelId,channelName, NotificationManager.IMPORTANCE_DEFAULT);
+        channel.enableVibration(isVibrate);
+        if(!isSound){
+            channel.setSound(null,null);
+        }
         getNotificationManager().createNotificationChannel(channel);
 
     }
