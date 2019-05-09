@@ -7,6 +7,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -128,10 +130,34 @@ public class DownloadService extends Service {
         }
 
         File file = new File(path,filename);
-        if(file.exists()){
+        if(file.exists()){//文件是否存在
+            Integer versionCode = config.getVersionCode();
+            if(versionCode!=null){
+                try{
+                    if(AppUtils.INSTANCE.apkExists(getContext(),versionCode,file)){
+                        //本地已经存在要下载的APK
+                        Log.d(Constants.TAG,"CacheFile:" + file);
+                        if(config.isInstallApk()){
+                            String authority = config.getAuthority();
+                            if(TextUtils.isEmpty(authority)){//如果为空则默认
+                                authority = getContext().getPackageName() + ".fileProvider";
+                            }
+                            AppUtils.INSTANCE.installApk(getContext(),file,authority);
+                        }
+                        if(callback!=null){
+                            callback.onFinish(file);
+                        }
+                        stopService();
+                        return;
+                    }
+                }catch (Exception e){
+                    Log.w(Constants.TAG,e);
+                }
+            }
+            //删除旧文件
             file.delete();
         }
-
+        Log.d(Constants.TAG,"File:" + file);
         if(httpManager != null){
             httpManager.download(url,path,filename,new AppDownloadCallback(config,callback));
         }else{
@@ -206,10 +232,10 @@ public class DownloadService extends Service {
             }
 
             this.isInstallApk = config.isInstallApk();
-            if(TextUtils.isEmpty(config.getAuthority())){//如果为空默认
+
+            this.authority = config.getAuthority();
+            if(TextUtils.isEmpty(config.getAuthority())){//如果为空则默认
                 authority = getContext().getPackageName() + ".fileProvider";
-            }else{
-                this.authority = config.getAuthority();
             }
 
             this.isShowPercentage = config.isShowPercentage();
@@ -220,6 +246,7 @@ public class DownloadService extends Service {
 
         @Override
         public void onStart(String url) {
+            Log.d(Constants.TAG,"onStart:" + url);
             isDownloading = true;
             mLastProgress = 0;
             if(isShowNotification){
@@ -263,6 +290,7 @@ public class DownloadService extends Service {
 
         @Override
         public void onFinish(File file) {
+            Log.d(Constants.TAG,"onFinish:" + file);
             isDownloading = false;
             showFinishNotification(notifyId,channelId,notificationIcon,getString(R.string.app_updater_finish_notification_title),getString(R.string.app_updater_finish_notification_content),file,authority);
             if(isInstallApk){
@@ -276,6 +304,7 @@ public class DownloadService extends Service {
 
         @Override
         public void onError(Exception e) {
+            Log.w(Constants.TAG,e);
             isDownloading = false;
             //支持下载失败重新并最多支持失败下载3次
             boolean isReDownload = this.isReDownload && mCount < 3;
@@ -293,6 +322,7 @@ public class DownloadService extends Service {
 
         @Override
         public void onCancel() {
+            Log.d(Constants.TAG,"onCancel");
             isDownloading = false;
             cancelNotification(notifyId);
             if(callback!=null){

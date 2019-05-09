@@ -4,7 +4,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="app_dialog_title_color">#333333</color>
-    <color name="app_dialog_content_color">#666666</color>
+    <color name="app_dialog_content_color">#333333</color>
     <color name="app_dialog_button_normal_color">#333333</color>
     <color name="app_dialog_button_pressed_color">@color/colorAccent</color>
 

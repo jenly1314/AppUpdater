@@ -52,9 +52,13 @@ public class AppDialogConfig {
      */
     private CharSequence ok;
     /**
-     * 是否隐藏取消按钮，如果取消则底部只显示一个按钮
+     * 是否隐藏取消按钮，如果隐藏取消则底部只显示一个按钮
      */
     private boolean isHideCancel;
+    /**
+     * 是否隐藏标题
+     */
+    private boolean isHideTitle;
 
     private View.OnClickListener onClickCancel;
 
@@ -158,6 +162,15 @@ public class AppDialogConfig {
 
     public AppDialogConfig setHideCancel(boolean hideCancel) {
         isHideCancel = hideCancel;
+        return this;
+    }
+
+    public boolean isHideTitle(){
+        return isHideTitle;
+    }
+
+    public AppDialogConfig setHideTitle(boolean hideTitle){
+        isHideTitle = hideTitle;
         return this;
     }
 

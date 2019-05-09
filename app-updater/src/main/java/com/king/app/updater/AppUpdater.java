@@ -79,7 +79,7 @@ public class AppUpdater {
 
             startDownloadService();
         }else{
-            throw new NullPointerException("url = null");
+            throw new NullPointerException("Url = null");
         }
     }
 
@@ -260,6 +260,17 @@ public class AppUpdater {
          */
         public Builder setReDownload(boolean reDownload) {
             mConfig.setReDownload(reDownload);
+            return this;
+        }
+
+        /**
+         * 设置要下载APK的versionCode
+         * @param versionCode 为null表示不处理，默认不存在则下载，存在则重新下载。不为null时，表示会优先校验本地是否存在已下载版本号为versionCode的APK。
+         *                    如果存在则不会重新下载(AppUpdater会自动校验packageName一致性)，直接取本地APK，反之重新下载。
+         * @return
+         */
+        public Builder setVersionCode(Integer versionCode) {
+            mConfig.setVersionCode(versionCode);
             return this;
         }
 

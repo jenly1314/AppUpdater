@@ -2,6 +2,7 @@ package com.king.app.updater.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -19,7 +20,7 @@ public enum AppUtils {
     INSTANCE;
 
     /**
-     *
+     * 通过url获取App的全名称
      * @param context
      * @return AppName.apk
      */
@@ -37,10 +38,27 @@ public enum AppUtils {
         return String.format("%s.apk",filename);
     }
 
-
+    /**
+     * 获取包信息
+     * @param context
+     * @return
+     * @throws PackageManager.NameNotFoundException
+     */
     public PackageInfo getPackageInfo(Context context) throws PackageManager.NameNotFoundException {
         PackageManager packageManager = context.getPackageManager();
         PackageInfo packageInfo = packageManager.getPackageInfo( context.getPackageName(), 0);
+        return packageInfo;
+    }
+
+    /**
+     * 通过APK路径获取包信息
+     * @param context
+     * @param archiveFilePath
+     * @return
+     */
+    public static PackageInfo getPackageInfo(Context context, String archiveFilePath) throws Exception {
+        PackageManager packageManager = context.getPackageManager();
+        PackageInfo packageInfo = packageManager.getPackageArchiveInfo(archiveFilePath, PackageManager.GET_ACTIVITIES);
         return packageInfo;
     }
 
@@ -94,5 +112,27 @@ public enum AppUtils {
         }
         intent.setDataAndType(uriData, type);
         context.startActivity(intent);
+    }
+
+    /**
+     * APK是否存在
+     * @param context
+     * @param versionCode
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    public boolean apkExists(Context context,int versionCode,File file) throws Exception{
+        if(file!=null && file.exists()){
+            String packageName = context.getPackageName();
+            PackageInfo packageInfo = AppUtils.getPackageInfo(context,file.getAbsolutePath());
+            if(packageInfo!=null && versionCode == packageInfo.versionCode){//比对versionCode
+                ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+                if(applicationInfo!=null && packageName.equals(applicationInfo.packageName)){//比对packageName
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

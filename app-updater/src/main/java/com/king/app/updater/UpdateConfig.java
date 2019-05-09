@@ -74,6 +74,11 @@ public class UpdateConfig implements Parcelable {
      */
     private boolean isSound;
 
+    /**
+     * 要下载的APK的versionCode
+     */
+    private Integer versionCode;
+
 
     public UpdateConfig() {
 
@@ -191,6 +196,14 @@ public class UpdateConfig implements Parcelable {
         isSound = sound;
     }
 
+    public Integer getVersionCode(){
+        return versionCode;
+    }
+
+    public void setVersionCode(Integer versionCode){
+        this.versionCode = versionCode;
+    }
+
     @Override
     public String toString() {
         return "UpdateConfig{" +
@@ -208,6 +221,7 @@ public class UpdateConfig implements Parcelable {
                 ", isShowPercentage=" + isShowPercentage +
                 ", isVibrate=" + isVibrate +
                 ", isSound=" + isSound +
+                ", versionCode=" + versionCode +
                 '}';
     }
 
@@ -233,6 +247,7 @@ public class UpdateConfig implements Parcelable {
         dest.writeByte(this.isShowPercentage ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isVibrate ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isSound ? (byte) 1 : (byte) 0);
+        dest.writeValue(this.versionCode);
     }
 
     protected UpdateConfig(Parcel in) {
@@ -250,6 +265,7 @@ public class UpdateConfig implements Parcelable {
         this.isShowPercentage = in.readByte() != 0;
         this.isVibrate = in.readByte() != 0;
         this.isSound = in.readByte() != 0;
+        this.versionCode = (Integer) in.readValue(Integer.class.getClassLoader());
     }
 
     public static final Creator<UpdateConfig> CREATOR = new Creator<UpdateConfig>() {

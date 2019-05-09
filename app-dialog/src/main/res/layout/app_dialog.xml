@@ -24,7 +24,8 @@
         android:padding="10dp"
         android:textSize="@dimen/app_dialog_content_text_size"
         android:textColor="@color/app_dialog_content_color"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:lineSpacingMultiplier="1" />
     <include layout="@layout/app_dialog_line_h"/>
     <LinearLayout

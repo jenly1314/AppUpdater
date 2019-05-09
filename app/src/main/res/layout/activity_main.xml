@@ -85,7 +85,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
-        android:text="自定义弹框升级"
+        android:text="自定义弹框，优先缓存升级"
         app:layout_constraintTop_toBottomOf="@+id/btn5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

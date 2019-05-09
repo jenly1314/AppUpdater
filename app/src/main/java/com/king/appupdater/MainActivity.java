@@ -1,12 +1,11 @@
 package com.king.appupdater;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -189,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 自定义弹框升级
+     * 自定义弹框，优先缓存升级
      */
     private void clickBtn6(){
         View view  = LayoutInflater.from(getContext()).inflate(R.layout.dialog_custom,null);
@@ -212,8 +211,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 new AppUpdater.Builder()
                         .serUrl(mUrl)
-                        .setFilename(Environment.getExternalStorageDirectory() + "/.AppUpdater")
-                        .setFilename("AppUpdater.apk")
+                        .setPath(Environment.getExternalStorageDirectory() + "/.AppUpdater")
+                        .setVersionCode(BuildConfig.VERSION_CODE)//设置versionCode之后，新版本相同的apk只下载一次,优先取本地缓存。
+                        .setFilename("AppUpdater1.apk")
                         .setVibrate(true)
                         .build(getContext())
                         .start();
@@ -245,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         AppDialog.INSTANCE.showDialogFragment(getSupportFragmentManager(),config);
+
     }
 
     public void OnClick(View v){

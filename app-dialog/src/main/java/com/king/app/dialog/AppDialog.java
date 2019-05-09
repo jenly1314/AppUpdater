@@ -42,6 +42,7 @@ public enum AppDialog {
         View view = config.getView(context);
         TextView tvDialogTitle = view.findViewById(config.getTitleId());
         setText(tvDialogTitle,config.getTitle());
+        tvDialogTitle.setVisibility(config.isHideTitle() ? View.GONE : View.VISIBLE);
 
         TextView tvDialogContent = view.findViewById(config.getContentId());
         setText(tvDialogContent,config.getContent());
@@ -56,7 +57,7 @@ public enum AppDialog {
             View line = view.findViewById(R.id.line);
             line.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
         }catch (Exception e){
-            e.printStackTrace();
+
         }
 
         Button btnDialogOK = view.findViewById(config.getOkId());

@@ -22,6 +22,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 - [x] 专注于App更新一键傻瓜式升级
 - [x] 支持下载监听
 - [x] 支持下载失败，重新下载
+- [x] 支持下载优先取本地缓存
 - [x] 支持通知栏提示内容和过程全部可配置
 - [x] 支持Android O
 
@@ -38,7 +39,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-updater</artifactId>
-      <version>1.0.2</version>
+      <version>1.0.3</version>
       <type>pom</type>
     </dependency>
     
@@ -46,27 +47,27 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-dialog</artifactId>
-      <version>1.0.2</version>
+      <version>1.0.3</version>
       <type>pom</type>
     </dependency>
 ```
 ### Gradle:
 ```gradle
     //app-updater
-    implementation 'com.king.app:app-updater:1.0.2'
+    implementation 'com.king.app:app-updater:1.0.3'
     
     //app-dialog
-    implementation 'com.king.app:app-dialog:1.0.2'
+    implementation 'com.king.app:app-dialog:1.0.3'
 ```
 ### Lvy:
 ```lvy
     //app-updater
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.2'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.3'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
     
     //app-dialog
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.2'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.3'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
 ```
@@ -130,11 +131,18 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 更多使用示例请查看[App](app)。
 
 ## 版本记录
+
+#### v1.0.3：2019-5-9
+*  新增支持下载APK优先取本地缓存，避免多次下载相同版本的APK文件。
+*  AppDialog支持隐藏Dialog的标题
+
 #### v1.0.2：2019-3-18
 *  新增通知栏是否震动和铃声提示配置
-*  AppDialogConfig新增getView(Context context)方法;
-#### v1.0.2：2019-1-10
+*  AppDialogConfig新增getView(Context context)方法
+
+#### v1.0.1：2019-1-10
 *  升级Gradle到4.6
+
 #### v1.0  ：2018-6-29
 *  AppUpdater初始版本
 
