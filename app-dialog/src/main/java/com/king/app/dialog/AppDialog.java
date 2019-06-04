@@ -53,7 +53,7 @@ public enum AppDialog {
         btnDialogCancel.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
 
         try{
-            //不强制要求要有横线
+            //不强制要求要有中间的线
             View line = view.findViewById(R.id.line);
             line.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
         }catch (Exception e){
@@ -137,6 +137,7 @@ public enum AppDialog {
      * @return
      */
     public String showDialogFragment(FragmentManager fragmentManager,DialogFragment dialogFragment, String tag) {
+        dismissDialogFragment(fragmentManager);
         dialogFragment.show(fragmentManager,tag);
         mTag = tag;
         return tag;

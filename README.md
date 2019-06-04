@@ -39,7 +39,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-updater</artifactId>
-      <version>1.0.3</version>
+      <version>1.0.4</version>
       <type>pom</type>
     </dependency>
     
@@ -47,27 +47,27 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-dialog</artifactId>
-      <version>1.0.3</version>
+      <version>1.0.4</version>
       <type>pom</type>
     </dependency>
 ```
 ### Gradle:
 ```gradle
     //app-updater
-    implementation 'com.king.app:app-updater:1.0.3'
+    implementation 'com.king.app:app-updater:1.0.4'
     
     //app-dialog
-    implementation 'com.king.app:app-dialog:1.0.3'
+    implementation 'com.king.app:app-dialog:1.0.4'
 ```
 ### Lvy:
 ```lvy
     //app-updater
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.3'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.4'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
     
     //app-dialog
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.3'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.4'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
 ```
@@ -131,6 +131,9 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 更多使用示例请查看[App](app)。
 
 ## 版本记录
+
+#### v1.0.4：2019-6-4
+*  支持添加请求头
 
 #### v1.0.3：2019-5-9
 *  新增支持下载APK优先取本地缓存，避免多次下载相同版本的APK文件

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <external-path name="app_external_path" path="."/>
+    <root-path name="app_root_path" path="/"/>
+    <external-path name="app_external_path" path="/"/>
     <external-path name="app_updater_path" path=".AppUpdater/"/>
-    <external-cache-path name="app_external_cache_path" path="."/>
-    <external-files-path name="app_external_files_path" path="."/>
-    <files-path name="app_files_path" path="."/>
-    <cache-path name="app_cache_path" path="."/>
+    <external-cache-path name="app_external_cache_path" path="/"/>
+    <external-files-path name="app_external_files_path" path="/"/>
+    <files-path name="app_files_path" path="/"/>
+    <cache-path name="app_cache_path" path="/"/>
 
 </paths>

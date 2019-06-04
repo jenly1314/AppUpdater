@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
     private final Object mLock = new Object();
 
-    public final String TAG = this.getClass().getSimpleName();
-
     private String mUrl = "https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk";
 
     private ProgressBar progressBar;
@@ -75,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     private void clickBtn2(){
         UpdateConfig config = new UpdateConfig();
         config.setUrl(mUrl);
+        config.addHeader("token","xxxxxx");
         new AppUpdater(getContext(),config)
                 .setUpdateCallback(new UpdateCallback() {
 

@@ -1,7 +1,10 @@
 package com.king.app.updater.http;
 
+import android.support.annotation.Nullable;
+
 import java.io.File;
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
@@ -14,9 +17,10 @@ public interface IHttpManager {
      * @param url
      * @param path
      * @param filename
+     * @param requestProperty
      * @param callback
      */
-    void download(String url,String path,String filename,DownloadCallback callback);
+    void download(String url, String path, String filename, @Nullable Map<String,String> requestProperty, DownloadCallback callback);
 
 
     interface DownloadCallback extends Serializable{

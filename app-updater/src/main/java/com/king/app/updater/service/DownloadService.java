@@ -7,8 +7,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -159,9 +157,9 @@ public class DownloadService extends Service {
         }
         Log.d(Constants.TAG,"File:" + file);
         if(httpManager != null){
-            httpManager.download(url,path,filename,new AppDownloadCallback(config,callback));
+            httpManager.download(url,path,filename,config.getRequestProperty(),new AppDownloadCallback(config,callback));
         }else{
-            HttpManager.getInstance().download(url,path,filename,new AppDownloadCallback(config,callback));
+            HttpManager.getInstance().download(url,path,filename,config.getRequestProperty(),new AppDownloadCallback(config,callback));
         }
 
     }
@@ -516,6 +514,8 @@ public class DownloadService extends Service {
 
         if(progress!= Constants.NONE && size!=Constants.NONE){
             builder.setProgress(size,progress,false);
+        }else{
+            builder.setProgress(0,0,true);
         }
 
         return builder;
@@ -545,7 +545,7 @@ public class DownloadService extends Service {
     public class DownloadBinder extends Binder {
 
         public void start(UpdateConfig config){
-            start(config,null,null);
+            start(config,null);
         }
 
         public void start(UpdateConfig config,UpdateCallback callback){

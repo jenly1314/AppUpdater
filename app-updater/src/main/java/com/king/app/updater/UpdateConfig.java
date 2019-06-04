@@ -8,6 +8,9 @@ import android.support.annotation.DrawableRes;
 
 import com.king.app.updater.constant.Constants;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
@@ -78,6 +81,11 @@ public class UpdateConfig implements Parcelable {
      * 要下载的APK的versionCode
      */
     private Integer versionCode;
+
+    /**
+     * 请求头参数
+     */
+    private Map<String,String> mRequestProperty;
 
 
     public UpdateConfig() {
@@ -204,25 +212,24 @@ public class UpdateConfig implements Parcelable {
         this.versionCode = versionCode;
     }
 
-    @Override
-    public String toString() {
-        return "UpdateConfig{" +
-                "mUrl='" + mUrl + '\'' +
-                ", mPath='" + mPath + '\'' +
-                ", mFilename='" + mFilename + '\'' +
-                ", isShowNotification=" + isShowNotification +
-                ", isInstallApk=" + isInstallApk +
-                ", mNotificationIcon=" + mNotificationIcon +
-                ", mNotificationId=" + mNotificationId +
-                ", mChannelId='" + mChannelId + '\'' +
-                ", mChannelName='" + mChannelName + '\'' +
-                ", mAuthority='" + mAuthority + '\'' +
-                ", isReDownload=" + isReDownload +
-                ", isShowPercentage=" + isShowPercentage +
-                ", isVibrate=" + isVibrate +
-                ", isSound=" + isSound +
-                ", versionCode=" + versionCode +
-                '}';
+    public Map<String, String> getRequestProperty() {
+        return mRequestProperty;
+    }
+
+    public void addHeader(String key, String value){
+        initRequestProperty();
+        mRequestProperty.put(key,value);
+    }
+
+    public void addHeader(Map<String,String> headers){
+        initRequestProperty();
+        mRequestProperty.putAll(headers);
+    }
+
+    private void initRequestProperty(){
+        if(mRequestProperty == null){
+            mRequestProperty = new HashMap<>();
+        }
     }
 
 
@@ -248,6 +255,14 @@ public class UpdateConfig implements Parcelable {
         dest.writeByte(this.isVibrate ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isSound ? (byte) 1 : (byte) 0);
         dest.writeValue(this.versionCode);
+        dest.writeInt(mRequestProperty!=null ? this.mRequestProperty.size():0);
+        if(mRequestProperty!=null){
+            for (Map.Entry<String, String> entry : this.mRequestProperty.entrySet()) {
+                dest.writeString(entry.getKey());
+                dest.writeString(entry.getValue());
+            }
+        }
+
     }
 
     protected UpdateConfig(Parcel in) {
@@ -266,6 +281,13 @@ public class UpdateConfig implements Parcelable {
         this.isVibrate = in.readByte() != 0;
         this.isSound = in.readByte() != 0;
         this.versionCode = (Integer) in.readValue(Integer.class.getClassLoader());
+        int mRequestPropertySize = in.readInt();
+        this.mRequestProperty = new HashMap<>(mRequestPropertySize);
+        for (int i = 0; i < mRequestPropertySize; i++) {
+            String key = in.readString();
+            String value = in.readString();
+            this.mRequestProperty.put(key, value);
+        }
     }
 
     public static final Creator<UpdateConfig> CREATOR = new Creator<UpdateConfig>() {

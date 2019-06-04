@@ -1,7 +1,11 @@
 package com.king.app.updater.http;
 
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
+import com.king.app.updater.constant.Constants;
 import com.king.app.updater.util.SSLSocketFactoryUtils;
 
 import java.io.File;
@@ -10,6 +14,7 @@ import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -20,7 +25,7 @@ public class HttpManager implements IHttpManager {
 
     private static final int DEFAULT_TIME_OUT = 20000;
 
-    private int mTimeout = DEFAULT_TIME_OUT;
+    private int mTimeout;
 
     private static HttpManager INSTANCE;
 
@@ -43,8 +48,8 @@ public class HttpManager implements IHttpManager {
     }
 
     @Override
-    public void download(String url, String path, String filename, DownloadCallback callback) {
-        new DownloadTask(url,path,filename,callback).execute();
+    public void download(String url, String path, String filename, @Nullable Map<String,String> requestProperty, DownloadCallback callback) {
+        new DownloadTask(url,path,filename,requestProperty,callback).execute();
     }
 
 
@@ -58,15 +63,18 @@ public class HttpManager implements IHttpManager {
 
         private String filename;
 
+        private Map<String,String> requestProperty;
+
         private DownloadCallback callback;
 
         private Exception exception;
 
-        public DownloadTask(String url,String path,String filename,DownloadCallback callback){
+        public DownloadTask(String url, String path, String filename ,@Nullable Map<String,String> requestProperty, DownloadCallback callback){
             this.url = url;
             this.path = path;
             this.filename = filename;
             this.callback = callback;
+            this.requestProperty = requestProperty;
 
         }
 
@@ -78,16 +86,29 @@ public class HttpManager implements IHttpManager {
                 HttpsURLConnection.setDefaultHostnameVerifier(SSLSocketFactoryUtils.createTrustAllHostnameVerifier());
                 HttpURLConnection connect = (HttpURLConnection)new URL(url).openConnection();
                 connect.setRequestMethod("GET");
+                connect.setRequestProperty("Accept-Encoding", "identity");
+
                 connect.setReadTimeout(mTimeout);
                 connect.setConnectTimeout(mTimeout);
+
+                if(requestProperty!=null){
+                    for(Map.Entry<String,String> entry : requestProperty.entrySet()){
+                        connect.setRequestProperty(entry.getKey(),entry.getValue());
+                    }
+                }
+
                 connect.connect();
                 int responseCode = connect.getResponseCode();
-
+                Log.d(Constants.TAG,"Content-Type:" + connect.getContentType());
                 if(responseCode == HttpURLConnection.HTTP_OK){
 
                     InputStream is = connect.getInputStream();
 
                     int length = connect.getContentLength();
+
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        length = (int)connect.getContentLengthLong();
+                    }
 
                     int progress = 0;
 

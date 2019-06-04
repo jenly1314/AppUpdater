@@ -8,7 +8,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -17,6 +16,8 @@ import com.king.app.updater.constant.Constants;
 import com.king.app.updater.http.IHttpManager;
 import com.king.app.updater.service.DownloadService;
 import com.king.app.updater.util.PermissionUtils;
+
+import java.util.Map;
 
 
 /**
@@ -271,6 +272,27 @@ public class AppUpdater {
          */
         public Builder setVersionCode(Integer versionCode) {
             mConfig.setVersionCode(versionCode);
+            return this;
+        }
+
+        /**
+         * 请求头添加参数
+         * @param key
+         * @param value
+         * @return
+         */
+        public Builder addHeader(String key, String value){
+            mConfig.addHeader(key,value);
+            return this;
+        }
+
+        /**
+         * 请求头添加参数
+         * @param headers
+         * @return
+         */
+        public Builder addHeader(Map<String,String> headers){
+            mConfig.addHeader(headers);
             return this;
         }
 

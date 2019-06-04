@@ -36,6 +36,7 @@ public class AppDialogFragment extends BaseDialogFragment {
         if(config!=null){
             TextView tvDialogTitle = rootView.findViewById(config.getTitleId());
             setText(tvDialogTitle,config.getTitle());
+            tvDialogTitle.setVisibility(config.isHideTitle() ? View.GONE : View.VISIBLE);
 
             TextView tvDialogContent = rootView.findViewById(config.getContentId());
             setText(tvDialogContent,config.getContent());
@@ -46,7 +47,7 @@ public class AppDialogFragment extends BaseDialogFragment {
             btnDialogCancel.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
 
             try{
-                //不强制要求要有横线
+                //不强制要求要有中间的线
                 View line = rootView.findViewById(R.id.line);
                 line.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
             }catch (Exception e){
@@ -56,6 +57,7 @@ public class AppDialogFragment extends BaseDialogFragment {
             Button btnDialogOK = rootView.findViewById(config.getOkId());
             setText(btnDialogOK,config.getOk());
             btnDialogOK.setOnClickListener(config.getOnClickOk() != null ? config.getOnClickOk() : getOnClickDismiss());
+
         }
     }
 }
