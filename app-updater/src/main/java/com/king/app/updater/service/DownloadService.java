@@ -514,8 +514,6 @@ public class DownloadService extends Service {
 
         if(progress!= Constants.NONE && size!=Constants.NONE){
             builder.setProgress(size,progress,false);
-        }else{
-            builder.setProgress(0,0,true);
         }
 
         return builder;
