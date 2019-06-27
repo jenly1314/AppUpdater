@@ -26,7 +26,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 - [x] 支持通知栏提示内容和过程全部可配置
 - [x] 支持Android O
 
-
+### [AndroidX version](https://github.com/jenly1314/AppUpdater/tree/androidx)
 
 ## Gif 展示
 ![Image](GIF.gif)
@@ -139,7 +139,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
 ## 版本记录
 
-#### v1.0.4：2019-6-4  //支持AndroidX版本
+#### v1.0.4：2019-6-4      [支持AndroidX版本](https://github.com/jenly1314/AppUpdater/tree/androidx)
 *  支持添加请求头
 
 #### v1.0.3：2019-5-9
