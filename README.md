@@ -53,9 +53,16 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 ```
 ### Gradle:
 ```gradle
+
+    //----------AndroidX 版本
+    //app-updater
+    implementation 'com.king.app:app-updater:1.0.4-androidx'
+    //app-dialog
+    implementation 'com.king.app:app-dialog:1.0.4-androidx'
+    
+    //----------Android 版本
     //app-updater
     implementation 'com.king.app:app-updater:1.0.4'
-    
     //app-dialog
     implementation 'com.king.app:app-dialog:1.0.4'
 ```
@@ -132,7 +139,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
 ## 版本记录
 
-#### v1.0.4：2019-6-4
+#### v1.0.4：2019-6-4  //支持AndroidX版本
 *  支持添加请求头
 
 #### v1.0.3：2019-5-9
