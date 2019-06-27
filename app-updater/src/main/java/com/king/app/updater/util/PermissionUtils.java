@@ -9,11 +9,12 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 
 /**
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
@@ -33,7 +34,7 @@ public enum PermissionUtils {
      * @param requestCode
      * @return
      */
-    public boolean verifyReadAndWritePermissions(@NonNull Activity activity,int requestCode){
+    public boolean verifyReadAndWritePermissions(@NonNull Activity activity, int requestCode){
 
         int readResult = checkPermission(activity,Manifest.permission.READ_EXTERNAL_STORAGE);
         int writeResult = checkPermission(activity,Manifest.permission.WRITE_EXTERNAL_STORAGE);

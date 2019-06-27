@@ -12,11 +12,6 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -29,6 +24,12 @@ import com.king.app.updater.http.IHttpManager;
 import com.king.app.updater.util.AppUtils;
 
 import java.io.File;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.FileProvider;
 
 
 /**
@@ -347,7 +348,7 @@ public class DownloadService extends Service {
      * @param title
      * @param content
      */
-    private void showStartNotification(int notifyId,String channelId, String channelName,@DrawableRes int icon,CharSequence title,CharSequence content,boolean isVibrate,boolean isSound){
+    private void showStartNotification(int notifyId, String channelId, String channelName, @DrawableRes int icon, CharSequence title, CharSequence content, boolean isVibrate, boolean isSound){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             createNotificationChannel(channelId,channelName,isVibrate,isSound);
         }

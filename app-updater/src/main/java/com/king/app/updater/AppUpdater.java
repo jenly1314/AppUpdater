@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -18,6 +16,9 @@ import com.king.app.updater.service.DownloadService;
 import com.king.app.updater.util.PermissionUtils;
 
 import java.util.Map;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 
 
 /**
@@ -43,7 +44,7 @@ public class AppUpdater {
 
     private ServiceConnection mServiceConnection;
 
-    public AppUpdater(@NonNull Context context,@NonNull UpdateConfig config){
+    public AppUpdater(@NonNull Context context, @NonNull UpdateConfig config){
         this.mContext = context;
         this.mConfig = config;
     }

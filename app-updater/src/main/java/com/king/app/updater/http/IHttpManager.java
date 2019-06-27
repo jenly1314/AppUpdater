@@ -1,10 +1,11 @@
 package com.king.app.updater.http;
 
-import android.support.annotation.Nullable;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.Map;
+
+import androidx.annotation.Nullable;
 
 /**
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>

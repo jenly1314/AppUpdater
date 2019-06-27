@@ -1,7 +1,6 @@
 package com.king.app.updater.util;
 
 import android.content.Context;
-import android.support.annotation.RawRes;
 
 import java.io.InputStream;
 import java.security.KeyManagementException;
@@ -20,6 +19,8 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
+
+import androidx.annotation.RawRes;
 
 /**
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>

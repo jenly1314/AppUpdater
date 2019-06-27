@@ -1,11 +1,12 @@
 package com.king.app.dialog;
 
 import android.content.Context;
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 
 /**
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
@@ -14,11 +15,13 @@ public class AppDialogConfig {
     /**
      * 布局ID
      */
-    private @LayoutRes int layoutId = R.layout.app_dialog;
+    private @LayoutRes
+    int layoutId = R.layout.app_dialog;
     /**
      * 标题视图ID
      */
-    private @IdRes int titleId = R.id.tvDialogTitle;
+    private @IdRes
+    int titleId = R.id.tvDialogTitle;
     /**
      * 内容视图ID
      */

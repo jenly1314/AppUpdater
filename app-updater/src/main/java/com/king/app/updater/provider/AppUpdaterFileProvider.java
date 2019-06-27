@@ -1,6 +1,7 @@
 package com.king.app.updater.provider;
 
-import android.support.v4.content.FileProvider;
+
+import androidx.core.content.FileProvider;
 
 /**
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>

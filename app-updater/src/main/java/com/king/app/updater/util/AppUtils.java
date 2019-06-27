@@ -7,10 +7,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
 import java.io.File;
+import java.lang.Exception;
+
+import androidx.core.content.FileProvider;
 
 /**
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>

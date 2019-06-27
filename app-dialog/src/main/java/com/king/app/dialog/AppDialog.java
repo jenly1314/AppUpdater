@@ -3,10 +3,6 @@ package com.king.app.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.NonNull;
-import android.support.annotation.StyleRes;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -16,6 +12,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.king.app.dialog.fragment.AppDialogFragment;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 /**
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
@@ -38,7 +39,7 @@ public enum AppDialog {
      * @param config 弹框配置 {@link AppDialogConfig}
      * @return
      */
-    public View createAppDialogView(@NonNull Context context,@NonNull AppDialogConfig config){
+    public View createAppDialogView(@NonNull Context context, @NonNull AppDialogConfig config){
         View view = config.getView(context);
         TextView tvDialogTitle = view.findViewById(config.getTitleId());
         setText(tvDialogTitle,config.getTitle());

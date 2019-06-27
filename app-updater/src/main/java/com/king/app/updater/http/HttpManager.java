@@ -2,7 +2,6 @@ package com.king.app.updater.http;
 
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.king.app.updater.constant.Constants;
@@ -17,6 +16,8 @@ import java.net.URL;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import androidx.annotation.Nullable;
 
 /**
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
