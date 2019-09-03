@@ -111,6 +111,21 @@ public class AppUpdater {
         }
     }
 
+    /**
+     * 停止
+     */
+    public void stop(){
+        stopDownloadService();
+    }
+
+    /**
+     * 停止下载服务
+     */
+    private void stopDownloadService(){
+        Intent intent = new Intent(mContext, DownloadService.class);
+        intent.putExtra(Constants.KEY_STOP_DOWNLOAD_SERVICE,true);
+        mContext.startService(intent);
+    }
 
     /**
      * AppUpdater构建器
@@ -293,6 +308,16 @@ public class AppUpdater {
          */
         public Builder addHeader(Map<String,String> headers){
             mConfig.addHeader(headers);
+            return this;
+        }
+
+        /**
+         *  设置是否自动删除取消下载的文件
+         * @param isDeleteCancelFile 是否删除取消下载的文件（默认为true）
+         * @return
+         */
+        public Builder setDeleteCancelFile(boolean isDeleteCancelFile){
+            mConfig.setDeleteCancelFile(isDeleteCancelFile);
             return this;
         }
 

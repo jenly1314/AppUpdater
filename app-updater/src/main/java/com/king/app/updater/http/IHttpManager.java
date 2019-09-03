@@ -22,6 +22,10 @@ public interface IHttpManager {
      */
     void download(String url, String path, String filename, @Nullable Map<String,String> requestProperty, DownloadCallback callback);
 
+    /**
+     * 取消下载
+     */
+    void cancel();
 
     interface DownloadCallback extends Serializable{
         /**

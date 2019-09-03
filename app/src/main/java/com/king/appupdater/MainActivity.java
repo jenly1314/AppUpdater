@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Toast toast;
 
+    private AppUpdater mAppUpdater;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
      * 简单一键后台升级
      */
     private void clickBtn1(){
-        new AppUpdater(getContext(),mUrl).start();
+        mAppUpdater = new AppUpdater(getContext(),mUrl);
+        mAppUpdater.start();
     }
 
     /**
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         UpdateConfig config = new UpdateConfig();
         config.setUrl(mUrl);
         config.addHeader("token","xxxxxx");
-        new AppUpdater(getContext(),config)
+        mAppUpdater = new AppUpdater(getContext(),config)
                 .setUpdateCallback(new UpdateCallback() {
 
                     @Override
@@ -112,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onCancel() {
                         progressBar.setVisibility(View.INVISIBLE);
                     }
-                })
-                .start();
+                });
+        mAppUpdater.start();
     }
 
     /**
@@ -126,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("升级", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        new AppUpdater.Builder()
+                        mAppUpdater = new AppUpdater.Builder()
                                 .serUrl(mUrl)
                                 .build(getContext())
                                 .setUpdateCallback(new AppUpdateCallback() {
@@ -139,8 +142,8 @@ public class MainActivity extends AppCompatActivity {
                                     public void onFinish(File file) {
                                         showToast("下载完成");
                                     }
-                                })
-                                .start();
+                                });
+                        mAppUpdater.start();
                     }
                 }).show();
     }
@@ -156,7 +159,8 @@ public class MainActivity extends AppCompatActivity {
                 .setOnClickOk(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new AppUpdater(getContext(),mUrl).start();
+                        mAppUpdater = new AppUpdater(getContext(),mUrl);
+                        mAppUpdater.start();
                         AppDialog.INSTANCE.dismissDialog();
                     }
                 });
@@ -176,10 +180,10 @@ public class MainActivity extends AppCompatActivity {
                 .setOnClickOk(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new AppUpdater.Builder()
+                        mAppUpdater = new AppUpdater.Builder()
                                 .serUrl(mUrl)
-                                .build(getContext())
-                                .start();
+                                .build(getContext());
+                        mAppUpdater.start();
                         AppDialog.INSTANCE.dismissDialog();
                     }
                 });
@@ -208,14 +212,14 @@ public class MainActivity extends AppCompatActivity {
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AppUpdater.Builder()
+                mAppUpdater = new AppUpdater.Builder()
                         .serUrl(mUrl)
                         .setPath(Environment.getExternalStorageDirectory() + "/.AppUpdater")
                         .setVersionCode(BuildConfig.VERSION_CODE)//设置versionCode之后，新版本相同的apk只下载一次,优先取本地缓存。
                         .setFilename("AppUpdater1.apk")
                         .setVibrate(true)
-                        .build(getContext())
-                        .start();
+                        .build(getContext());
+                mAppUpdater.start();
                 AppDialog.INSTANCE.dismissDialog();
             }
         });
@@ -234,16 +238,23 @@ public class MainActivity extends AppCompatActivity {
                 .setOnClickOk(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new AppUpdater.Builder()
+                        mAppUpdater = new AppUpdater.Builder()
                                 .serUrl(mUrl)
                                 .setVibrate(true)
                                 .setSound(true)
-                                .build(getContext())
-                                .start();
+                                .build(getContext());
+                        mAppUpdater.start();
                         AppDialog.INSTANCE.dismissDialogFragment(getSupportFragmentManager());
                     }
                 });
         AppDialog.INSTANCE.showDialogFragment(getSupportFragmentManager(),config);
+
+    }
+
+    private void clickCancel(){
+        if(mAppUpdater != null){
+            mAppUpdater.stop();
+        }
 
     }
 
@@ -269,6 +280,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.btn7:
                 clickBtn7();
+                break;
+            case R.id.btnCancel:
+                clickCancel();
                 break;
         }
     }

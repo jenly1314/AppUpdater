@@ -87,6 +87,11 @@ public class UpdateConfig implements Parcelable {
      */
     private Map<String,String> mRequestProperty;
 
+    /**
+     * 是否删除取消下载的文件
+     */
+    private boolean isDeleteCancelFile = true;
+
 
     public UpdateConfig() {
 
@@ -233,6 +238,15 @@ public class UpdateConfig implements Parcelable {
     }
 
 
+    public boolean isDeleteCancelFile() {
+        return isDeleteCancelFile;
+    }
+
+    public void setDeleteCancelFile(boolean deleteCancelFile) {
+        isDeleteCancelFile = deleteCancelFile;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -255,14 +269,14 @@ public class UpdateConfig implements Parcelable {
         dest.writeByte(this.isVibrate ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isSound ? (byte) 1 : (byte) 0);
         dest.writeValue(this.versionCode);
-        dest.writeInt(mRequestProperty!=null ? this.mRequestProperty.size():0);
+        dest.writeInt(mRequestProperty!=null ? this.mRequestProperty.size() : 0);
         if(mRequestProperty!=null){
             for (Map.Entry<String, String> entry : this.mRequestProperty.entrySet()) {
                 dest.writeString(entry.getKey());
                 dest.writeString(entry.getValue());
             }
         }
-
+        dest.writeByte(this.isDeleteCancelFile ? (byte) 1 : (byte) 0);
     }
 
     protected UpdateConfig(Parcel in) {
@@ -288,6 +302,7 @@ public class UpdateConfig implements Parcelable {
             String value = in.readString();
             this.mRequestProperty.put(key, value);
         }
+        this.isDeleteCancelFile = in.readByte() != 0;
     }
 
     public static final Creator<UpdateConfig> CREATOR = new Creator<UpdateConfig>() {
