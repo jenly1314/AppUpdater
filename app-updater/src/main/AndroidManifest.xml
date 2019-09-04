@@ -11,10 +11,10 @@
 
     <application>
 
-        <service android:name=".service.DownloadService"/>
+        <service android:name="com.king.app.updater.service.DownloadService"/>
 
         <provider
-            android:name=".provider.AppUpdaterFileProvider"
+            android:name="com.king.app.updater.provider.AppUpdaterFileProvider"
             android:authorities="${applicationId}.fileProvider"
             android:exported="false"
             android:grantUriPermissions="true">

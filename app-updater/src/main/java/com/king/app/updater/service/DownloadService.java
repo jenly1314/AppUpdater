@@ -55,6 +55,10 @@ public class DownloadService extends Service {
      */
     private int mCount = 0;
 
+    private IHttpManager mHttpManager;
+
+    private File mFile;
+
     private Context getContext(){
         return this;
     }
@@ -63,20 +67,19 @@ public class DownloadService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         if(intent != null){
-            if(!isDownloading){
-                boolean isStop = intent.getBooleanExtra(Constants.KEY_STOP_DOWNLOAD_SERVICE,false);
-                if(isStop){
-                    stopService();
-                }else{
-                    //是否实通过通知栏触发重复下载
-                    boolean isReDownload = intent.getBooleanExtra(Constants.KEY_RE_DOWNLOAD,false);
-                    if(isReDownload){
-                        mCount++;
-                    }
-                    //获取配置信息
-                    UpdateConfig config =  intent.getParcelableExtra(Constants.KEY_UPDATE_CONFIG);
-                    startDownload(config,null,null);
+
+            boolean isStop = intent.getBooleanExtra(Constants.KEY_STOP_DOWNLOAD_SERVICE,false);
+            if(isStop){
+                stopDownload();
+            } else if(!isDownloading){
+                //是否实通过通知栏触发重复下载
+                boolean isReDownload = intent.getBooleanExtra(Constants.KEY_RE_DOWNLOAD,false);
+                if(isReDownload){
+                    mCount++;
                 }
+                //获取配置信息
+                UpdateConfig config =  intent.getParcelableExtra(Constants.KEY_UPDATE_CONFIG);
+                startDownload(config,null,null);
             }else{
                 Log.w(Constants.TAG,"Please do not repeat the download.");
             }
@@ -128,23 +131,23 @@ public class DownloadService extends Service {
             filename = AppUtils.INSTANCE.getAppFullName(getContext(),url,getResources().getString(R.string.app_name));
         }
 
-        File file = new File(path,filename);
-        if(file.exists()){//文件是否存在
+        mFile = new File(path,filename);
+        if(mFile.exists()){//文件是否存在
             Integer versionCode = config.getVersionCode();
             if(versionCode!=null){
                 try{
-                    if(AppUtils.INSTANCE.apkExists(getContext(),versionCode,file)){
+                    if(AppUtils.INSTANCE.apkExists(getContext(),versionCode,mFile)){
                         //本地已经存在要下载的APK
-                        Log.d(Constants.TAG,"CacheFile:" + file);
+                        Log.d(Constants.TAG,"CacheFile:" + mFile);
                         if(config.isInstallApk()){
                             String authority = config.getAuthority();
                             if(TextUtils.isEmpty(authority)){//如果为空则默认
                                 authority = getContext().getPackageName() + ".fileProvider";
                             }
-                            AppUtils.INSTANCE.installApk(getContext(),file,authority);
+                            AppUtils.INSTANCE.installApk(getContext(),mFile,authority);
                         }
                         if(callback!=null){
-                            callback.onFinish(file);
+                            callback.onFinish(mFile);
                         }
                         stopService();
                         return;
@@ -154,15 +157,26 @@ public class DownloadService extends Service {
                 }
             }
             //删除旧文件
-            file.delete();
+            mFile.delete();
         }
-        Log.d(Constants.TAG,"File:" + file);
-        if(httpManager != null){
-            httpManager.download(url,path,filename,config.getRequestProperty(),new AppDownloadCallback(config,callback));
-        }else{
-            HttpManager.getInstance().download(url,path,filename,config.getRequestProperty(),new AppDownloadCallback(config,callback));
-        }
+        Log.d(Constants.TAG,"File:" + mFile);
 
+        if(httpManager != null){
+            mHttpManager = httpManager;
+        }else{
+            mHttpManager = HttpManager.getInstance();
+        }
+        mHttpManager.download(url,path,filename,config.getRequestProperty(),new AppDownloadCallback(config,callback));
+
+    }
+
+    /**
+     * 停止下载
+     */
+    public void stopDownload(){
+        if(mHttpManager!=null){
+            mHttpManager.cancel();
+        }
     }
 
     /**
@@ -327,6 +341,9 @@ public class DownloadService extends Service {
             if(callback!=null){
                 callback.onCancel();
             }
+            if(mFile!=null){
+                mFile.delete();
+            }
             stopService();
         }
     }
@@ -334,6 +351,7 @@ public class DownloadService extends Service {
     @Override
     public void onDestroy() {
         isDownloading = false;
+        mHttpManager = null;
         super.onDestroy();
     }
 

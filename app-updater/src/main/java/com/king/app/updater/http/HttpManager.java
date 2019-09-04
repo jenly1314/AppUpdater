@@ -28,6 +28,8 @@ public class HttpManager implements IHttpManager {
 
     private int mTimeout;
 
+    private boolean isCancel;
+
     private static HttpManager INSTANCE;
 
     public static HttpManager getInstance(){
@@ -50,9 +52,14 @@ public class HttpManager implements IHttpManager {
 
     @Override
     public void download(String url, String path, String filename, @Nullable Map<String,String> requestProperty, DownloadCallback callback) {
+        isCancel = false;
         new DownloadTask(url,path,filename,requestProperty,callback).execute();
     }
 
+    @Override
+    public void cancel() {
+        isCancel = true;
+    }
 
     /**
      * 异步下载任务
@@ -119,6 +126,10 @@ public class HttpManager implements IHttpManager {
                     File file = new File(path,filename);
                     FileOutputStream fos = new FileOutputStream(file);
                     while ((len = is.read(buffer)) != -1){
+                        if(isCancel){
+                            cancel(true);
+                            break;
+                        }
                         fos.write(buffer,0,len);
                         progress += len;
                         //更新进度
@@ -169,7 +180,10 @@ public class HttpManager implements IHttpManager {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             if(callback!=null){
-                callback.onProgress(values[0],values[1]);
+                if(!isCancelled()){
+                    callback.onProgress(values[0],values[1]);
+                }
+
             }
         }
 

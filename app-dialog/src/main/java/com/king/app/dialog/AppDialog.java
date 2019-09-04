@@ -87,6 +87,7 @@ public enum AppDialog {
 
     public void dismissDialogFragment(FragmentManager fragmentManager){
         dismissDialogFragment(fragmentManager,mTag);
+        mTag = null;
     }
 
     public void dismissDialogFragment(FragmentManager fragmentManager,String tag){
