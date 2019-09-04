@@ -102,7 +102,7 @@ public enum AppUtils {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
-        Uri uriData = null;
+        Uri uriData;
         String type = "application/vnd.android.package-archive";
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

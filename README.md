@@ -40,7 +40,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-updater</artifactId>
-      <version>1.0.4</version>
+      <version>1.0.5</version>
       <type>pom</type>
     </dependency>
     
@@ -48,7 +48,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-dialog</artifactId>
-      <version>1.0.4</version>
+      <version>1.0.5</version>
       <type>pom</type>
     </dependency>
 ```
@@ -57,25 +57,25 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
     //----------AndroidX 版本
     //app-updater
-    implementation 'com.king.app:app-updater:1.0.4-androidx'
+    implementation 'com.king.app:app-updater:1.0.5-androidx'
     //app-dialog
-    implementation 'com.king.app:app-dialog:1.0.4-androidx'
+    implementation 'com.king.app:app-dialog:1.0.5-androidx'
     
     //----------Android 版本
     //app-updater
-    implementation 'com.king.app:app-updater:1.0.4'
+    implementation 'com.king.app:app-updater:1.0.5'
     //app-dialog
-    implementation 'com.king.app:app-dialog:1.0.4'
+    implementation 'com.king.app:app-dialog:1.0.5'
 ```
 ### Lvy:
 ```lvy
     //app-updater
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.4'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.5'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
     
     //app-dialog
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.4'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.5'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
 ```
@@ -140,6 +140,9 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
 ## 版本记录
 
+#### v1.0.5：2019-9-4
+*  支持取消下载
+
 #### v1.0.4：2019-6-4      [支持AndroidX版本](https://github.com/jenly1314/AppUpdater/tree/androidx)
 *  支持添加请求头
 
@@ -173,6 +176,8 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
    Email: <a title="欢迎邮件与我交流" href="mailto:jenly1314@gmail.com" target="_blank">jenly1314#gmail.com</a> / <a title="给我发邮件" href="mailto:jenly1314@vip.qq.com" target="_blank">jenly1314#vip.qq.com</a>
 
    CSDN: <a title="CSDN博客" href="http://blog.csdn.net/jenly121" target="_blank">jenly121</a>
+
+   博客园: <a title="博客园" href="https://www.cnblogs.com/jenly" target="_blank">jenly</a>
 
    Github: <a title="Github开源项目" href="https://github.com/jenly1314" target="_blank">jenly1314</a>
 

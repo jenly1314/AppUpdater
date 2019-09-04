@@ -112,7 +112,7 @@ public class AppUpdater {
     }
 
     /**
-     * 停止
+     * 取消下载
      */
     public void stop(){
         stopDownloadService();

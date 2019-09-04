@@ -141,10 +141,6 @@ public class HttpManager implements IHttpManager {
 
                     connect.disconnect();
 
-                    if(isCancelled()){
-                        return null;
-                    }
-
                     return file;
                 }else {//连接失败
                     throw new ConnectException(String.format("responseCode = %d",responseCode));

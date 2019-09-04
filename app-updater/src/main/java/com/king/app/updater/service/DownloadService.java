@@ -350,6 +350,7 @@ public class DownloadService extends Service {
     @Override
     public void onDestroy() {
         isDownloading = false;
+        mHttpManager = null;
         super.onDestroy();
     }
 
