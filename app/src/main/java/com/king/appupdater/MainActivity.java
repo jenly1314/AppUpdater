@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void OnClick(View v){
+    public void onClick(View v){
         switch (v.getId()){
             case R.id.btn1:
                 clickBtn1();
