@@ -3,7 +3,7 @@
 ![Image](app/src/main/ic_launcher-web.png)
 
 [![Download](https://img.shields.io/badge/download-App-blue.svg)](https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk)
-[![Jitpack](https://jitpack.io/v/jenly1314/AppUpdater.svg)](https://jitpack.io/#jenly1314/AppUpdater)
+[![JitPack](https://jitpack.io/v/jenly1314/AppUpdater.svg)](https://jitpack.io/#jenly1314/AppUpdater)
 [![CI](https://travis-ci.org/jenly1314/AppUpdater.svg?branch=master)](https://travis-ci.org/jenly1314/AppUpdater)
 [![CircleCI](https://circleci.com/gh/jenly1314/AppUpdater.svg?style=svg)](https://circleci.com/gh/jenly1314/AppUpdater)
 [![API](https://img.shields.io/badge/API-15%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=15)
@@ -25,7 +25,8 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 - [x] 支持下载失败，重新下载
 - [x] 支持下载优先取本地缓存
 - [x] 支持通知栏提示内容和过程全部可配置
-- [x] 支持Android O
+- [x] 支持Android Q(10)
+- [x] 支持使用OkHttpClient下载
 
 ### [AndroidX version](https://github.com/jenly1314/AppUpdater/tree/androidx)
 
@@ -40,7 +41,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-updater</artifactId>
-      <version>1.0.5</version>
+      <version>1.0.6</version>
       <type>pom</type>
     </dependency>
     
@@ -48,7 +49,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-dialog</artifactId>
-      <version>1.0.5</version>
+      <version>1.0.6</version>
       <type>pom</type>
     </dependency>
 ```
@@ -57,25 +58,25 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
     //----------AndroidX 版本
     //app-updater
-    implementation 'com.king.app:app-updater:1.0.5-androidx'
+    implementation 'com.king.app:app-updater:1.0.6-androidx'
     //app-dialog
-    implementation 'com.king.app:app-dialog:1.0.5-androidx'
+    implementation 'com.king.app:app-dialog:1.0.6-androidx'
     
-    //----------Android 版本
+    //----------Android Support 版本
     //app-updater
-    implementation 'com.king.app:app-updater:1.0.5'
+    implementation 'com.king.app:app-updater:1.0.6'
     //app-dialog
-    implementation 'com.king.app:app-dialog:1.0.5'
+    implementation 'com.king.app:app-dialog:1.0.6'
 ```
 ### Lvy:
 ```lvy
     //app-updater
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.5'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.6'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
     
     //app-dialog
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.5'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.6'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
 ```
@@ -128,6 +129,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
                             .serUrl(mUrl)
                             .setFilename("AppUpdater.apk")
                             .build(getContext())
+                            .setHttpManager(OkHttpManager.getInstance())//使用OkHttpClient实现下载，需依赖okhttp库
                             .start();
                     AppDialog.INSTANCE.dismissDialogFragment(getSupportFragmentManager());
                 }
@@ -139,6 +141,10 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 更多使用详情，请查看[app](app)中的源码使用示例或直接查看[API帮助文档](https://jenly1314.github.io/projects/AppUpdater/doc/)
 
 ## 版本记录
+
+#### v1.0.6：2019-11-27
+*  新增OkHttpManager        如果使用了OkHttpManager则必须依赖[okhttp](https://github.com/square/okhttp)
+*  优化细节 (progress,total 变更 int -> long)
 
 #### v1.0.5：2019-9-4
 *  支持取消下载

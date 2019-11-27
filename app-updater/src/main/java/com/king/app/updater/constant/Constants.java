@@ -1,9 +1,5 @@
 package com.king.app.updater.constant;
 
-import android.os.Environment;
-
-import java.io.File;
-
 /**
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
@@ -23,9 +19,12 @@ public final class Constants {
 
     public static final String KEY_RE_DOWNLOAD = "app_update_re_download";
 
-    public static final String DEFAULT_DIR_PATH = Environment.getExternalStorageDirectory() + File.separator + ".AppUpdater";
-
     public static final int RE_CODE_STORAGE_PERMISSION = 0x66;
 
     public static final int NONE = -1;
+
+    public static final String DEFAULT_FILE_PROVIDER = ".fileProvider";
+
+    public static final String DEFAULT_DIR = "apk";
+
 }

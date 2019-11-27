@@ -24,7 +24,7 @@ public interface UpdateCallback {
      * @param total
      * @param isChange 进度百分比是否有改变，（主要可以用来过滤无用的刷新，从而降低刷新频率）
      */
-    void onProgress(int progress,int total,boolean isChange);
+    void onProgress(long progress,long total,boolean isChange);
 
     /**
      * 完成

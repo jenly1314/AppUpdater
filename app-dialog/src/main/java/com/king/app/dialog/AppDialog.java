@@ -234,8 +234,9 @@ public enum AppDialog {
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if(keyCode == KeyEvent.KEYCODE_BACK && isCancel){
                     dismissDialog();
+                    return true;
                 }
-                return true;
+                return false;
 
             }
         });

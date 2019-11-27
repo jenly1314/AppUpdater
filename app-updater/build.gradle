@@ -36,5 +36,6 @@ dependencies {
     androidTestImplementation deps.test.espresso
     //support
     compileOnly deps.support.appcompat
+    compileOnly deps.okhttp
 
 }

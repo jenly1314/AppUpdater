@@ -1,42 +1,47 @@
 package com.king.app.updater.http;
 
 import android.os.AsyncTask;
-import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.king.app.updater.constant.Constants;
 import com.king.app.updater.util.SSLSocketFactoryUtils;
 
+import org.apache.http.conn.ssl.SSLSocketFactory;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.ConnectException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.HttpsURLConnection;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
- * HttpManager使用{@link HttpURLConnection}实现{@link IHttpManager}
- * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * OkHttpManager使用{@link OkHttpClient}实现{@link IHttpManager}
+ * 使用OkHttpManager时必须依赖OkHttp库
+ * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
-public class HttpManager implements IHttpManager {
+public class OkHttpManager implements IHttpManager {
 
     private static final int DEFAULT_TIME_OUT = 20000;
 
-    private int mTimeout;
+    private OkHttpClient okHttpClient;
 
     private boolean isCancel;
 
-    private static volatile HttpManager INSTANCE;
+    private static volatile OkHttpManager INSTANCE;
 
-    public static HttpManager getInstance(){
+    public static OkHttpManager getInstance(){
         if(INSTANCE == null){
             synchronized (HttpManager.class){
                 if(INSTANCE == null){
-                    INSTANCE = new HttpManager();
+                    INSTANCE = new OkHttpManager();
                 }
             }
         }
@@ -44,27 +49,43 @@ public class HttpManager implements IHttpManager {
         return INSTANCE;
     }
 
-    private HttpManager(){
+    private OkHttpManager(){
         this(DEFAULT_TIME_OUT);
     }
 
     /**
      * HttpManager对外暴露。如果没有特殊需求，推荐使用{@link HttpManager#getInstance()}
+     * @param timeout 超时时间，单位：毫秒
      */
-    public HttpManager(int timeout){
-        this.mTimeout = timeout;
+    public OkHttpManager(int timeout){
+        this(new OkHttpClient.Builder()
+                .readTimeout(timeout, TimeUnit.MILLISECONDS)
+                .connectTimeout(timeout, TimeUnit.MILLISECONDS)
+                .sslSocketFactory(SSLSocketFactoryUtils.createSSLSocketFactory(),SSLSocketFactoryUtils.createTrustAllManager())
+                .hostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
+                .build());
     }
 
+    /**
+     * HttpManager对外暴露，推荐使用{@link HttpManager#getInstance()}
+     * @param okHttpClient {@link OkHttpClient}
+     */
+    public OkHttpManager(@NonNull OkHttpClient okHttpClient){
+        this.okHttpClient = okHttpClient;
+    }
+
+
     @Override
-    public void download(String url, String path, String filename, @Nullable Map<String,String> requestProperty, DownloadCallback callback) {
+    public void download(String url,final String path,final String filename, @Nullable Map<String, String> requestProperty,final DownloadCallback callback) {
         isCancel = false;
-        new DownloadTask(url,path,filename,requestProperty,callback).execute();
+        new DownloadTask(okHttpClient,url,path,filename,requestProperty,callback).execute();
     }
 
     @Override
     public void cancel() {
         isCancel = true;
     }
+
 
     /**
      * 异步下载任务
@@ -82,7 +103,10 @@ public class HttpManager implements IHttpManager {
 
         private Exception exception;
 
-        public DownloadTask(String url, String path, String filename ,@Nullable Map<String,String> requestProperty, DownloadCallback callback){
+        private OkHttpClient okHttpClient;
+
+        public DownloadTask(OkHttpClient okHttpClient,String url, String path, String filename ,@Nullable Map<String,String> requestProperty, DownloadCallback callback){
+            this.okHttpClient = okHttpClient;
             this.url = url;
             this.path = path;
             this.filename = filename;
@@ -94,34 +118,25 @@ public class HttpManager implements IHttpManager {
         @Override
         protected File doInBackground(Void... voids) {
 
-            try {
-                HttpsURLConnection.setDefaultSSLSocketFactory(SSLSocketFactoryUtils.createSSLSocketFactory());
-                HttpsURLConnection.setDefaultHostnameVerifier(SSLSocketFactoryUtils.createTrustAllHostnameVerifier());
-                HttpURLConnection connect = (HttpURLConnection)new URL(url).openConnection();
-                connect.setRequestMethod("GET");
-                connect.setRequestProperty("Accept-Encoding", "identity");
-
-                connect.setReadTimeout(mTimeout);
-                connect.setConnectTimeout(mTimeout);
+            try{
+                Request.Builder builder = new Request.Builder()
+                        .url(url)
+                        .addHeader("Accept-Encoding", "identity")
+                        .get();
 
                 if(requestProperty!=null){
                     for(Map.Entry<String,String> entry : requestProperty.entrySet()){
-                        connect.setRequestProperty(entry.getKey(),entry.getValue());
+                        builder.addHeader(entry.getKey(),entry.getValue());
                     }
                 }
 
-                connect.connect();
-                int responseCode = connect.getResponseCode();
-                Log.d(Constants.TAG,"Content-Type:" + connect.getContentType());
-                if(responseCode == HttpURLConnection.HTTP_OK){
+                Call call = okHttpClient.newCall(builder.build());
+                Response response = call.execute();
 
-                    InputStream is = connect.getInputStream();
+                if(response.isSuccessful()){
+                    InputStream is = response.body().byteStream();
 
-                    long length = connect.getContentLength();
-
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        length = connect.getContentLengthLong();
-                    }
+                    long length = response.body().contentLength();
 
                     Log.d(Constants.TAG,"contentLength:" + length);
 
@@ -134,6 +149,9 @@ public class HttpManager implements IHttpManager {
                     FileOutputStream fos = new FileOutputStream(file);
                     while ((len = is.read(buffer)) != -1){
                         if(isCancel){
+                            if(call != null){
+                                call.cancel();
+                            }
                             cancel(true);
                             break;
                         }
@@ -149,14 +167,15 @@ public class HttpManager implements IHttpManager {
                     fos.close();
                     is.close();
 
-                    connect.disconnect();
+                    response.close();
 
                     return file;
+
                 }else {//连接失败
-                    throw new ConnectException(String.format("responseCode = %d",responseCode));
+                    throw new ConnectException(String.format("responseCode = %d",response.code()));
                 }
 
-            } catch (Exception e) {
+            }catch (Exception e){
                 this.exception = e;
                 e.printStackTrace();
             }
@@ -196,7 +215,6 @@ public class HttpManager implements IHttpManager {
             }
         }
 
-
         @Override
         protected void onCancelled() {
             super.onCancelled();
@@ -205,7 +223,5 @@ public class HttpManager implements IHttpManager {
             }
         }
 
-
     }
-
 }

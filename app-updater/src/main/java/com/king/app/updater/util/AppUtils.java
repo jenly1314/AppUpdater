@@ -1,30 +1,36 @@
 package com.king.app.updater.util;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
-public enum AppUtils {
+public final class AppUtils {
 
-    INSTANCE;
+    private AppUtils(){
+        throw new AssertionError();
+    }
 
     /**
      * 通过url获取App的全名称
      * @param context
      * @return AppName.apk
      */
-    public String getAppFullName(Context context,String url,String defaultName){
+    public static String getAppFullName(Context context,String url,String defaultName){
         if(url.endsWith(".apk")){
             return url.substring(url.lastIndexOf("/") + 1);
         }
@@ -44,7 +50,7 @@ public enum AppUtils {
      * @return
      * @throws PackageManager.NameNotFoundException
      */
-    public PackageInfo getPackageInfo(Context context) throws PackageManager.NameNotFoundException {
+    public static PackageInfo getPackageInfo(Context context) throws PackageManager.NameNotFoundException {
         PackageManager packageManager = context.getPackageManager();
         PackageInfo packageInfo = packageManager.getPackageInfo( context.getPackageName(), 0);
         return packageInfo;
@@ -66,7 +72,7 @@ public enum AppUtils {
     /**
      * 获取App的名称
      */
-    public String getAppName(Context context) {
+    public static String getAppName(Context context) {
         try{
 
             int labelRes = getPackageInfo(context).applicationInfo.labelRes;
@@ -82,7 +88,7 @@ public enum AppUtils {
      * @param context
      * @return
      */
-    public int getAppIcon(Context context){
+    public static int getAppIcon(Context context){
         try{
             return getPackageInfo(context).applicationInfo.icon;
         } catch (Exception e) {
@@ -97,7 +103,19 @@ public enum AppUtils {
      * @param context
      * @param file
      */
-    public void installApk(Context context,File file,String authority){
+    public static void installApk(Context context,File file,String authority){
+        Intent intent = getInstallIntent(context,file,authority);
+        context.startActivity(intent);
+    }
+
+    /**
+     * 获取安装Intent
+     * @param context
+     * @param file
+     * @param authority
+     * @return
+     */
+    public static Intent getInstallIntent(Context context,File file,String authority){
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -111,7 +129,7 @@ public enum AppUtils {
             uriData = Uri.fromFile(file);
         }
         intent.setDataAndType(uriData, type);
-        context.startActivity(intent);
+        return intent;
     }
 
     /**
@@ -122,7 +140,7 @@ public enum AppUtils {
      * @return
      * @throws Exception
      */
-    public boolean apkExists(Context context,int versionCode,File file) throws Exception{
+    public static boolean apkExists(Context context,int versionCode,File file) throws Exception{
         if(file!=null && file.exists()){
             String packageName = context.getPackageName();
             PackageInfo packageInfo = AppUtils.getPackageInfo(context,file.getAbsolutePath());
@@ -135,4 +153,55 @@ public enum AppUtils {
         }
         return false;
     }
+
+    /**
+     * 判断文件是否存在
+     * @param context
+     * @param path
+     * @return
+     */
+    public static boolean isAndroidQFileExists(Context context,String path){
+        return isAndroidQFileExists(context,new File(path));
+    }
+
+    /**
+     * 判断文件是否存在
+     * @param context
+     * @param file
+     * @return
+     */
+    public static boolean isAndroidQFileExists(Context context,File file){
+        AssetFileDescriptor descriptor = null;
+        ContentResolver contentResolver = context.getContentResolver();
+        try {
+            Uri uri = Uri.fromFile(file);
+            descriptor = contentResolver.openAssetFileDescriptor(uri, "r");
+            if (descriptor == null) {
+                return false;
+            } else {
+                close(descriptor);
+            }
+            return true;
+        } catch (FileNotFoundException e) {
+
+        }finally {
+            close(descriptor);
+        }
+        return false;
+    }
+
+    /**
+     * 关闭
+     * @param descriptor
+     */
+    private static void close(AssetFileDescriptor descriptor){
+        if(descriptor != null){
+            try {
+                descriptor.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
