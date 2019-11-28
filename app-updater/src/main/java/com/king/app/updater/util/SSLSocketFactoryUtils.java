@@ -25,10 +25,10 @@ import androidx.annotation.RawRes;
 /**
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
-public class SSLSocketFactoryUtils {
+public final class SSLSocketFactoryUtils {
 
     private SSLSocketFactoryUtils(){
-
+        throw new AssertionError();
     }
 
     public static SSLSocketFactory createSSLSocketFactory() {

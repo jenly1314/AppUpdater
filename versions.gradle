@@ -1,7 +1,7 @@
 //App
 def app_version = [:]
-app_version.versionCode = 8 //androidx 8
-app_version.versionName = "1.0.5-androidx"
+app_version.versionCode = 10 //androidx 10
+app_version.versionName = "1.0.6-androidx"
 ext.app_version = app_version
 
 //build version
@@ -23,6 +23,9 @@ versions.junit = "1.1.0"
 versions.test = "1.2.0"
 versions.runner = "1.2.0"
 versions.espresso = "3.2.0"
+
+versions.okhttp = "4.2.2"
+
 ext.versions = versions
 
 ext.deps = [:]
@@ -41,6 +44,8 @@ test.runner = "androidx.test:runner:$versions.runner"
 test.espresso = "androidx.test.espresso:espresso-core:$versions.espresso"
 deps.test = test
 
+//okHttp
+deps.okhttp = "com.squareup.okhttp3:okhttp:$versions.okhttp"
 
 ext.deps = deps
 

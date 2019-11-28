@@ -3,7 +3,6 @@ package com.king.appupdater;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +17,7 @@ import com.king.app.updater.UpdateConfig;
 import com.king.app.updater.callback.AppUpdateCallback;
 import com.king.app.updater.callback.UpdateCallback;
 import com.king.app.updater.constant.Constants;
+import com.king.app.updater.http.OkHttpManager;
 import com.king.app.updater.util.PermissionUtils;
 
 import java.io.File;
@@ -25,6 +25,9 @@ import java.io.File;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ */
 public class MainActivity extends AppCompatActivity {
 
     private final Object mLock = new Object();
@@ -43,8 +46,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
+        progressBar.setMax(100);
 
-        PermissionUtils.INSTANCE.verifyReadAndWritePermissions(this,Constants.RE_CODE_STORAGE_PERMISSION);
+        PermissionUtils.verifyReadAndWritePermissions(this,Constants.RE_CODE_STORAGE_PERMISSION);
     }
 
     public Context getContext(){
@@ -79,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         config.setUrl(mUrl);
         config.addHeader("token","xxxxxx");
         mAppUpdater = new AppUpdater(getContext(),config)
+                .setHttpManager(OkHttpManager.getInstance())
                 .setUpdateCallback(new UpdateCallback() {
 
                     @Override
@@ -95,10 +100,10 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onProgress(int progress, int total, boolean isChange) {
+                    public void onProgress(long progress, long total, boolean isChange) {
                         if(isChange){
-                            progressBar.setMax(total);
-                            progressBar.setProgress(progress);
+                            int currProgress = Math.round(progress * 1.0f / total * 100.0f);
+                            progressBar.setProgress(currProgress);
                         }
                     }
 
@@ -135,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                                 .build(getContext())
                                 .setUpdateCallback(new AppUpdateCallback() {
                                     @Override
-                                    public void onProgress(int progress, int total, boolean isChange) {
+                                    public void onProgress(long progress, long total, boolean isChange) {
 
                                     }
 
@@ -215,12 +220,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mAppUpdater = new AppUpdater.Builder()
                         .serUrl(mUrl)
-                        .setPath(Environment.getExternalStorageDirectory() + "/.AppUpdater")
+//                        .setPath(Environment.getExternalStorageDirectory() + "/.AppUpdater")//如果适配Android Q，则Environment.getExternalStorageDirectory()将废弃
+                        .setPath(getExternalFilesDir(Constants.DEFAULT_DIR).getAbsolutePath())//自定义路径
                         .setVersionCode(BuildConfig.VERSION_CODE)//设置versionCode之后，新版本相同的apk只下载一次,优先取本地缓存。
-                        .setFilename("AppUpdater1.apk")
+                        .setFilename("AppUpdater.apk")
                         .setVibrate(true)
                         .build(getContext());
-                mAppUpdater.start();
+                mAppUpdater.setHttpManager(OkHttpManager.getInstance()).start();
                 AppDialog.INSTANCE.dismissDialog();
             }
         });
@@ -244,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
                                 .setVibrate(true)
                                 .setSound(true)
                                 .build(getContext());
-                        mAppUpdater.start();
+                        mAppUpdater.setHttpManager(OkHttpManager.getInstance()).start();
                         AppDialog.INSTANCE.dismissDialogFragment(getSupportFragmentManager());
                     }
                 });

@@ -11,7 +11,9 @@ import android.util.Log;
 
 import com.king.app.updater.callback.UpdateCallback;
 import com.king.app.updater.constant.Constants;
+import com.king.app.updater.http.HttpManager;
 import com.king.app.updater.http.IHttpManager;
+import com.king.app.updater.http.OkHttpManager;
 import com.king.app.updater.service.DownloadService;
 import com.king.app.updater.util.PermissionUtils;
 
@@ -44,7 +46,7 @@ public class AppUpdater {
 
     private ServiceConnection mServiceConnection;
 
-    public AppUpdater(@NonNull Context context, @NonNull UpdateConfig config){
+    public AppUpdater(@NonNull Context context,@NonNull UpdateConfig config){
         this.mContext = context;
         this.mConfig = config;
     }
@@ -55,11 +57,24 @@ public class AppUpdater {
         mConfig.setUrl(url);
     }
 
+    /**
+     * 设置下载更新进度回调
+     * @param callback
+     * @return
+     */
     public AppUpdater setUpdateCallback(UpdateCallback callback){
         this.mCallback = callback;
         return this;
     }
 
+    /**
+     * 设置一个IHttpManager
+     * @param httpManager AppUpdater内置提供{@link HttpManager} 和 {@link OkHttpManager}两种实现。
+     *                    如果不设置，将默认使用{@link HttpManager},你也可以使用{@link OkHttpManager}或自己去实现一个
+     *                    {@link IHttpManager}。
+     *                    当使用{@link OkHttpManager}时，必需依赖okhttp库
+     * @return
+     */
     public AppUpdater setHttpManager(IHttpManager httpManager){
         this.mHttpManager = httpManager;
         return this;
@@ -72,10 +87,10 @@ public class AppUpdater {
         if(mConfig!=null && !TextUtils.isEmpty(mConfig.getUrl())){
             //如果mContext是Activity,则默认会校验一次动态权限。
             if(mContext instanceof Activity){
-                PermissionUtils.INSTANCE.verifyReadAndWritePermissions((Activity) mContext,Constants.RE_CODE_STORAGE_PERMISSION);
+                PermissionUtils.verifyReadAndWritePermissions((Activity) mContext,Constants.RE_CODE_STORAGE_PERMISSION);
             }
 
-            if(mConfig.isShowNotification() && !PermissionUtils.INSTANCE.isNotificationEnabled(mContext)){
+            if(mConfig.isShowNotification() && !PermissionUtils.isNotificationEnabled(mContext)){
                 Log.w(Constants.TAG,"Notification permission not enabled.");
             }
 
@@ -129,7 +144,7 @@ public class AppUpdater {
     }
 
     /**
-     * AppUpdater构建器
+     * AppUpdater建造者
      */
     public static class Builder{
 
@@ -151,7 +166,7 @@ public class AppUpdater {
 
         /**
          * 设置保存的路径
-         * @param path  下载保存的文件路径 （默认SD卡/.AppUpdater目录）
+         * @param path  下载保存的文件路径
          * @return
          */
         public Builder setPath(String path){
@@ -252,7 +267,7 @@ public class AppUpdater {
 
         /**
          * 设置FileProvider的authority
-         * @param authority FileProvider的authority（默认兼容N，默认值context.getPackageName() + ".fileProvider"）
+         * @param authority FileProvider的authority（默认兼容N，默认值{@link Context#getPackageName() + ".fileProvider"}）
          * @return
          */
         public Builder setAuthority(String authority){

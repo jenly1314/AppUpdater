@@ -39,7 +39,7 @@ public enum AppDialog {
      * @param config 弹框配置 {@link AppDialogConfig}
      * @return
      */
-    public View createAppDialogView(@NonNull Context context, @NonNull AppDialogConfig config){
+    public View createAppDialogView(@NonNull Context context,@NonNull AppDialogConfig config){
         View view = config.getView(context);
         TextView tvDialogTitle = view.findViewById(config.getTitleId());
         setText(tvDialogTitle,config.getTitle());
@@ -235,8 +235,9 @@ public enum AppDialog {
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if(keyCode == KeyEvent.KEYCODE_BACK && isCancel){
                     dismissDialog();
+                    return true;
                 }
-                return true;
+                return false;
 
             }
         });

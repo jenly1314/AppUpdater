@@ -1,7 +1,6 @@
 package com.king.app.updater.util;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AppOpsManager;
 import android.app.NotificationManager;
@@ -19,14 +18,16 @@ import androidx.core.app.ActivityCompat;
 /**
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
-public enum PermissionUtils {
+public final class PermissionUtils {
 
-    INSTANCE;
-
-    private String[] PERMISSIONS_STORAGE = {
+    private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_PHONE_STATE};
+
+    private PermissionUtils(){
+        throw new AssertionError();
+    }
 
     /**
      * 校验权限
@@ -34,7 +35,7 @@ public enum PermissionUtils {
      * @param requestCode
      * @return
      */
-    public boolean verifyReadAndWritePermissions(@NonNull Activity activity, int requestCode){
+    public static boolean verifyReadAndWritePermissions(@NonNull Activity activity,int requestCode){
 
         int readResult = checkPermission(activity,Manifest.permission.READ_EXTERNAL_STORAGE);
         int writeResult = checkPermission(activity,Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -46,7 +47,7 @@ public enum PermissionUtils {
         return true;
     }
 
-    public int checkPermission(@NonNull Activity activity,@NonNull String permission){
+    public static int checkPermission(@NonNull Activity activity,@NonNull String permission){
         return ActivityCompat.checkSelfPermission(activity,permission);
     }
 
@@ -54,7 +55,7 @@ public enum PermissionUtils {
      * 获取通知权限
      * @param context
      */
-    public boolean isNotificationEnabled(Context context) {
+    public static boolean isNotificationEnabled(Context context) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);

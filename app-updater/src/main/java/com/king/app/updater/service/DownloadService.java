@@ -7,10 +7,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Environment;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
@@ -29,7 +27,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-import androidx.core.content.FileProvider;
+import androidx.core.content.ContextCompat;
 
 
 /**
@@ -119,16 +117,16 @@ public class DownloadService extends Service {
 
         //如果保存路径为空则使用缓存路径
         if(TextUtils.isEmpty(path)){
-            path = getDiskCacheDir(getContext());
+            path = getExternalFilesDir(getContext());
         }
         File dirFile = new File(path);
         if(!dirFile.exists()){
-            dirFile.mkdir();
+            dirFile.mkdirs();
         }
 
         //如果文件名为空则使用路径
         if(TextUtils.isEmpty(filename)){
-            filename = AppUtils.INSTANCE.getAppFullName(getContext(),url,getResources().getString(R.string.app_name));
+            filename = AppUtils.getAppFullName(getContext(),url,getResources().getString(R.string.app_name));
         }
 
         mFile = new File(path,filename);
@@ -136,15 +134,15 @@ public class DownloadService extends Service {
             Integer versionCode = config.getVersionCode();
             if(versionCode!=null){
                 try{
-                    if(AppUtils.INSTANCE.apkExists(getContext(),versionCode,mFile)){
+                    if(AppUtils.apkExists(getContext(),versionCode,mFile)){
                         //本地已经存在要下载的APK
                         Log.d(Constants.TAG,"CacheFile:" + mFile);
                         if(config.isInstallApk()){
                             String authority = config.getAuthority();
                             if(TextUtils.isEmpty(authority)){//如果为空则默认
-                                authority = getContext().getPackageName() + ".fileProvider";
+                                authority = getContext().getPackageName() + Constants.DEFAULT_FILE_PROVIDER;
                             }
-                            AppUtils.INSTANCE.installApk(getContext(),mFile,authority);
+                            AppUtils.installApk(getContext(),mFile,authority);
                         }
                         if(callback!=null){
                             callback.onFinish(mFile);
@@ -184,12 +182,13 @@ public class DownloadService extends Service {
      * @param context
      * @return
      */
-    public String getDiskCacheDir(Context context) {
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            return Constants.DEFAULT_DIR_PATH;
+    private String getExternalFilesDir(Context context) {
+        File[] files = ContextCompat.getExternalFilesDirs(context,Constants.DEFAULT_DIR);
+        if(files!=null && files.length > 0){
+            return files[0].getAbsolutePath();
         }
+        return context.getExternalFilesDir(Constants.DEFAULT_DIR).getAbsolutePath();
 
-        return context.getCacheDir().getAbsolutePath();
     }
 
     /**
@@ -238,8 +237,8 @@ public class DownloadService extends Service {
                 this.channelId = TextUtils.isEmpty(config.getChannelId()) ? Constants.DEFAULT_NOTIFICATION_CHANNEL_ID : config.getChannelId();
                 this.channelName = TextUtils.isEmpty(config.getChannelName()) ? Constants.DEFAULT_NOTIFICATION_CHANNEL_NAME : config.getChannelName();
             }
-            if(config.getNotificationIcon()<=0){
-                this.notificationIcon = AppUtils.INSTANCE.getAppIcon(getContext());
+            if(config.getNotificationIcon() <=0 ){
+                this.notificationIcon = AppUtils.getAppIcon(getContext());
             }else{
                 this.notificationIcon = config.getNotificationIcon();
             }
@@ -248,14 +247,13 @@ public class DownloadService extends Service {
 
             this.authority = config.getAuthority();
             if(TextUtils.isEmpty(config.getAuthority())){//如果为空则默认
-                authority = getContext().getPackageName() + ".fileProvider";
+                authority = getContext().getPackageName() + Constants.DEFAULT_FILE_PROVIDER;
             }
 
             this.isShowPercentage = config.isShowPercentage();
             this.isReDownload = config.isReDownload();
 
         }
-
 
         @Override
         public void onStart(String url) {
@@ -272,7 +270,7 @@ public class DownloadService extends Service {
         }
 
         @Override
-        public void onProgress(int progress, int total) {
+        public void onProgress(long progress, long total) {
 
             boolean isChange = false;
             long curTime = System.currentTimeMillis();
@@ -290,7 +288,7 @@ public class DownloadService extends Service {
                             content += percentage;
                         }
 
-                        showProgressNotification(notifyId, channelId, notificationIcon, getString(R.string.app_updater_progress_notification_title), content, progress, total);
+                        showProgressNotification(notifyId, channelId, notificationIcon, getString(R.string.app_updater_progress_notification_title), content, currProgress, 100);
 
                     }
                 }
@@ -307,7 +305,7 @@ public class DownloadService extends Service {
             isDownloading = false;
             showFinishNotification(notifyId,channelId,notificationIcon,getString(R.string.app_updater_finish_notification_title),getString(R.string.app_updater_finish_notification_content),file,authority);
             if(isInstallApk){
-                AppUtils.INSTANCE.installApk(getContext(),file,authority);
+                AppUtils.installApk(getContext(),file,authority);
             }
             if(callback!=null){
                 callback.onFinish(file);
@@ -366,7 +364,7 @@ public class DownloadService extends Service {
      * @param title
      * @param content
      */
-    private void showStartNotification(int notifyId, String channelId, String channelName, @DrawableRes int icon, CharSequence title, CharSequence content, boolean isVibrate, boolean isSound){
+    private void showStartNotification(int notifyId,String channelId, String channelName,@DrawableRes int icon,CharSequence title,CharSequence content,boolean isVibrate,boolean isSound){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             createNotificationChannel(channelId,channelName,isVibrate,isSound);
         }
@@ -413,18 +411,7 @@ public class DownloadService extends Service {
         cancelNotification(notifyId);
         NotificationCompat.Builder builder = buildNotification(channelId,icon,title,content);
         builder.setAutoCancel(true);
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        Uri uriData;
-        String type = "application/vnd.android.package-archive";
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            uriData = FileProvider.getUriForFile(getContext(), authority, file);
-        }else{
-            uriData = Uri.fromFile(file);
-        }
-        intent.setDataAndType(uriData, type);
+        Intent intent = AppUtils.getInstallIntent(getContext(),file,authority);
         PendingIntent clickIntent = PendingIntent.getActivity(getContext(), notifyId,intent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(clickIntent);
         Notification notification = builder.build();
@@ -469,7 +456,7 @@ public class DownloadService extends Service {
     }
 
     /**
-     *
+     * 取消通知
      * @param notifyId
      */
     private void cancelNotification(int notifyId){

@@ -30,6 +30,7 @@ dependencies {
     //support
     implementation deps.support.appcompat
     implementation deps.support.constraintlayout
+    implementation deps.okhttp
 
     implementation project(':app-updater')
     implementation project(':app-dialog')

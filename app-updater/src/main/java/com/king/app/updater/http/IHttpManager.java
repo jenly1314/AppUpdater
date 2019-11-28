@@ -8,6 +8,7 @@ import java.util.Map;
 import androidx.annotation.Nullable;
 
 /**
+ * IHttpManager 默认提供{@link HttpManager} 和 {@link OkHttpManager}两种实现。
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public interface IHttpManager {
@@ -40,7 +41,7 @@ public interface IHttpManager {
          * @param progress
          * @param total
          */
-        void onProgress(int progress,int total);
+        void onProgress(long progress,long total);
 
         /**
          * 完成
