@@ -84,10 +84,11 @@ public class AppUpdater {
      */
     public void start(){
         if(mConfig!=null && !TextUtils.isEmpty(mConfig.getUrl())){
-            //如果mContext是Activity,则默认会校验一次动态权限。
-            if(mContext instanceof Activity){
+            //如果mContext是Activity,并且配置了下载路径，则默认会校验一次动态权限。
+            if(mContext instanceof Activity && !TextUtils.isEmpty(mConfig.getPath())){
                 PermissionUtils.verifyReadAndWritePermissions((Activity) mContext,Constants.RE_CODE_STORAGE_PERMISSION);
             }
+
 
             if(mConfig.isShowNotification() && !PermissionUtils.isNotificationEnabled(mContext)){
                 Log.w(Constants.TAG,"Notification permission not enabled.");

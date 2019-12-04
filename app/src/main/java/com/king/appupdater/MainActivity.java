@@ -24,6 +24,9 @@ import com.king.app.updater.util.PermissionUtils;
 
 import java.io.File;
 
+/**
+ * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ */
 public class MainActivity extends AppCompatActivity {
 
     private final Object mLock = new Object();
@@ -189,7 +192,8 @@ public class MainActivity extends AppCompatActivity {
                         AppDialog.INSTANCE.dismissDialog();
                     }
                 });
-        AppDialog.INSTANCE.showDialog(getContext(),AppDialog.INSTANCE.createAppDialogView(getContext(),config),true);
+        //强制升级，拦截返回
+        AppDialog.INSTANCE.showDialog(getContext(),AppDialog.INSTANCE.createAppDialogView(getContext(),config),false);
     }
 
     /**
