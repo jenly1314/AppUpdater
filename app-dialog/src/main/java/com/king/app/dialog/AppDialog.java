@@ -233,8 +233,10 @@ public enum AppDialog {
         mDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if(keyCode == KeyEvent.KEYCODE_BACK && isCancel){
-                    dismissDialog();
+                if(keyCode == KeyEvent.KEYCODE_BACK){
+                    if(isCancel){
+                        dismissDialog();
+                    }
                     return true;
                 }
                 return false;

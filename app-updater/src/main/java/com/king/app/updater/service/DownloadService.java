@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.king.app.updater.R;
 import com.king.app.updater.UpdateConfig;
@@ -224,6 +225,8 @@ public class DownloadService extends Service {
 
         private boolean isReDownload;
 
+        private boolean isDeleteCancelFile;
+
         private UpdateCallback callback;
 
 
@@ -252,6 +255,7 @@ public class DownloadService extends Service {
 
             this.isShowPercentage = config.isShowPercentage();
             this.isReDownload = config.isReDownload();
+            this.isDeleteCancelFile = config.isDeleteCancelFile();
 
         }
 
@@ -315,7 +319,7 @@ public class DownloadService extends Service {
 
         @Override
         public void onError(Exception e) {
-            Log.w(Constants.TAG,e);
+            Log.w(Constants.TAG,"onError:"+ e.getMessage());
             isDownloading = false;
             //支持下载失败重新并最多支持失败下载3次
             boolean isReDownload = this.isReDownload && mCount < 3;
@@ -339,7 +343,7 @@ public class DownloadService extends Service {
             if(callback!=null){
                 callback.onCancel();
             }
-            if(mFile!=null){
+            if(isDeleteCancelFile && mFile!=null){
                 mFile.delete();
             }
             stopService();
@@ -369,6 +373,7 @@ public class DownloadService extends Service {
             createNotificationChannel(channelId,channelName,isVibrate,isSound);
         }
         NotificationCompat.Builder builder = buildNotification(channelId,icon,title,content);
+        builder.setPriority(NotificationManager.IMPORTANCE_HIGH);
         if(isVibrate && isSound){
             builder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND);
         }else if(isVibrate){
@@ -376,6 +381,7 @@ public class DownloadService extends Service {
         }else if(isSound){
             builder.setDefaults(Notification.DEFAULT_SOUND);
         }
+
         Notification notification = builder.build();
         notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONLY_ALERT_ONCE;
         notifyNotification(notifyId,notification);
@@ -393,6 +399,7 @@ public class DownloadService extends Service {
      */
     private void showProgressNotification(int notifyId,String channelId,@DrawableRes int icon,CharSequence title,CharSequence content,int progress,int size){
         NotificationCompat.Builder builder = buildNotification(channelId,icon,title,content,progress,size);
+
         Notification notification = builder.build();
         notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONLY_ALERT_ONCE;
         notifyNotification(notifyId,notification);
@@ -479,7 +486,7 @@ public class DownloadService extends Service {
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createNotificationChannel(String channelId, String channelName,boolean isVibrate,boolean isSound){
-        NotificationChannel channel = new NotificationChannel(channelId,channelName, NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel channel = new NotificationChannel(channelId,channelName, NotificationManager.IMPORTANCE_HIGH);
         channel.enableVibration(isVibrate);
         if(!isSound){
             channel.setSound(null,null);

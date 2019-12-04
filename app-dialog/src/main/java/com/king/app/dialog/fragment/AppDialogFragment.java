@@ -26,10 +26,10 @@ public class AppDialogFragment extends BaseDialogFragment {
 
     @Override
     public int getRootLayoutId() {
-        if(config == null){
-            config = new AppDialogConfig();
+        if(config != null){
+            return config.getLayoutId();
         }
-        return config.getLayoutId();
+        return R.layout.app_dialog;
     }
 
     public void init(View rootView){

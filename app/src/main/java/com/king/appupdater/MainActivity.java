@@ -193,7 +193,8 @@ public class MainActivity extends AppCompatActivity {
                         AppDialog.INSTANCE.dismissDialog();
                     }
                 });
-        AppDialog.INSTANCE.showDialog(getContext(),AppDialog.INSTANCE.createAppDialogView(getContext(),config),true);
+        //强制升级，拦截返回
+        AppDialog.INSTANCE.showDialog(getContext(),AppDialog.INSTANCE.createAppDialogView(getContext(),config),false);
     }
 
     /**
