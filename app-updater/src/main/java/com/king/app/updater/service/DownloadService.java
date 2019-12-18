@@ -227,12 +227,15 @@ public class DownloadService extends Service {
 
         private UpdateCallback callback;
 
+        private int reDownloads;
+
 
         private AppDownloadCallback(UpdateConfig config,UpdateCallback callback){
             this.config = config;
             this.callback = callback;
             this.isShowNotification = config.isShowNotification();
             this.notifyId = config.getNotificationId();
+            this.reDownloads = config.getReDownloads();
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
                 this.channelId = TextUtils.isEmpty(config.getChannelId()) ? Constants.DEFAULT_NOTIFICATION_CHANNEL_ID : config.getChannelId();
@@ -280,7 +283,7 @@ public class DownloadService extends Service {
                 mLastTime = curTime;
 
                 int currProgress = Math.round(progress * 1.0f / total * 100.0f);
-                if(currProgress!=mLastProgress){//百分比改变了才更新
+                if(currProgress != mLastProgress){//百分比改变了才更新
                     isChange = true;
                     String percentage = currProgress + "%";
                     if(isShowNotification) {
@@ -319,8 +322,8 @@ public class DownloadService extends Service {
         public void onError(Exception e) {
             Log.w(Constants.TAG,"onError:"+ e.getMessage());
             isDownloading = false;
-            //支持下载失败重新并最多支持失败下载3次
-            boolean isReDownload = this.isReDownload && mCount < 3;
+            //支持下载失败时重新下载，当重新下载次数不超过限制时才被允许
+            boolean isReDownload = this.isReDownload && mCount < reDownloads;
             String content = isReDownload ? getString(R.string.app_updater_error_notification_content_re_download) : getString(R.string.app_updater_error_notification_content);
             showErrorNotification(notifyId,channelId,notificationIcon,getString(R.string.app_updater_error_notification_title),content,isReDownload,config);
 

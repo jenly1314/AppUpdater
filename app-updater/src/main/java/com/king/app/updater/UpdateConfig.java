@@ -59,9 +59,13 @@ public class UpdateConfig implements Parcelable {
      */
     private String mAuthority;
     /**
-     * 下载失败是否支持点击通知栏重复下载
+     * 下载失败是否支持点击通知栏重新下载
      */
     private boolean isReDownload = true;
+    /**
+     * 下载失败后，最大重新下载次数
+     */
+    private int reDownloads = 3;
     /**
      * 是否显示百分比
      */
@@ -193,6 +197,14 @@ public class UpdateConfig implements Parcelable {
         isReDownload = reDownload;
     }
 
+    public int getReDownloads() {
+        return reDownloads;
+    }
+
+    public void setReDownloads(int reDownloads) {
+        this.reDownloads = reDownloads;
+    }
+
     public boolean isVibrate() {
         return isVibrate;
     }
@@ -237,7 +249,6 @@ public class UpdateConfig implements Parcelable {
         }
     }
 
-
     public boolean isDeleteCancelFile() {
         return isDeleteCancelFile;
     }
@@ -265,17 +276,21 @@ public class UpdateConfig implements Parcelable {
         dest.writeString(this.mChannelName);
         dest.writeString(this.mAuthority);
         dest.writeByte(this.isReDownload ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.reDownloads);
         dest.writeByte(this.isShowPercentage ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isVibrate ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isSound ? (byte) 1 : (byte) 0);
         dest.writeValue(this.versionCode);
-        dest.writeInt(mRequestProperty!=null ? this.mRequestProperty.size() : 0);
         if(mRequestProperty!=null){
+            dest.writeInt(this.mRequestProperty.size());
             for (Map.Entry<String, String> entry : this.mRequestProperty.entrySet()) {
                 dest.writeString(entry.getKey());
                 dest.writeString(entry.getValue());
             }
+        }else{
+            dest.writeInt(0);
         }
+
         dest.writeByte(this.isDeleteCancelFile ? (byte) 1 : (byte) 0);
     }
 
@@ -291,6 +306,7 @@ public class UpdateConfig implements Parcelable {
         this.mChannelName = in.readString();
         this.mAuthority = in.readString();
         this.isReDownload = in.readByte() != 0;
+        this.reDownloads = in.readInt();
         this.isShowPercentage = in.readByte() != 0;
         this.isVibrate = in.readByte() != 0;
         this.isSound = in.readByte() != 0;

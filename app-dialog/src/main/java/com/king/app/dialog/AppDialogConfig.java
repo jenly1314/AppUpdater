@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -129,6 +130,11 @@ public class AppDialogConfig {
         return this;
     }
 
+    public AppDialogConfig setTitle(@NonNull Context context,@StringRes int resId) {
+        this.title = context.getString(resId);
+        return this;
+    }
+
     public CharSequence getContent() {
         return content;
     }
@@ -147,12 +153,22 @@ public class AppDialogConfig {
         return this;
     }
 
+    public AppDialogConfig setCancel(@NonNull Context context,@StringRes int resId) {
+        this.cancel = context.getString(resId);
+        return this;
+    }
+
     public CharSequence getOk() {
         return ok;
     }
 
     public AppDialogConfig setOk(CharSequence ok) {
         this.ok = ok;
+        return this;
+    }
+
+    public AppDialogConfig setOk(@NonNull Context context,@StringRes int resId) {
+        this.ok = context.getString(resId);
         return this;
     }
 

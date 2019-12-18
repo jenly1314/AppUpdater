@@ -286,12 +286,22 @@ public class AppUpdater {
         }
 
         /**
-         * 设置下载失败是是否支持点击通知栏重新下载
-         * @param reDownload 下载失败时是否支持点击通知栏重新下载，默认true 最多重新下载3次
+         * 设置下载失败时，是否支持点击通知栏重新下载。与之相关联的方法{@link #setReDownloads(int)}
+         * @param reDownload 下载失败时是否支持点击通知栏重新下载，默认true
          * @return
          */
         public Builder setReDownload(boolean reDownload) {
             mConfig.setReDownload(reDownload);
+            return this;
+        }
+
+        /**
+         * 设置下载失败时，最多重新下载次数。与之相关联的方法{@link #setReDownload(boolean)}
+         * @param reDownloads 下载失败时是否支持点击通知栏重新下载，默认最多重新下载3次
+         * @return
+         */
+        public Builder setReDownloads(int reDownloads) {
+            mConfig.setReDownloads(reDownloads);
             return this;
         }
 

@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final Object mLock = new Object();
 
+    //下载出现Failed to connect to raw.githubusercontent.com时，可以换个下载链接测试，github的raw.githubusercontent.com目前不太稳定。
     private String mUrl = "https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk";
 
     private ProgressBar progressBar;

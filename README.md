@@ -41,7 +41,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-updater</artifactId>
-      <version>1.0.6</version>
+      <version>1.0.7</version>
       <type>pom</type>
     </dependency>
     
@@ -49,7 +49,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-dialog</artifactId>
-      <version>1.0.6</version>
+      <version>1.0.7</version>
       <type>pom</type>
     </dependency>
 ```
@@ -58,25 +58,25 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
     //----------AndroidX 版本
     //app-updater
-    implementation 'com.king.app:app-updater:1.0.6-androidx'
+    implementation 'com.king.app:app-updater:1.0.7-androidx'
     //app-dialog
-    implementation 'com.king.app:app-dialog:1.0.6-androidx'
+    implementation 'com.king.app:app-dialog:1.0.7-androidx'
     
     //----------Android Support 版本
     //app-updater
-    implementation 'com.king.app:app-updater:1.0.6'
+    implementation 'com.king.app:app-updater:1.0.7'
     //app-dialog
-    implementation 'com.king.app:app-dialog:1.0.6'
+    implementation 'com.king.app:app-dialog:1.0.7'
 ```
 ### Lvy:
 ```lvy
     //app-updater
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.6'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.7'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
     
     //app-dialog
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.6'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.7'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
 ```
@@ -141,6 +141,9 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 更多使用详情，请查看[app](app)中的源码使用示例或直接查看[API帮助文档](https://jenly1314.github.io/projects/AppUpdater/doc/)
 
 ## 版本记录
+
+#### v1.0.7：2019-12-18
+*  优化细节
 
 #### v1.0.6：2019-11-27
 *  新增OkHttpManager        如果使用了OkHttpManager则必须依赖[okhttp](https://github.com/square/okhttp)
