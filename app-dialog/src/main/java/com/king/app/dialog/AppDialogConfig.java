@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
 /**
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
@@ -15,13 +16,11 @@ public class AppDialogConfig {
     /**
      * 布局ID
      */
-    private @LayoutRes
-    int layoutId = R.layout.app_dialog;
+    private @LayoutRes int layoutId = R.layout.app_dialog;
     /**
      * 标题视图ID
      */
-    private @IdRes
-    int titleId = R.id.tvDialogTitle;
+    private @IdRes int titleId = R.id.tvDialogTitle;
     /**
      * 内容视图ID
      */
@@ -132,6 +131,11 @@ public class AppDialogConfig {
         return this;
     }
 
+    public AppDialogConfig setTitle(@NonNull Context context,@StringRes int resId) {
+        this.title = context.getString(resId);
+        return this;
+    }
+
     public CharSequence getContent() {
         return content;
     }
@@ -150,12 +154,22 @@ public class AppDialogConfig {
         return this;
     }
 
+    public AppDialogConfig setCancel(@NonNull Context context,@StringRes int resId) {
+        this.cancel = context.getString(resId);
+        return this;
+    }
+
     public CharSequence getOk() {
         return ok;
     }
 
     public AppDialogConfig setOk(CharSequence ok) {
         this.ok = ok;
+        return this;
+    }
+
+    public AppDialogConfig setOk(@NonNull Context context,@StringRes int resId) {
+        this.ok = context.getString(resId);
         return this;
     }
 

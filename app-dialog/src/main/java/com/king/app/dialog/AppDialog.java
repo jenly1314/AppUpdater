@@ -56,7 +56,9 @@ public enum AppDialog {
         try{
             //不强制要求要有中间的线
             View line = view.findViewById(R.id.line);
-            line.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
+            if(line != null){
+                line.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
+            }
         }catch (Exception e){
 
         }
