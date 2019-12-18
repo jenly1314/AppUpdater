@@ -19,3 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-dontwarn com.king.app.updater.**
+-keep class com.king.app.updater.**{ *;}
+-keep class * extends com.king.app.updater.**{ *;}
+-keep class * implements com.king.app.updater.**{ *;}
+-keepattributes InnerClasses
+
+-keep class * implements android.os.Parcelable {
+    public static final android.os.Parcelable$Creator *;
+}
