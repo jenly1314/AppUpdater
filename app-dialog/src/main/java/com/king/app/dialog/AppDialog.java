@@ -228,10 +228,106 @@ public enum AppDialog {
      */
     public void showDialog(Context context, View contentView, @StyleRes int resId, float widthRatio,final boolean isCancel){
         dismissDialog();
-        mDialog = new Dialog(context,resId);
-        mDialog.setContentView(contentView);
-        mDialog.setCanceledOnTouchOutside(false);
-        mDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+        mDialog = createDialog(context,contentView,resId,widthRatio,isCancel);
+        mDialog.show();
+    }
+
+    /**
+     * 设置弹框窗口配置
+     * @param context
+     * @param dialog
+     * @param widthRatio
+     */
+    private void setDialogWindow(Context context,Dialog dialog,float widthRatio){
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = (int)(context.getResources().getDisplayMetrics().widthPixels * widthRatio);
+        window.setAttributes(lp);
+    }
+
+    /**
+     * 创建弹框
+     * @param context
+     * @param config 弹框配置 {@link AppDialogConfig}
+     */
+    public Dialog createDialog(Context context,AppDialogConfig config){
+        return createDialog(context,config,true);
+    }
+
+    /**
+     * 创建弹框
+     * @param context
+     * @param config 弹框配置 {@link AppDialogConfig}
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     */
+    public Dialog createDialog(Context context,AppDialogConfig config,boolean isCancel){
+        return createDialog(context,createAppDialogView(context,config),R.style.app_dialog,DEFAULT_WIDTH_RATIO,isCancel);
+    }
+
+    /**
+     * 创建弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     */
+    public Dialog createDialog(Context context,View contentView){
+        return createDialog(context,contentView,DEFAULT_WIDTH_RATIO);
+    }
+
+    /**
+     * 创建弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     */
+    public Dialog createDialog(Context context,View contentView,boolean isCancel){
+        return createDialog(context,contentView,R.style.app_dialog,DEFAULT_WIDTH_RATIO,isCancel);
+    }
+
+    /**
+     * 创建弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
+     */
+    public Dialog createDialog(Context context,View contentView,float widthRatio){
+        return createDialog(context,contentView,widthRatio,true);
+    }
+
+    /**
+     * 创建弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     */
+    public Dialog createDialog(Context context,View contentView,float widthRatio,boolean isCancel){
+        return createDialog(context,contentView,R.style.app_dialog,widthRatio,isCancel);
+    }
+
+    /**
+     * 创建弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     * @param resId Dialog样式
+     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
+     */
+    public Dialog createDialog(Context context, View contentView, @StyleRes int resId, float widthRatio){
+        return createDialog(context,contentView,resId,widthRatio,true);
+    }
+
+    /**
+     * 创建弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     * @param resId Dialog样式
+     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     */
+    public Dialog createDialog(Context context, View contentView, @StyleRes int resId, float widthRatio,final boolean isCancel){
+        Dialog dialog = new Dialog(context,resId);
+        dialog.setContentView(contentView);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if(keyCode == KeyEvent.KEYCODE_BACK){
@@ -244,23 +340,21 @@ public enum AppDialog {
 
             }
         });
-        setDialogWindow(context,mDialog,widthRatio);
-        mDialog.show();
+        setDialogWindow(context,dialog,widthRatio);
+        return dialog;
     }
 
-    private void setDialogWindow(Context context,Dialog dialog,float widthRatio){
-        Window window = dialog.getWindow();
-        WindowManager.LayoutParams lp = window.getAttributes();
-        lp.width = (int)(context.getResources().getDisplayMetrics().widthPixels * widthRatio);
-        window.setAttributes(lp);
+    public Dialog getDialog(){
+        return mDialog;
     }
 
     public void dismissDialog(){
         dismissDialog(mDialog);
+        mDialog = null;
     }
 
-    private void dismissDialog(Dialog dialog){
-        if(dialog!=null){
+    public void dismissDialog(Dialog dialog){
+        if(dialog != null){
             dialog.dismiss();
         }
     }

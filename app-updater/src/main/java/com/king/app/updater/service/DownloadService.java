@@ -130,29 +130,38 @@ public class DownloadService extends Service {
 
         mFile = new File(path,filename);
         if(mFile.exists()){//文件是否存在
+
             Integer versionCode = config.getVersionCode();
-            if(versionCode!=null){
+            String apkMD5 = config.getApkMD5();
+            //是否存在相同的apk
+            boolean isExistApk = false;
+            if(!TextUtils.isEmpty(apkMD5)){//如果存在MD5，则优先校验MD5
+               isExistApk = AppUtils.checkFileMD5(mFile,apkMD5);
+            }else if(versionCode!=null){//如果存在versionCode，则校验versionCode
                 try{
-                    if(AppUtils.apkExists(getContext(),versionCode,mFile)){
-                        //本地已经存在要下载的APK
-                        Log.d(Constants.TAG,"CacheFile:" + mFile);
-                        if(config.isInstallApk()){
-                            String authority = config.getAuthority();
-                            if(TextUtils.isEmpty(authority)){//如果为空则默认
-                                authority = getContext().getPackageName() + Constants.DEFAULT_FILE_PROVIDER;
-                            }
-                            AppUtils.installApk(getContext(),mFile,authority);
-                        }
-                        if(callback!=null){
-                            callback.onFinish(mFile);
-                        }
-                        stopService();
-                        return;
-                    }
+                    isExistApk = AppUtils.apkExists(getContext(),versionCode,mFile);
                 }catch (Exception e){
                     Log.w(Constants.TAG,e);
                 }
             }
+
+            if(isExistApk){
+                //本地已经存在要下载的APK
+                Log.d(Constants.TAG,"CacheFile:" + mFile);
+                if(config.isInstallApk()){
+                    String authority = config.getAuthority();
+                    if(TextUtils.isEmpty(authority)){//如果为空则默认
+                        authority = getContext().getPackageName() + Constants.DEFAULT_FILE_PROVIDER;
+                    }
+                    AppUtils.installApk(getContext(),mFile,authority);
+                }
+                if(callback!=null){
+                    callback.onFinish(mFile);
+                }
+                stopService();
+                return;
+            }
+
             //删除旧文件
             mFile.delete();
         }
