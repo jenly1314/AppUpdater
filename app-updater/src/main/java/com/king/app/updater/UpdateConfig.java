@@ -96,6 +96,9 @@ public class UpdateConfig implements Parcelable {
      */
     private boolean isDeleteCancelFile = true;
 
+    /**
+     * APK文件的MD5
+     */
     private String apkMD5;
 
 
