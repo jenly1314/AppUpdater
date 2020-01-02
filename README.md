@@ -3,6 +3,7 @@
 ![Image](app/src/main/ic_launcher-web.png)
 
 [![Download](https://img.shields.io/badge/download-App-blue.svg)](https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk)
+[![JCenter](https://img.shields.io/badge/JCenter-1.0.8-46C018.svg)](https://bintray.com/beta/#/jenly/maven/app-updater)
 [![JitPack](https://jitpack.io/v/jenly1314/AppUpdater.svg)](https://jitpack.io/#jenly1314/AppUpdater)
 [![CI](https://travis-ci.org/jenly1314/AppUpdater.svg?branch=master)](https://travis-ci.org/jenly1314/AppUpdater)
 [![CircleCI](https://circleci.com/gh/jenly1314/AppUpdater.svg?style=svg)](https://circleci.com/gh/jenly1314/AppUpdater)
@@ -11,23 +12,24 @@
 [![Blog](https://img.shields.io/badge/blog-Jenly-9933CC.svg)](https://jenly1314.github.io/)
 [![QQGroup](https://img.shields.io/badge/QQGroup-20867961-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=8fcc6a2f88552ea44b1411582c94fd124f7bb3ec227e2a400dbbfaad3dc2f5ad)
 
-AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版本升级的开源库。(无需担心通知栏适配；无需担心重复点击下载；无需担心App安装等问题；这些AppUpdater都已帮您处理好。)
+AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版本升级的轻量开源库。(无需担心通知栏适配；无需担心重复点击下载；无需担心App安装等问题；这些AppUpdater都已帮您处理好。)
  核心库主要包括app-updater和app-dialog。
 > 下载更新和弹框提示分开，是因为这本来就是两个逻辑。完全独立开来能有效的解耦。
 * app-updater 主要负责后台下载更新App，无需担心下载时各种配置相关的细节，一键傻瓜式升级。
-* app-dialog 主要是提供常用的Dialog和DialogFragment，简化弹框提示，样式支持高度自定义。
+* app-dialog 主要是提供常用的Dialog和DialogFragment，简化弹框提示，布局样式支持自定义。
 > app-updater + app-dialog 配合使用，谁用谁知道。
 
 
 ## 功能介绍
 - [x] 专注于App更新一键傻瓜式升级
-- [x] 支持下载监听
+- [x] 够轻量，体积小
+- [x] 支持监听下载过程
 - [x] 支持下载失败，重新下载
 - [x] 支持下载优先取本地缓存
 - [x] 支持通知栏提示内容和过程全部可配置
 - [x] 支持Android Q(10)
+- [x] 支持取消下载
 - [x] 支持使用OkHttpClient下载
-
 
 ## Gif 展示
 ![Image](GIF.gif)
@@ -40,7 +42,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-updater</artifactId>
-      <version>1.0.7</version>
+      <version>1.0.8</version>
       <type>pom</type>
     </dependency>
 
@@ -48,7 +50,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-dialog</artifactId>
-      <version>1.0.7</version>
+      <version>1.0.8</version>
       <type>pom</type>
     </dependency>
 ```
@@ -57,25 +59,25 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
     //----------AndroidX 版本
     //app-updater
-    implementation 'com.king.app:app-updater:1.0.7-androidx'
+    implementation 'com.king.app:app-updater:1.0.8-androidx'
     //app-dialog
-    implementation 'com.king.app:app-dialog:1.0.7-androidx'
+    implementation 'com.king.app:app-dialog:1.0.8-androidx'
 
     //----------Android Support 版本
     //app-updater
-    implementation 'com.king.app:app-updater:1.0.7'
+    implementation 'com.king.app:app-updater:1.0.8'
     //app-dialog
-    implementation 'com.king.app:app-dialog:1.0.7'
+    implementation 'com.king.app:app-dialog:1.0.8'
 ```
 ### Lvy:
 ```lvy
     //app-updater
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.7'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.8'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
 
     //app-dialog
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.7'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.8'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
 ```
@@ -107,7 +109,6 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
                 public void onClick(View v) {
                     new AppUpdater.Builder()
                             .serUrl(mUrl)
-                            .setFilename("AppUpdater.apk")
                             .build(getContext())
                             .start();
                     AppDialog.INSTANCE.dismissDialog();
@@ -141,6 +142,10 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
 ## 版本记录
 
+#### v1.0.8：2020-1-2
+*  支持MD5校验
+*  对外提供获取Dialog方法
+
 #### v1.0.7：2019-12-18
 *  优化细节
 
@@ -151,7 +156,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 #### v1.0.5：2019-9-4
 *  支持取消下载
 
-#### v1.0.4：2019-6-4      [支持AndroidX版本](https://github.com/jenly1314/AppUpdater/tree/androidx)
+#### v1.0.4：2019-6-4      [开始支持AndroidX版本](https://github.com/jenly1314/AppUpdater/tree/androidx)
 *  支持添加请求头
 
 #### v1.0.3：2019-5-9
@@ -185,7 +190,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
    CSDN: <a title="CSDN博客" href="http://blog.csdn.net/jenly121" target="_blank">jenly121</a>
 
-   博客园: <a title="博客园" href="https://www.cnblogs.com/jenly" target="_blank">jenly</a>
+   CNBlog: <a title="博客园" href="https://www.cnblogs.com/jenly" target="_blank">jenly</a>
 
    Github: <a title="Github开源项目" href="https://github.com/jenly1314" target="_blank">jenly1314</a>
 

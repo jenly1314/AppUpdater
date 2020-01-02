@@ -90,7 +90,6 @@ public class AppUpdater {
                 PermissionUtils.verifyReadAndWritePermissions((Activity) mContext,Constants.RE_CODE_STORAGE_PERMISSION);
             }
 
-
             if(mConfig.isShowNotification() && !PermissionUtils.isNotificationEnabled(mContext)){
                 Log.w(Constants.TAG,"Notification permission not enabled.");
             }
@@ -166,10 +165,11 @@ public class AppUpdater {
         }
 
         /**
-         * 设置保存的路径
+         * 设置保存的路径，（建议使用默认，不做设置）
          * @param path  下载保存的文件路径
          * @return
          */
+        @Deprecated
         public Builder setPath(String path){
             mConfig.setPath(path);
             return this;
@@ -307,7 +307,9 @@ public class AppUpdater {
         }
 
         /**
-         * 设置要下载APK的versionCode
+         * 设置要下载APK的versionCode，用于优先取缓存时通过versionCode校验APK文件是否一致。
+         * 缓存校验目前支持两种方式，一种是通过versionCode校验，即{@link #setVersionCode(Integer)}；一种是文件MD5校验，即{@link #setApkMD5(String)}。推荐使用MD5校验方式
+         * 如果两种方式都设置了，则只校验MD5
          * @param versionCode 为null表示不处理，默认不存在则下载，存在则重新下载。不为null时，表示会优先校验本地是否存在已下载版本号为versionCode的APK。
          *                    如果存在则不会重新下载(AppUpdater会自动校验packageName一致性)，直接取本地APK，反之重新下载。
          * @return
@@ -317,6 +319,17 @@ public class AppUpdater {
             return this;
         }
 
+        /**
+         * 设置APK文件的MD5，用于优先取缓存时通过MD5校验文件APK是否一致。
+         * 缓存校验目前支持两种方式，一种是通过versionCode校验，即{@link #setVersionCode(Integer)}；一种是文件MD5校验，即{@link #setApkMD5(String)}。推荐使用MD5校验方式
+         * 如果两种方式都设置了，则只校验MD5
+         * @param md5 为null表示不处理，如果设置了MD5，则缓存APK的MD5相同时，只下载一次，优先取本地缓存
+         * @return
+         */
+        public Builder setApkMD5(String md5) {
+            mConfig.setApkMD5(md5);
+            return this;
+        }
         /**
          * 请求头添加参数
          * @param key

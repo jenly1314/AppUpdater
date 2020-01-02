@@ -97,6 +97,11 @@ public class UpdateConfig implements Parcelable {
      */
     private boolean isDeleteCancelFile = true;
 
+    /**
+     * APK文件的MD5
+     */
+    private String apkMD5;
+
 
     public UpdateConfig() {
 
@@ -234,6 +239,15 @@ public class UpdateConfig implements Parcelable {
         return mRequestProperty;
     }
 
+
+    public void setApkMD5(String md5){
+        this.apkMD5 = md5;
+    }
+
+    public String getApkMD5(){
+        return apkMD5;
+    }
+
     public void addHeader(String key, String value){
         initRequestProperty();
         mRequestProperty.put(key,value);
@@ -293,6 +307,7 @@ public class UpdateConfig implements Parcelable {
         }
 
         dest.writeByte(this.isDeleteCancelFile ? (byte) 1 : (byte) 0);
+        dest.writeString(this.apkMD5);
     }
 
     protected UpdateConfig(Parcel in) {
@@ -320,6 +335,7 @@ public class UpdateConfig implements Parcelable {
             this.mRequestProperty.put(key, value);
         }
         this.isDeleteCancelFile = in.readByte() != 0;
+        this.apkMD5 = in.readString();
     }
 
     public static final Creator<UpdateConfig> CREATOR = new Creator<UpdateConfig>() {

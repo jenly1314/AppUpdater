@@ -223,8 +223,9 @@ public class MainActivity extends AppCompatActivity {
                 mAppUpdater = new AppUpdater.Builder()
                         .serUrl(mUrl)
 //                        .setPath(Environment.getExternalStorageDirectory() + "/.AppUpdater")//如果适配Android Q，则Environment.getExternalStorageDirectory()将废弃
-                        .setPath(getExternalFilesDir(Constants.DEFAULT_DIR).getAbsolutePath())//自定义路径
-                        .setVersionCode(BuildConfig.VERSION_CODE)//设置versionCode之后，新版本相同的apk只下载一次,优先取本地缓存。
+//                        .setPath(getExternalFilesDir(Constants.DEFAULT_DIR).getAbsolutePath())//自定义路径，推荐使用默认
+//                        .setApkMD5("3df5b1c1d2bbd01b4a7ddb3f2722ccca")//支持MD5校验，如果缓存APK的MD5与此MD5相同，则直接取本地缓存安装，推荐使用MD5校验的方式
+                        .setVersionCode(BuildConfig.VERSION_CODE)//支持versionCode校验，设置versionCode之后，新版本versionCode相同的apk只下载一次,优先取本地缓存,推荐使用MD5校验的方式
                         .setFilename("AppUpdater.apk")
                         .setVibrate(true)
                         .build(getContext());

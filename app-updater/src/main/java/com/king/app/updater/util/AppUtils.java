@@ -10,10 +10,16 @@ import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
+
+import com.king.app.updater.constant.Constants;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 
 import androidx.core.content.FileProvider;
 
@@ -190,6 +196,45 @@ public final class AppUtils {
             close(descriptor);
         }
         return false;
+    }
+
+    /**
+     * 校验文件MD5
+     * @param file
+     * @param md5
+     * @return
+     */
+    public static boolean checkFileMD5(File file,String md5){
+        String fileMD5 = getFileMD5(file);
+        Log.d(Constants.TAG,"FileMD5:"+ fileMD5);
+        if(!TextUtils.isEmpty(md5)){
+            return md5.equalsIgnoreCase(fileMD5);
+        }
+
+        return false;
+    }
+
+    /**
+     * 获取文件MD5
+     * @param file
+     * @return
+     */
+    public static String getFileMD5(File file){
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = fis.read(buffer)) != -1){
+                messageDigest.update(buffer,0,length);
+            }
+            BigInteger bigInteger = new BigInteger(1,messageDigest.digest());
+            return bigInteger.toString(16);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     /**
