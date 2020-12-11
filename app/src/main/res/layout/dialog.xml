@@ -11,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:minHeight="40dp"
-        android:padding="6dp"
+        android:padding="10dp"
         android:lines="1"
         android:textSize="16sp"
         android:background="@drawable/dialog_title_bg"
@@ -22,8 +21,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:layout_marginBottom="6dp"
-        android:lineSpacingMultiplier="1" />
+        android:textSize="@dimen/app_dialog_content_text_size"
+        android:textColor="@color/app_dialog_content_color"
+        android:layout_marginBottom="16dp"
+        android:lineSpacingMultiplier="1.2" />
     <include layout="@layout/app_dialog_line_h"/>
     <LinearLayout
         android:orientation="horizontal"
