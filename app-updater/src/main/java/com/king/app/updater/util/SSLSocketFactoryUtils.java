@@ -1,6 +1,7 @@
 package com.king.app.updater.util;
 
 import android.content.Context;
+import androidx.annotation.RawRes;
 
 import java.io.InputStream;
 import java.security.KeyManagementException;
@@ -20,7 +21,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
-import androidx.annotation.RawRes;
 
 /**
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
@@ -108,7 +108,7 @@ public final class SSLSocketFactoryUtils {
                         return null;
                     }
                     //获得服务器端证书
-                    TrustManager[] turstManager = getTurstManager(certificates);
+                    TrustManager[] turstManager = getTrustManager(certificates);
 
                     //初始化ssl证书库
                     try {
@@ -130,7 +130,7 @@ public final class SSLSocketFactoryUtils {
      * @param certificates
      * @return
      */
-    public static TrustManager[] getTurstManager(InputStream... certificates) {
+    public static TrustManager[] getTrustManager(InputStream... certificates) {
         try {
             CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
             KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -162,13 +162,13 @@ public final class SSLSocketFactoryUtils {
 
         }
 
-        return getTurstAllManager();
+        return getTrustAllManager();
     }
 
     /**
      * 获得信任所有服务器端证书库
      * */
-    public static TrustManager[] getTurstAllManager() {
+    public static TrustManager[] getTrustAllManager() {
         return new X509TrustManager[] {createTrustAllManager()};
     }
 
