@@ -144,9 +144,9 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
 ## 混淆
 
-**app-updater** [Proguard rules](blob/master/app-updater/proguard-rules.pro)
+**app-updater** [Proguard rules](app-updater/proguard-rules.pro)
 
-**app-dialog** [Proguard rules](blob/master/app-dialog/proguard-rules.pro)
+**app-dialog** [Proguard rules](app-dialog/proguard-rules.pro)
 
 ## 版本记录
 
