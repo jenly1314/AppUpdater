@@ -52,14 +52,10 @@ public enum AppDialog {
         btnDialogCancel.setOnClickListener(config.getOnClickCancel() != null ? config.getOnClickCancel() : mOnClickDismissDialog);
         btnDialogCancel.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
 
-        try{
-            //不强制要求要有中间的线
-            View line = view.findViewById(R.id.line);
-            if(line != null){
-                line.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
-            }
-        }catch (Exception e){
-
+        //不强制要求要有中间的线
+        View line = view.findViewById(config.getLineId());
+        if(line != null){
+            line.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
         }
 
         Button btnDialogOK = view.findViewById(config.getOkId());

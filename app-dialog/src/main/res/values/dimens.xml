@@ -6,5 +6,5 @@
 
     <dimen name="app_dialog_title_text_size">16sp</dimen>
     <dimen name="app_dialog_content_text_size">16sp</dimen>
-    <dimen name="app_dialog_button_text_size">18sp</dimen>
+    <dimen name="app_dialog_button_text_size">16sp</dimen>
 </resources>

@@ -35,7 +35,7 @@ public class AppDialogConfig {
     /**
      * 按钮中间分割线ID
      */
-    private @IdRes int line = R.id.line;
+    private @IdRes int lineId = R.id.line;
     /**
      * 标题文本
      */
@@ -112,12 +112,12 @@ public class AppDialogConfig {
         return this;
     }
 
-    public @IdRes int getLine() {
-        return line;
+    public @IdRes int getLineId() {
+        return lineId;
     }
 
-    public AppDialogConfig setLine(@IdRes int line) {
-        this.line = line;
+    public AppDialogConfig setLineId(@IdRes int lineId) {
+        this.lineId = lineId;
         return this;
     }
 

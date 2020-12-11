@@ -3,7 +3,7 @@
 ![Image](app/src/main/ic_launcher-web.png)
 
 [![Download](https://img.shields.io/badge/download-App-blue.svg)](https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk)
-[![JCenter](https://img.shields.io/badge/JCenter-1.0.8-46C018.svg)](https://bintray.com/beta/#/jenly/maven/app-updater)
+[![JCenter](https://img.shields.io/badge/JCenter-1.0.9-46C018.svg)](https://bintray.com/beta/#/jenly/maven/app-updater)
 [![JitPack](https://jitpack.io/v/jenly1314/AppUpdater.svg)](https://jitpack.io/#jenly1314/AppUpdater)
 [![CI](https://travis-ci.org/jenly1314/AppUpdater.svg?branch=master)](https://travis-ci.org/jenly1314/AppUpdater)
 [![CircleCI](https://circleci.com/gh/jenly1314/AppUpdater.svg?style=svg)](https://circleci.com/gh/jenly1314/AppUpdater)
@@ -44,7 +44,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-updater</artifactId>
-      <version>1.0.8</version>
+      <version>1.0.9</version>
       <type>pom</type>
     </dependency>
     
@@ -52,7 +52,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-dialog</artifactId>
-      <version>1.0.8</version>
+      <version>1.0.9</version>
       <type>pom</type>
     </dependency>
 ```
@@ -61,25 +61,25 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
     //----------AndroidX 版本
     //app-updater
-    implementation 'com.king.app:app-updater:1.0.8-androidx'
+    implementation 'com.king.app:app-updater:1.0.9-androidx'
     //app-dialog
-    implementation 'com.king.app:app-dialog:1.0.8-androidx'
+    implementation 'com.king.app:app-dialog:1.0.9-androidx'
     
     //----------Android Support 版本
     //app-updater
-    implementation 'com.king.app:app-updater:1.0.8'
+    implementation 'com.king.app:app-updater:1.0.9'
     //app-dialog
-    implementation 'com.king.app:app-dialog:1.0.8'
+    implementation 'com.king.app:app-dialog:1.0.9'
 ```
 ### Lvy:
 ```lvy
     //app-updater
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.8'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.9'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
     
     //app-dialog
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.8'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.9'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
 ```
@@ -131,7 +131,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
                             .serUrl(mUrl)
                             .setFilename("AppUpdater.apk")
                             .build(getContext())
-                            .setHttpManager(OkHttpManager.getInstance())//使用OkHttpClient实现下载，需依赖okhttp库
+                            .setHttpManager(OkHttpManager.getInstance())//不设置HttpManager时，默认使用HttpsURLConnection下载，如果使用OkHttpClient实现下载，需依赖okhttp库
                             .start();
                     AppDialog.INSTANCE.dismissDialogFragment(getSupportFragmentManager());
                 }
@@ -142,7 +142,16 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
 更多使用详情，请查看[app](app)中的源码使用示例或直接查看[API帮助文档](https://jenly1314.github.io/projects/AppUpdater/doc/)
 
+## 混淆
+
+**app-updater** [Proguard rules](blob/master/app-updater/proguard-rules.pro)
+
+**app-dialog** [Proguard rules](blob/master/app-dialog/proguard-rules.pro)
+
 ## 版本记录
+
+#### v1.0.9：2020-12-11
+*  优化默认Dialog样式的显示细节
 
 #### v1.0.8：2020-1-2
 *  支持MD5校验
@@ -192,12 +201,15 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
    CSDN: <a title="CSDN博客" href="http://blog.csdn.net/jenly121" target="_blank">jenly121</a>
 
-   CNBlog: <a title="博客园" href="https://www.cnblogs.com/jenly" target="_blank">jenly</a>
+   CNBlogs: <a title="博客园" href="https://www.cnblogs.com/jenly" target="_blank">jenly</a>
 
-   Github: <a title="Github开源项目" href="https://github.com/jenly1314" target="_blank">jenly1314</a>
+   GitHub: <a title="GitHub开源项目" href="https://github.com/jenly1314" target="_blank">jenly1314</a>
+
+   Gitee: <a title="Gitee开源项目" href="https://gitee.com/jenly1314" target="_blank">jenly1314</a>
 
    加入QQ群: <a title="点击加入QQ群" href="http://shang.qq.com/wpa/qunwpa?idkey=8fcc6a2f88552ea44b1411582c94fd124f7bb3ec227e2a400dbbfaad3dc2f5ad" target="_blank">20867961</a>
    <div>
        <img src="https://jenly1314.github.io/image/jenly666.png">
        <img src="https://jenly1314.github.io/image/qqgourp.png">
    </div>
+

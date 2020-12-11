@@ -46,12 +46,10 @@ public class AppDialogFragment extends BaseDialogFragment {
             btnDialogCancel.setOnClickListener(config.getOnClickCancel() != null ? config.getOnClickCancel() : getOnClickDismiss());
             btnDialogCancel.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
 
-            try{
-                //不强制要求要有中间的线
-                View line = rootView.findViewById(R.id.line);
+            //不强制要求要有中间的线
+            View line = rootView.findViewById(config.getLineId());
+            if(line != null){
                 line.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
-            }catch (Exception e){
-
             }
 
             Button btnDialogOK = rootView.findViewById(config.getOkId());
