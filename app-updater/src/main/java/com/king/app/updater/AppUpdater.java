@@ -158,7 +158,7 @@ public class AppUpdater {
          * @param url 下载地址
          * @return
          */
-        public Builder serUrl(@NonNull String url){
+        public Builder setUrl(@NonNull String url){
             mConfig.setUrl(url);
             return this;
         }
