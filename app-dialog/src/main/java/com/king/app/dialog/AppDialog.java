@@ -3,13 +3,10 @@ package com.king.app.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.king.app.dialog.fragment.AppDialogFragment;
 
@@ -34,52 +31,25 @@ public enum AppDialog {
     //-------------------------------------------
 
     /**
-     * 通过{@link AppDialogConfig} 创建一个视图
      * @param context
      * @param config 弹框配置 {@link AppDialogConfig}
      * @return
+     * @deprecated 即将废弃，下一个版本可能会移除此方法。
      */
+    @Deprecated
     public View createAppDialogView(@NonNull Context context,@NonNull AppDialogConfig config){
-        View view = config.getView(context);
-        TextView tvDialogTitle = view.findViewById(config.getTitleId());
-        setText(tvDialogTitle,config.getTitle());
-        tvDialogTitle.setVisibility(config.isHideTitle() ? View.GONE : View.VISIBLE);
-
-        TextView tvDialogContent = view.findViewById(config.getContentId());
-        setText(tvDialogContent,config.getContent());
-
-        Button btnDialogCancel = view.findViewById(config.getCancelId());
-        setText(btnDialogCancel,config.getCancel());
-        btnDialogCancel.setOnClickListener(config.getOnClickCancel() != null ? config.getOnClickCancel() : mOnClickDismissDialog);
-        btnDialogCancel.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
-
-        //不强制要求要有中间的线
-        View line = view.findViewById(config.getLineId());
-        if(line != null){
-            line.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
-        }
-
-        Button btnDialogOK = view.findViewById(config.getOkId());
-        setText(btnDialogOK,config.getOk());
-        btnDialogOK.setOnClickListener(config.getOnClickOk() != null ? config.getOnClickOk() : mOnClickDismissDialog);
-
-        return view;
+        return config.buildAppDialogView();
     }
+
 
     //-------------------------------------------
 
-    private View.OnClickListener mOnClickDismissDialog = new View.OnClickListener() {
+    View.OnClickListener mOnClickDismissDialog = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             dismissDialog();
         }
     };
-
-    private void setText(TextView tv,CharSequence text){
-        if(!TextUtils.isEmpty(text)){
-            tv.setText(text);
-        }
-    }
 
     //-------------------------------------------
 
@@ -147,22 +117,44 @@ public enum AppDialog {
 
     /**
      * 显示弹框
-     * @param context
      * @param config 弹框配置 {@link AppDialogConfig}
      */
+    public void showDialog(AppDialogConfig config){
+        showDialog(config,true);
+    }
+
+    /**
+     * 显示弹框 请使用{@link #showDialog(AppDialogConfig)}
+     * @param context
+     * @param config 弹框配置 {@link AppDialogConfig}
+     * @deprecated 即将废弃，下一个版本可能会移除此方法。
+     */
+    @Deprecated
     public void showDialog(Context context,AppDialogConfig config){
-        showDialog(context,config,true);
+        showDialog(config,true);
+    }
+
+    /**
+     * 显示弹框，请使用{@link #showDialog(AppDialogConfig, boolean)}
+     * @param context
+     * @param config 弹框配置 {@link AppDialogConfig}
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     * @deprecated 即将废弃，下一个版本可能会移除此方法。
+     */
+    @Deprecated
+    public void showDialog(Context context,AppDialogConfig config,boolean isCancel){
+        showDialog(config,isCancel);
     }
 
     /**
      * 显示弹框
-     * @param context
      * @param config 弹框配置 {@link AppDialogConfig}
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
      */
-    public void showDialog(Context context,AppDialogConfig config,boolean isCancel){
-        showDialog(context,createAppDialogView(context,config),R.style.app_dialog,DEFAULT_WIDTH_RATIO,isCancel);
+    public void showDialog(AppDialogConfig config,boolean isCancel){
+        showDialog(config.getContext(),config.buildAppDialogView(),config.getStyleId(),DEFAULT_WIDTH_RATIO,isCancel);
     }
+
 
     /**
      * 显示弹框
@@ -208,24 +200,24 @@ public enum AppDialog {
      * 显示弹框
      * @param context
      * @param contentView 弹框内容视图
-     * @param resId Dialog样式
+     * @param styleId Dialog样式
      * @param widthRatio 宽度比例，根据屏幕宽度计算得来
      */
-    public void showDialog(Context context, View contentView, @StyleRes int resId, float widthRatio){
-        showDialog(context,contentView,resId,widthRatio,true);
+    public void showDialog(Context context, View contentView, @StyleRes int styleId, float widthRatio){
+        showDialog(context,contentView,styleId,widthRatio,true);
     }
 
     /**
      * 显示弹框
      * @param context
      * @param contentView 弹框内容视图
-     * @param resId Dialog样式
+     * @param styleId Dialog样式
      * @param widthRatio 宽度比例，根据屏幕宽度计算得来
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
      */
-    public void showDialog(Context context, View contentView, @StyleRes int resId, float widthRatio,final boolean isCancel){
+    public void showDialog(Context context, View contentView, @StyleRes int styleId, float widthRatio,final boolean isCancel){
         dismissDialog();
-        mDialog = createDialog(context,contentView,resId,widthRatio,isCancel);
+        mDialog = createDialog(context,contentView,styleId,widthRatio,isCancel);
         mDialog.show();
     }
 
@@ -244,21 +236,42 @@ public enum AppDialog {
 
     /**
      * 创建弹框
-     * @param context
      * @param config 弹框配置 {@link AppDialogConfig}
      */
+    public Dialog createDialog(AppDialogConfig config){
+        return createDialog(config,true);
+    }
+
+    /**
+     * 创建弹框，请使用{@link #createDialog(AppDialogConfig)}
+     * @param context
+     * @param config 弹框配置 {@link AppDialogConfig}
+     * @deprecated 即将废弃，下一个版本可能会移除此方法。
+     */
+    @Deprecated
     public Dialog createDialog(Context context,AppDialogConfig config){
-        return createDialog(context,config,true);
+        return createDialog(config,true);
+    }
+
+    /**
+     * 创建弹框，请使用{@link #createDialog(AppDialogConfig, boolean)}
+     * @param context
+     * @param config 弹框配置 {@link AppDialogConfig}
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     * @deprecated 即将废弃，下一个版本可能会移除此方法。
+     */
+    @Deprecated
+    public Dialog createDialog(Context context,AppDialogConfig config,boolean isCancel){
+        return createDialog(config,isCancel);
     }
 
     /**
      * 创建弹框
-     * @param context
      * @param config 弹框配置 {@link AppDialogConfig}
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
      */
-    public Dialog createDialog(Context context,AppDialogConfig config,boolean isCancel){
-        return createDialog(context,createAppDialogView(context,config),R.style.app_dialog,DEFAULT_WIDTH_RATIO,isCancel);
+    public Dialog createDialog(AppDialogConfig config,boolean isCancel){
+        return createDialog(config.getContext(),config.buildAppDialogView(),config.getStyleId(),DEFAULT_WIDTH_RATIO,isCancel);
     }
 
     /**
@@ -305,23 +318,23 @@ public enum AppDialog {
      * 创建弹框
      * @param context
      * @param contentView 弹框内容视图
-     * @param resId Dialog样式
+     * @param styleId Dialog样式
      * @param widthRatio 宽度比例，根据屏幕宽度计算得来
      */
-    public Dialog createDialog(Context context, View contentView, @StyleRes int resId, float widthRatio){
-        return createDialog(context,contentView,resId,widthRatio,true);
+    public Dialog createDialog(Context context, View contentView, @StyleRes int styleId, float widthRatio){
+        return createDialog(context,contentView,styleId,widthRatio,true);
     }
 
     /**
      * 创建弹框
      * @param context
      * @param contentView 弹框内容视图
-     * @param resId Dialog样式
+     * @param styleId Dialog样式
      * @param widthRatio 宽度比例，根据屏幕宽度计算得来
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
      */
-    public Dialog createDialog(Context context, View contentView, @StyleRes int resId, float widthRatio,final boolean isCancel){
-        Dialog dialog = new Dialog(context,resId);
+    public Dialog createDialog(Context context, View contentView, @StyleRes int styleId, float widthRatio,final boolean isCancel){
+        Dialog dialog = new Dialog(context,styleId);
         dialog.setContentView(contentView);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {

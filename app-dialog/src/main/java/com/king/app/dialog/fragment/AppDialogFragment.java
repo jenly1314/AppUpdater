@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.king.app.dialog.AppDialogConfig;
+import com.king.app.dialog.BaseDialogConfig;
 import com.king.app.dialog.R;
 
 /**
@@ -13,9 +13,9 @@ import com.king.app.dialog.R;
  */
 public class AppDialogFragment extends BaseDialogFragment {
 
-    private AppDialogConfig config;
+    private BaseDialogConfig config;
 
-    public static AppDialogFragment newInstance(AppDialogConfig config) {
+    public static AppDialogFragment newInstance(BaseDialogConfig config) {
 
         Bundle args = new Bundle();
         AppDialogFragment fragment = new AppDialogFragment();
@@ -33,28 +33,35 @@ public class AppDialogFragment extends BaseDialogFragment {
     }
 
     public void init(View rootView){
-        if(config!=null){
+        if(config != null){
             TextView tvDialogTitle = rootView.findViewById(config.getTitleId());
-            setText(tvDialogTitle,config.getTitle());
-            tvDialogTitle.setVisibility(config.isHideTitle() ? View.GONE : View.VISIBLE);
+            if(tvDialogTitle != null){
+                setText(tvDialogTitle,config.getTitle());
+                tvDialogTitle.setVisibility(config.isHideTitle() ? View.GONE : View.VISIBLE);
+            }
 
             TextView tvDialogContent = rootView.findViewById(config.getContentId());
-            setText(tvDialogContent,config.getContent());
+            if(tvDialogContent != null){
+                setText(tvDialogContent,config.getContent());
+            }
 
             Button btnDialogCancel = rootView.findViewById(config.getCancelId());
-            setText(btnDialogCancel,config.getCancel());
-            btnDialogCancel.setOnClickListener(config.getOnClickCancel() != null ? config.getOnClickCancel() : getOnClickDismiss());
-            btnDialogCancel.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
+            if(btnDialogCancel != null){
+                setText(btnDialogCancel,config.getCancel());
+                btnDialogCancel.setOnClickListener(config.getOnClickCancel() != null ? config.getOnClickCancel() : getOnClickDismiss());
+                btnDialogCancel.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
+            }
 
-            //不强制要求要有中间的线
             View line = rootView.findViewById(config.getLineId());
             if(line != null){
                 line.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
             }
 
             Button btnDialogOK = rootView.findViewById(config.getOkId());
-            setText(btnDialogOK,config.getOk());
-            btnDialogOK.setOnClickListener(config.getOnClickOk() != null ? config.getOnClickOk() : getOnClickDismiss());
+            if(btnDialogOK != null){
+                setText(btnDialogOK,config.getOk());
+                btnDialogOK.setOnClickListener(config.getOnClickOk() != null ? config.getOnClickOk() : getOnClickDismiss());
+            }
 
         }
     }

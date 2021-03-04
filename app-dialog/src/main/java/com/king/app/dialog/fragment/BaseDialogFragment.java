@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +58,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
     }
 
     protected void setText(TextView tv, CharSequence text){
-        if(!TextUtils.isEmpty(text)){
+        if(text != null){
             tv.setText(text);
         }
     }
