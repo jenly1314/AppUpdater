@@ -76,7 +76,7 @@ public class OkHttpManager implements IHttpManager {
 
 
     @Override
-    public void download(String url, final String path, final String filename, @Nullable Map<String, String> requestProperty, final DownloadCallback callback) {
+    public void download(String url,final String path,final String filename, @Nullable Map<String, String> requestProperty,final DownloadCallback callback) {
         isCancel = false;
         new DownloadTask(okHttpClient,url,path,filename,requestProperty,callback).execute();
     }
@@ -90,7 +90,7 @@ public class OkHttpManager implements IHttpManager {
     /**
      * 异步下载任务
      */
-    private class DownloadTask extends AsyncTask<Void,Long, File> {
+    private class DownloadTask extends AsyncTask<Void,Long,File> {
         private String url;
 
         private String path;
@@ -158,7 +158,7 @@ public class OkHttpManager implements IHttpManager {
                         fos.write(buffer,0,len);
                         progress += len;
                         //更新进度
-                        if(length>0){
+                        if(length > 0){
                             publishProgress(progress,length);
                         }
                     }
@@ -168,6 +168,10 @@ public class OkHttpManager implements IHttpManager {
                     is.close();
 
                     response.close();
+
+                    if(progress <= 0 && length <= 0){
+                        throw new IllegalStateException(String.format("contentLength = %d",length));
+                    }
 
                     return file;
 
@@ -186,7 +190,7 @@ public class OkHttpManager implements IHttpManager {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if(callback!=null){
+            if(callback != null){
                 callback.onStart(url);
             }
         }
@@ -194,8 +198,8 @@ public class OkHttpManager implements IHttpManager {
         @Override
         protected void onPostExecute(File file) {
             super.onPostExecute(file);
-            if(callback!=null){
-                if(file!=null){
+            if(callback != null){
+                if(file != null){
                     callback.onFinish(file);
                 }else{
                     callback.onError(exception);
@@ -207,7 +211,7 @@ public class OkHttpManager implements IHttpManager {
         @Override
         protected void onProgressUpdate(Long... values) {
             super.onProgressUpdate(values);
-            if(callback!=null){
+            if(callback != null){
                 if(!isCancelled()){
                     callback.onProgress(values[0],values[1]);
                 }
@@ -218,7 +222,7 @@ public class OkHttpManager implements IHttpManager {
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            if(callback!=null){
+            if(callback != null){
                 callback.onCancel();
             }
         }
