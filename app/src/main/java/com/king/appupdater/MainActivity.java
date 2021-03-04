@@ -3,7 +3,6 @@ package com.king.appupdater;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -33,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private final Object mLock = new Object();
 
     //下载出现Failed to connect to raw.githubusercontent.com时，可以换个下载链接测试，github的raw.githubusercontent.com目前不太稳定。
-    private String mUrl = "https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk";
+//    private String mUrl = "https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk";
+    private String mUrl = "https://gitlab.com/jenly1314/AppUpdater/-/raw/master/app/release/app-release.apk";
 
     private ProgressBar progressBar;
 
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
      * 简单弹框升级
      */
     private void clickBtn4(){
-        AppDialogConfig config = new AppDialogConfig();
+        AppDialogConfig config = new AppDialogConfig(getContext());
         config.setTitle("简单弹框升级")
                 .setOk("升级")
                 .setContent("1、新增某某功能、\n2、修改某某问题、\n3、优化某某BUG、")
@@ -178,9 +178,8 @@ public class MainActivity extends AppCompatActivity {
      * 简单自定义弹框升级
      */
     private void clickBtn5(){
-        AppDialogConfig config = new AppDialogConfig();
-        config.setLayoutId(R.layout.dialog)
-                .setOk("升级")
+        AppDialogConfig config = new AppDialogConfig(getContext(),R.layout.dialog);
+        config.setOk("升级")
                 .setHideCancel(true)
                 .setTitle("简单自定义弹框升级")
                 .setContent("1、新增某某功能、\n2、修改某某问题、\n3、优化某某BUG、")
@@ -241,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
      * 简单DialogFragment升级
      */
     private void clickBtn7(){
-        AppDialogConfig config = new AppDialogConfig();
+        AppDialogConfig config = new AppDialogConfig(getContext());
         config.setTitle("简单DialogFragment升级")
                 .setOk("升级")
                 .setContent("1、新增某某功能、\n2、修改某某问题、\n3、优化某某BUG、")

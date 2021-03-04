@@ -102,7 +102,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 ```
 ```Java
     //简单弹框升级
-    AppDialogConfig config = new AppDialogConfig();
+    AppDialogConfig config = new AppDialogConfig(context);
     config.setTitle("简单弹框升级")
             .setOk("升级")
             .setContent("1、新增某某功能、\n2、修改某某问题、\n3、优化某某BUG、")
@@ -120,7 +120,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 ```
 ```Java
     //简单DialogFragment升级
-    AppDialogConfig config = new AppDialogConfig();
+    AppDialogConfig config = new AppDialogConfig(context);
     config.setTitle("简单DialogFragment升级")
             .setOk("升级")
             .setContent("1、新增某某功能、\n2、修改某某问题、\n3、优化某某BUG、")
@@ -149,6 +149,9 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 **app-dialog** [Proguard rules](app-dialog/proguard-rules.pro)
 
 ## 版本记录
+
+#### v1.0.10：2021-3-4
+*  AppDialogConfig添加构造参数，简化自定义扩展用法
 
 #### v1.0.9：2020-12-11
 *  优化默认Dialog样式的显示细节
