@@ -110,7 +110,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
                 @Override
                 public void onClick(View v) {
                     new AppUpdater.Builder()
-                            .serUrl(mUrl)
+                            .setUrl(mUrl)
                             .build(getContext())
                             .start();
                     AppDialog.INSTANCE.dismissDialog();
@@ -128,7 +128,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
                 @Override
                 public void onClick(View v) {
                     new AppUpdater.Builder()
-                            .serUrl(mUrl)
+                            .setUrl(mUrl)
                             .setFilename("AppUpdater.apk")
                             .build(getContext())
                             .setHttpManager(OkHttpManager.getInstance())//不设置HttpManager时，默认使用HttpsURLConnection下载，如果使用OkHttpClient实现下载，需依赖okhttp库
