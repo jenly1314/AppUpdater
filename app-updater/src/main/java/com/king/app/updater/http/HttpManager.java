@@ -73,6 +73,7 @@ public class HttpManager implements IHttpManager {
      * 异步下载任务
      */
     private class DownloadTask extends AsyncTask<Void,Long,File> {
+
         private String url;
 
         private String path;
@@ -102,7 +103,7 @@ public class HttpManager implements IHttpManager {
                 connect.setReadTimeout(mTimeout);
                 connect.setConnectTimeout(mTimeout);
 
-                if(requestProperty!=null){
+                if(requestProperty != null){
                     for(Map.Entry<String,String> entry : requestProperty.entrySet()){
                         connect.setRequestProperty(entry.getKey(),entry.getValue());
                     }
@@ -150,6 +151,10 @@ public class HttpManager implements IHttpManager {
 
                         connect.disconnect();
 
+                        if(progress <= 0 && length <= 0){
+                            throw new IllegalStateException(String.format("contentLength = %d",length));
+                        }
+
                         return file;
                     }
                     case HttpURLConnection.HTTP_MULT_CHOICE:
@@ -187,7 +192,7 @@ public class HttpManager implements IHttpManager {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if(callback!=null){
+            if(callback != null){
                 callback.onStart(url);
             }
         }
@@ -195,8 +200,8 @@ public class HttpManager implements IHttpManager {
         @Override
         protected void onPostExecute(File file) {
             super.onPostExecute(file);
-            if(callback!=null){
-                if(file!=null){
+            if(callback != null){
+                if(file != null){
                     callback.onFinish(file);
                 }else{
                     callback.onError(exception);
@@ -208,7 +213,7 @@ public class HttpManager implements IHttpManager {
         @Override
         protected void onProgressUpdate(Long... values) {
             super.onProgressUpdate(values);
-            if(callback!=null){
+            if(callback != null){
                 if(!isCancelled()){
                     callback.onProgress(values[0],values[1]);
                 }
@@ -219,7 +224,7 @@ public class HttpManager implements IHttpManager {
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            if(callback!=null){
+            if(callback != null){
                 callback.onCancel();
             }
         }
