@@ -3,7 +3,7 @@
 ![Image](app/src/main/ic_launcher-web.png)
 
 [![Download](https://img.shields.io/badge/download-App-blue.svg)](https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk)
-[![JCenter](https://img.shields.io/badge/JCenter-1.0.9-46C018.svg)](https://bintray.com/beta/#/jenly/maven/app-updater)
+[![JCenter](https://img.shields.io/badge/JCenter-1.0.10-46C018.svg)](https://bintray.com/beta/#/jenly/maven/app-updater)
 [![JitPack](https://jitpack.io/v/jenly1314/AppUpdater.svg)](https://jitpack.io/#jenly1314/AppUpdater)
 [![CI](https://travis-ci.org/jenly1314/AppUpdater.svg?branch=master)](https://travis-ci.org/jenly1314/AppUpdater)
 [![CircleCI](https://circleci.com/gh/jenly1314/AppUpdater.svg?style=svg)](https://circleci.com/gh/jenly1314/AppUpdater)
@@ -44,7 +44,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-updater</artifactId>
-      <version>1.0.9</version>
+      <version>1.0.10</version>
       <type>pom</type>
     </dependency>
     
@@ -52,7 +52,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     <dependency>
       <groupId>com.king.app</groupId>
       <artifactId>app-dialog</artifactId>
-      <version>1.0.9</version>
+      <version>1.0.10</version>
       <type>pom</type>
     </dependency>
 ```
@@ -61,25 +61,25 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
     //----------AndroidX 版本
     //app-updater
-    implementation 'com.king.app:app-updater:1.0.9-androidx'
+    implementation 'com.king.app:app-updater:1.0.10-androidx'
     //app-dialog
-    implementation 'com.king.app:app-dialog:1.0.9-androidx'
+    implementation 'com.king.app:app-dialog:1.0.10-androidx'
     
     //----------Android Support 版本
     //app-updater
-    implementation 'com.king.app:app-updater:1.0.9'
+    implementation 'com.king.app:app-updater:1.0.10'
     //app-dialog
-    implementation 'com.king.app:app-dialog:1.0.9'
+    implementation 'com.king.app:app-dialog:1.0.10'
 ```
 ### Lvy:
 ```lvy
     //app-updater
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.9'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.10'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
     
     //app-dialog
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.9'>
+    <dependency org='com.king.app' name='app-dialog' rev='1.0.10'>
       <artifact name='$AID' ext='pom'></artifact>
     </dependency>
 ```
@@ -152,6 +152,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
 #### v1.0.10：2021-3-4
 *  AppDialogConfig添加构造参数，简化自定义扩展用法
+*  优化细节
 
 #### v1.0.9：2020-12-11
 *  优化默认Dialog样式的显示细节
