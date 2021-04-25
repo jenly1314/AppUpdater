@@ -51,6 +51,7 @@ ext.deps = deps
 
 def addRepos(RepositoryHandler handler) {
     handler.google()
+    handler.mavenCentral()
     handler.jcenter()
 }
 ext.addRepos = this.&addRepos
