@@ -31,8 +31,6 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 - [x] 支持取消下载
 - [x] 支持使用OkHttpClient下载
 
-### [AndroidX version](https://github.com/jenly1314/AppUpdater/tree/androidx)
-
 ## Gif 展示
 ![Image](GIF.gif)
 
