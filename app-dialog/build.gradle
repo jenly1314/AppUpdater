@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
-apply from: 'bintray.gradle'
+//apply from: 'bintray.gradle'
+apply plugin: "com.vanniktech.maven.publish"
 
 android {
 
@@ -38,6 +39,7 @@ dependencies {
     compileOnly deps.support.appcompat
 
 }
+
 
 
 
