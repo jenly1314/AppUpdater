@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         //强制升级，拦截返回
-        AppDialog.INSTANCE.showDialog(getContext(),AppDialog.INSTANCE.createAppDialogView(getContext(),config),false);
+        AppDialog.INSTANCE.showDialog(getContext(),config,false);
     }
 
     /**

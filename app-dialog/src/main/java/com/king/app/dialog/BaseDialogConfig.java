@@ -90,6 +90,7 @@ public class BaseDialogConfig {
     }
 
     /**
+     * 此方法即将废弃，请通过构造{@link #BaseDialogConfig(int)}来初始化
      * @param layoutId
      * @return
      * @deprecated 即将废弃，下一个版本可能会移除此方法

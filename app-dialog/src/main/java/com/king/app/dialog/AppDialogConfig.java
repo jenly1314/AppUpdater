@@ -12,7 +12,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 
 /**
- * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public class AppDialogConfig extends BaseDialogConfig{
 
@@ -38,7 +38,7 @@ public class AppDialogConfig extends BaseDialogConfig{
 
 
     /**
-     * use {@link #getDialogView()}
+     *
      * @param context
      * @return
      * @deprecated 即将废弃，下一个版本可能会移除此方法。
@@ -48,7 +48,7 @@ public class AppDialogConfig extends BaseDialogConfig{
         return getDialogView();
     }
 
-    public View getDialogView(){
+    private View getDialogView(){
         if(view == null){
             view = LayoutInflater.from(context).inflate(getLayoutId(),null);
         }

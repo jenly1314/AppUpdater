@@ -10,13 +10,12 @@ import android.view.WindowManager;
 
 import com.king.app.dialog.fragment.AppDialogFragment;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 /**
- * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public enum AppDialog {
 
@@ -27,19 +26,6 @@ public enum AppDialog {
     private Dialog mDialog;
 
     private String mTag;
-
-    //-------------------------------------------
-
-    /**
-     * @param context
-     * @param config 弹框配置 {@link AppDialogConfig}
-     * @return
-     * @deprecated 即将废弃，下一个版本可能会移除此方法。
-     */
-    @Deprecated
-    public View createAppDialogView(@NonNull Context context,@NonNull AppDialogConfig config){
-        return config.buildAppDialogView();
-    }
 
 
     //-------------------------------------------
@@ -120,18 +106,16 @@ public enum AppDialog {
      * @param config 弹框配置 {@link AppDialogConfig}
      */
     public void showDialog(AppDialogConfig config){
-        showDialog(config,true);
+        showDialog(config.getContext(),config);
     }
 
     /**
      * 显示弹框 请使用{@link #showDialog(AppDialogConfig)}
      * @param context
      * @param config 弹框配置 {@link AppDialogConfig}
-     * @deprecated 即将废弃，下一个版本可能会移除此方法。
      */
-    @Deprecated
     public void showDialog(Context context,AppDialogConfig config){
-        showDialog(config,true);
+        showDialog(context,config,true);
     }
 
     /**
@@ -139,11 +123,9 @@ public enum AppDialog {
      * @param context
      * @param config 弹框配置 {@link AppDialogConfig}
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
-     * @deprecated 即将废弃，下一个版本可能会移除此方法。
      */
-    @Deprecated
     public void showDialog(Context context,AppDialogConfig config,boolean isCancel){
-        showDialog(config,isCancel);
+        showDialog(context,config.buildAppDialogView(),isCancel);
     }
 
     /**
@@ -246,11 +228,9 @@ public enum AppDialog {
      * 创建弹框，请使用{@link #createDialog(AppDialogConfig)}
      * @param context
      * @param config 弹框配置 {@link AppDialogConfig}
-     * @deprecated 即将废弃，下一个版本可能会移除此方法。
      */
-    @Deprecated
     public Dialog createDialog(Context context,AppDialogConfig config){
-        return createDialog(config,true);
+        return createDialog(context,config,true);
     }
 
     /**
@@ -258,11 +238,9 @@ public enum AppDialog {
      * @param context
      * @param config 弹框配置 {@link AppDialogConfig}
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
-     * @deprecated 即将废弃，下一个版本可能会移除此方法。
      */
-    @Deprecated
     public Dialog createDialog(Context context,AppDialogConfig config,boolean isCancel){
-        return createDialog(config,isCancel);
+        return createDialog(context,config.buildAppDialogView(),isCancel);
     }
 
     /**
