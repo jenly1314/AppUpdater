@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                         AppDialog.INSTANCE.dismissDialog();
                     }
                 });
-        AppDialog.INSTANCE.showDialog(getContext(),config);
+        AppDialog.INSTANCE.showDialog(config);
     }
 
     /**
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         //强制升级，拦截返回
-        AppDialog.INSTANCE.showDialog(getContext(),config,false);
+        AppDialog.INSTANCE.showDialog(config,false);
     }
 
     /**

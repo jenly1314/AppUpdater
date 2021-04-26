@@ -3,6 +3,7 @@ package com.king.app.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -106,27 +107,9 @@ public enum AppDialog {
      * @param config 弹框配置 {@link AppDialogConfig}
      */
     public void showDialog(AppDialogConfig config){
-        showDialog(config.getContext(),config);
+        showDialog(config,true);
     }
 
-    /**
-     * 显示弹框 请使用{@link #showDialog(AppDialogConfig)}
-     * @param context
-     * @param config 弹框配置 {@link AppDialogConfig}
-     */
-    public void showDialog(Context context,AppDialogConfig config){
-        showDialog(context,config,true);
-    }
-
-    /**
-     * 显示弹框，请使用{@link #showDialog(AppDialogConfig, boolean)}
-     * @param context
-     * @param config 弹框配置 {@link AppDialogConfig}
-     * @param isCancel 是否可取消（默认为true，false则拦截back键）
-     */
-    public void showDialog(Context context,AppDialogConfig config,boolean isCancel){
-        showDialog(context,config.buildAppDialogView(),isCancel);
-    }
 
     /**
      * 显示弹框
@@ -137,6 +120,25 @@ public enum AppDialog {
         showDialog(config.getContext(),config.buildAppDialogView(),config.getStyleId(),DEFAULT_WIDTH_RATIO,isCancel);
     }
 
+    /**
+     * 显示弹框
+     * @param context
+     * @param config 弹框配置 {@link AppDialogConfig}
+     */
+    public void showDialog(Context context,AppDialogConfig config){
+        showDialog(context,config,true);
+    }
+
+
+    /**
+     * 显示弹框
+     * @param context
+     * @param config 弹框配置 {@link AppDialogConfig}
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     */
+    public void showDialog(Context context,AppDialogConfig config,boolean isCancel){
+        showDialog(context,config.buildAppDialogView(),config.getStyleId(),DEFAULT_WIDTH_RATIO,isCancel);
+    }
 
     /**
      * 显示弹框
@@ -225,7 +227,16 @@ public enum AppDialog {
     }
 
     /**
-     * 创建弹框，请使用{@link #createDialog(AppDialogConfig)}
+     * 创建弹框
+     * @param config 弹框配置 {@link AppDialogConfig}
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     */
+    public Dialog createDialog(AppDialogConfig config,boolean isCancel){
+        return createDialog(config.getContext(),config.buildAppDialogView(),config.getStyleId(),DEFAULT_WIDTH_RATIO,isCancel);
+    }
+
+    /**
+     * 创建弹框
      * @param context
      * @param config 弹框配置 {@link AppDialogConfig}
      */
@@ -234,22 +245,13 @@ public enum AppDialog {
     }
 
     /**
-     * 创建弹框，请使用{@link #createDialog(AppDialogConfig, boolean)}
+     * 创建弹框
      * @param context
      * @param config 弹框配置 {@link AppDialogConfig}
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
      */
     public Dialog createDialog(Context context,AppDialogConfig config,boolean isCancel){
-        return createDialog(context,config.buildAppDialogView(),isCancel);
-    }
-
-    /**
-     * 创建弹框
-     * @param config 弹框配置 {@link AppDialogConfig}
-     * @param isCancel 是否可取消（默认为true，false则拦截back键）
-     */
-    public Dialog createDialog(AppDialogConfig config,boolean isCancel){
-        return createDialog(config.getContext(),config.buildAppDialogView(),config.getStyleId(),DEFAULT_WIDTH_RATIO,isCancel);
+        return createDialog(context,config.buildAppDialogView(),config.getStyleId(),DEFAULT_WIDTH_RATIO,isCancel);
     }
 
     /**
