@@ -168,6 +168,7 @@ public class AppUpdater {
          * 设置保存的路径，（建议使用默认，不做设置）
          * @param path  下载保存的文件路径
          * @return
+         * @deprecated 因为适配Android Q的分区存储，所以此方法已弃用，不建议再使用
          */
         @Deprecated
         public Builder setPath(String path){
@@ -197,11 +198,11 @@ public class AppUpdater {
 
         /**
          * 设置通知ID
-         * @param notifyId 通知ID
+         * @param notificationId 通知ID
          * @return
          */
-        public Builder setNotificationId(int notifyId) {
-            mConfig.setNotificationId(notifyId);
+        public Builder setNotificationId(int notificationId) {
+            mConfig.setNotificationId(notificationId);
             return this;
         }
 
@@ -353,11 +354,10 @@ public class AppUpdater {
 
         /**
          *  设置是否自动删除取消下载的文件
-         * @param isDeleteCancelFile 是否删除取消下载的文件（默认为true）
-         * @return
+         * @param deleteCancelFile 是否删除取消下载的文件（默认为true）
          */
-        public Builder setDeleteCancelFile(boolean isDeleteCancelFile){
-            mConfig.setDeleteCancelFile(isDeleteCancelFile);
+        public Builder setDeleteCancelFile(boolean deleteCancelFile){
+            mConfig.setDeleteCancelFile(deleteCancelFile);
             return this;
         }
 
