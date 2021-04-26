@@ -48,7 +48,9 @@ public final class AppUtils {
         if(TextUtils.isEmpty(filename)){
             filename = defaultName;
         }
-
+        if(filename.endsWith(".apk")){
+            return filename;
+        }
         return String.format("%s.apk",filename);
     }
 

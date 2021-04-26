@@ -35,8 +35,8 @@ dependencies {
     testImplementation deps.test.junit
     androidTestImplementation deps.test.runner
     androidTestImplementation deps.test.espresso
-    //support
-    compileOnly deps.support.appcompat
+    //androidx
+    compileOnly deps.androidx.appcompat
     compileOnly deps.okhttp
 
 }
