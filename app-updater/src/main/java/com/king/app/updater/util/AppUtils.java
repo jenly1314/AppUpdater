@@ -154,10 +154,13 @@ public final class AppUtils {
         if(file!=null && file.exists()){
             String packageName = context.getPackageName();
             PackageInfo packageInfo = AppUtils.getPackageInfo(context,file.getAbsolutePath());
-            if(packageInfo!=null && versionCode == packageInfo.versionCode){//比对versionCode
-                ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-                if(applicationInfo!=null && packageName.equals(applicationInfo.packageName)){//比对packageName
-                    return true;
+            if(packageInfo != null){//比对versionCode
+                Log.d(Constants.TAG,String.format("ApkVersionCode:%d",packageInfo.versionCode));
+                if(versionCode == packageInfo.versionCode){
+                    ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+                    if(applicationInfo != null && packageName.equals(applicationInfo.packageName)){//比对packageName
+                        return true;
+                    }
                 }
             }
         }

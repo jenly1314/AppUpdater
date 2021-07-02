@@ -73,7 +73,7 @@ public class DownloadService extends Service {
                 UpdateConfig config =  intent.getParcelableExtra(Constants.KEY_UPDATE_CONFIG);
                 startDownload(config,null,null);
             }else{
-                Log.w(Constants.TAG,"Please do not repeat the download.");
+                Log.w(Constants.TAG,"Please do not duplicate downloads.");
             }
         }
 
@@ -96,12 +96,12 @@ public class DownloadService extends Service {
             return;
         }
 
-        if(callback!=null){
+        if(callback != null){
             callback.onDownloading(isDownloading);
         }
 
         if(isDownloading){
-            Log.w(Constants.TAG,"Please do not repeat the download.");
+            Log.w(Constants.TAG,"Please do not duplicate downloads.");
             return;
         }
 
@@ -131,9 +131,11 @@ public class DownloadService extends Service {
             //是否存在相同的apk
             boolean isExistApk = false;
             if(!TextUtils.isEmpty(apkMD5)){//如果存在MD5，则优先校验MD5
+                Log.d(Constants.TAG,String.format("UpdateConfig.apkMD5:%d",apkMD5));
                 isExistApk = AppUtils.checkFileMD5(mFile,apkMD5);
-            }else if(versionCode!=null){//如果存在versionCode，则校验versionCode
+            }else if(versionCode != null){//如果存在versionCode，则校验versionCode
                 try{
+                    Log.d(Constants.TAG,String.format("UpdateConfig.versionCode:%d",versionCode));
                     isExistApk = AppUtils.apkExists(getContext(),versionCode,mFile);
                 }catch (Exception e){
                     Log.w(Constants.TAG,e);
@@ -303,7 +305,7 @@ public class DownloadService extends Service {
                 }
             }
 
-            if(callback!=null){
+            if(callback != null){
                 callback.onProgress(progress,total,isChange);
             }
         }

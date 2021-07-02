@@ -3,6 +3,7 @@ package com.king.appupdater;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,8 @@ import androidx.appcompat.app.AppCompatActivity;
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public class MainActivity extends AppCompatActivity {
+
+    private static String TAG = MainActivity.class.getSimpleName();
 
     private final Object mLock = new Object();
 
@@ -92,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onDownloading(boolean isDownloading) {
                         if(isDownloading){
                             showToast("已经在下载中,请勿重复下载。");
+                        }else{
+                            showToast("开始下载…");
                         }
                     }
 
@@ -103,10 +108,11 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onProgress(long progress, long total, boolean isChange) {
+                        int currProgress = (int)(progress * 1.0f / total * 100.0f);
                         if(isChange){
-                            int currProgress = Math.round(progress * 1.0f / total * 100.0f);
                             progressBar.setProgress(currProgress);
                         }
+                        Log.d(TAG,String.format("onProgress:%d/%d | %d%%",progress,total,currProgress));
                     }
 
                     @Override
@@ -143,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                                 .setUpdateCallback(new AppUpdateCallback() {
                                     @Override
                                     public void onProgress(long progress, long total, boolean isChange) {
-
+                                        Log.d(TAG,String.format("onProgress:%d/%d",progress,total));
                                     }
 
                                     @Override
@@ -222,8 +228,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mAppUpdater = new AppUpdater.Builder()
                         .setUrl(mUrl)
-//                        .setPath(Environment.getExternalStorageDirectory() + "/.AppUpdater")//如果适配Android Q，则Environment.getExternalStorageDirectory()将废弃
-//                        .setPath(getExternalFilesDir(Constants.DEFAULT_DIR).getAbsolutePath())//自定义路径，推荐使用默认
 //                        .setApkMD5("3df5b1c1d2bbd01b4a7ddb3f2722ccca")//支持MD5校验，如果缓存APK的MD5与此MD5相同，则直接取本地缓存安装，推荐使用MD5校验的方式
                         .setVersionCode(BuildConfig.VERSION_CODE)//支持versionCode校验，设置versionCode之后，新版本versionCode相同的apk只下载一次,优先取本地缓存,推荐使用MD5校验的方式
                         .setFilename("AppUpdater.apk")

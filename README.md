@@ -2,7 +2,8 @@
 
 ![Image](app/src/main/ic_launcher-web.png)
 
-[![Download](https://img.shields.io/badge/download-App-blue.svg)](https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk)
+[![Download](https://img.shields.io/badge/download-App-blue.svg)](https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk)、
+[![MavenCentral](https://img.shields.io/maven-central/v/com.github.jenly1314.AppUpdater/app-updater)](https://repo1.maven.org/maven2/com/github/jenly1314/AppUpdater)
 [![JCenter](https://img.shields.io/badge/JCenter-1.0.10-46C018.svg)](https://bintray.com/beta/#/jenly/maven/app-updater)
 [![JitPack](https://jitpack.io/v/jenly1314/AppUpdater.svg)](https://jitpack.io/#jenly1314/AppUpdater)
 [![CI](https://travis-ci.org/jenly1314/AppUpdater.svg?branch=master)](https://travis-ci.org/jenly1314/AppUpdater)
@@ -36,25 +37,36 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
 ## 引入
 
-### Maven：
-```maven
-    //app-updater
-    <dependency>
-      <groupId>com.king.app</groupId>
-      <artifactId>app-updater</artifactId>
-      <version>1.0.10</version>
-      <type>pom</type>
-    </dependency>
+由于2021年2月3日 **JFrog宣布将关闭Bintray和JCenter，计划在2022年2月完全关闭。所以后续版本不再发布至 JCenter
 
-    //app-dialog
-    <dependency>
-      <groupId>com.king.app</groupId>
-      <artifactId>app-dialog</artifactId>
-      <version>1.0.10</version>
-      <type>pom</type>
-    </dependency>
-```
 ### Gradle:
+
+1. 在Project的 **build.gradle** 里面添加远程仓库  
+          
+```gradle
+allprojects {
+    repositories {
+        //...
+        mavenCentral()
+    }
+}
+```
+
+2. 在Module的 **build.gradle** 里面添加引入依赖项
+
+```gradle
+
+    //----------AndroidX 版本
+    //app-updater
+    implementation 'com.github.jenly1314.AppUpdater:app-updater:1.1.0'
+    //app-dialog
+    implementation 'com.github.jenly1314.AppUpdater:app-dialog:1.1.0'
+
+```
+
+
+以前发布至JCenter的版本
+
 ```gradle
 
     //----------AndroidX 版本
@@ -68,28 +80,6 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
     implementation 'com.king.app:app-updater:1.0.10'
     //app-dialog
     implementation 'com.king.app:app-dialog:1.0.10'
-```
-### Lvy:
-```lvy
-    //app-updater
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.10'>
-      <artifact name='$AID' ext='pom'></artifact>
-    </dependency>
-
-    //app-dialog
-    <dependency org='com.king.app' name='app-dialog' rev='1.0.10'>
-      <artifact name='$AID' ext='pom'></artifact>
-    </dependency>
-```
-
-###### 如果Gradle出现compile失败的情况，可以在Project的build.gradle里面添加如下：（也可以使用上面的GitPack来complie）
-```gradle
-    allprojects {
-        repositories {
-            //...
-            maven { url 'https://dl.bintray.com/jenly/maven' }
-        }
-    }
 ```
 
 ## 示例
@@ -138,7 +128,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
 ```
 
-更多使用详情，请查看[app](app)中的源码使用示例或直接查看[API帮助文档](https://jenly1314.github.io/projects/AppUpdater/doc/)
+更多使用详情，请查看[app](app)中的源码使用示例或直接查看[API帮助文档](https://javadoc.jitpack.io/com/github/jenly1314/AppUpdater/1.1.0/javadoc/index.html)
 
 ## 混淆
 
@@ -147,6 +137,10 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 **app-dialog** [Proguard rules](app-dialog/proguard-rules.pro)
 
 ## 版本记录
+
+#### v1.1.0：2021-7-2  (从v1.1.0开始不再发布至JCenter)
+*  后续版本只支持androidx，版本名称不再带有androidx标识
+*  优化细节
 
 #### v1.0.10：2021-3-4
 *  AppDialogConfig添加构造参数，简化自定义扩展用法
