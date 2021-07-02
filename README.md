@@ -37,7 +37,7 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
 ## 引入
 
-由于2021年2月3日 **JFrog宣布将关闭Bintray和JCenter，计划在2022年2月完全关闭。所以后续版本不再发布至 JCenter
+> 由于2021年2月3日 **JFrog宣布将关闭Bintray和JCenter，计划在2022年2月完全关闭。** 所以后续版本不再发布至 **JCenter**
 
 ### Gradle:
 
