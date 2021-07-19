@@ -131,7 +131,7 @@ public class DownloadService extends Service {
             //是否存在相同的apk
             boolean isExistApk = false;
             if(!TextUtils.isEmpty(apkMD5)){//如果存在MD5，则优先校验MD5
-                Log.d(Constants.TAG,String.format("UpdateConfig.apkMD5:%d",apkMD5));
+                Log.d(Constants.TAG,String.format("UpdateConfig.apkMD5:%s",apkMD5));
                 isExistApk = AppUtils.checkFileMD5(mFile,apkMD5);
             }else if(versionCode != null){//如果存在versionCode，则校验versionCode
                 try{
