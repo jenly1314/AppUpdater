@@ -164,11 +164,7 @@ public class DownloadService extends Service {
         }
         Log.d(Constants.TAG,"File:" + mFile);
 
-        if(httpManager != null){
-            mHttpManager = httpManager;
-        }else{
-            mHttpManager = HttpManager.getInstance();
-        }
+        mHttpManager = httpManager != null ? httpManager : HttpManager.getInstance();
         mHttpManager.download(url,path,filename,config.getRequestProperty(),new AppDownloadCallback(config,callback));
 
     }
@@ -177,7 +173,7 @@ public class DownloadService extends Service {
      * 停止下载
      */
     public void stopDownload(){
-        if(mHttpManager!=null){
+        if(mHttpManager != null){
             mHttpManager.cancel();
         }
     }
@@ -231,6 +227,8 @@ public class DownloadService extends Service {
 
         private boolean isDeleteCancelFile;
 
+        private boolean isCancelDownload;
+
         private UpdateCallback callback;
 
         private int reDownloads;
@@ -263,6 +261,7 @@ public class DownloadService extends Service {
             this.isShowPercentage = config.isShowPercentage();
             this.isReDownload = config.isReDownload();
             this.isDeleteCancelFile = config.isDeleteCancelFile();
+            this.isCancelDownload = config.isCancelDownload();
 
         }
 
@@ -272,7 +271,7 @@ public class DownloadService extends Service {
             isDownloading = true;
             mLastProgress = 0;
             if(isShowNotification){
-                NotificationUtils.showStartNotification(getContext(),notifyId,channelId,channelName,notificationIcon,getString(R.string.app_updater_start_notification_title),getString(R.string.app_updater_start_notification_content),config.isVibrate(),config.isSound());
+                NotificationUtils.showStartNotification(getContext(),notifyId,channelId,channelName,notificationIcon,getString(R.string.app_updater_start_notification_title),getString(R.string.app_updater_start_notification_content),config.isVibrate(),config.isSound(),isCancelDownload);
             }
 
             if(callback!=null){
@@ -299,7 +298,7 @@ public class DownloadService extends Service {
                             content += percentage;
                         }
 
-                        NotificationUtils.showProgressNotification(getContext(),notifyId, channelId, notificationIcon, getString(R.string.app_updater_progress_notification_title), content, currProgress, 100);
+                        NotificationUtils.showProgressNotification(getContext(),notifyId, channelId, notificationIcon, getString(R.string.app_updater_progress_notification_title), content, currProgress, 100,isCancelDownload);
 
                     }
                 }

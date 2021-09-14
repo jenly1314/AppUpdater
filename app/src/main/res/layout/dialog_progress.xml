@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/app_dialog_bg">
+    <ImageView
+        android:id="@+id/ivIcon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginRight="4dp"/>
+    <TextView
+        android:id="@+id/tvDialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ivIcon"
+        android:textSize="14sp"
+        android:textColor="@color/app_dialog_title_color"
+        android:text="@string/app_updater_progress_notification_title"/>
+    <TextView
+        android:id="@+id/tvProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvDialogTitle"
+        android:layout_marginTop="10dp"
+        android:text="@string/app_updater_start_notification_content"
+        android:textSize="14sp"
+        android:textColor="@color/app_dialog_content_color"
+        android:lineSpacingMultiplier="1.2" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:max="100"
+        android:layout_below="@+id/tvProgress"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+</RelativeLayout>

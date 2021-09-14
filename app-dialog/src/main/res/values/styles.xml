@@ -2,9 +2,32 @@
 <resources>
 
     <!-- dialog animation -->
-    <style name="app_dialog_animation" parent="android:style/Animation.Dialog">
-        <item name="android:windowEnterAnimation">@anim/app_dialog_in</item>
-        <item name="android:windowExitAnimation">@anim/app_dialog_out</item>
+    <style name="app_dialog_scale_animation" parent="android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/app_dialog_scale_in</item>
+        <item name="android:windowExitAnimation">@anim/app_dialog_scale_out</item>
+    </style>
+
+    <style name="app_dialog_animation" parent="app_dialog_scale_animation">
+    </style>
+
+    <style name="app_dialog_left_animation" parent="android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/app_dialog_left_in</item>
+        <item name="android:windowExitAnimation">@anim/app_dialog_left_out</item>
+    </style>
+
+    <style name="app_dialog_top_animation" parent="android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/app_dialog_top_in</item>
+        <item name="android:windowExitAnimation">@anim/app_dialog_top_out</item>
+    </style>
+
+    <style name="app_dialog_right_animation" parent="android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/app_dialog_right_in</item>
+        <item name="android:windowExitAnimation">@anim/app_dialog_right_out</item>
+    </style>
+
+    <style name="app_dialog_bottom_animation" parent="android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/app_dialog_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/app_dialog_bottom_out</item>
     </style>
 
     <!-- dialog style -->
@@ -15,7 +38,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:windowAnimationStyle">@style/app_dialog_animation</item>
+        <item name="android:windowAnimationStyle">@style/app_dialog_scale_animation</item>
     </style>
 
 </resources>

@@ -361,6 +361,17 @@ public class AppUpdater {
             return this;
         }
 
+        /**
+         * 是否支持通过删除通知栏来取消下载（默认为：false）
+         * @param cancelDownload
+         * @return
+         */
+        public Builder setCancelDownload(boolean cancelDownload){
+            mConfig.setCancelDownload(cancelDownload);
+            return this;
+        }
+
+
         public AppUpdater build(@NonNull Context context){
             AppUpdater appUpdater = new AppUpdater(context,mConfig);
             return appUpdater;

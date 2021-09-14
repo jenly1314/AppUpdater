@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="30dp"
-    android:background="@android:color/white"
+    android:background="@drawable/app_dialog_bg"
     android:orientation="vertical">
     <TextView
         android:id="@+id/tvTitle"
@@ -13,43 +13,48 @@
         android:gravity="center"
         android:padding="6dp"
         android:lines="1"
-        android:textSize="16sp"
-        android:background="#F5F5F5" />
+        android:textSize="16sp" />
     <TextView
         android:id="@+id/tvContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_marginBottom="6dp"
+        android:padding="16dp"
         android:lineSpacingMultiplier="1" />
-    <include layout="@layout/app_dialog_line_h"/>
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center_horizontal">
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/btnConfirm"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:layout_weight="1"
-            android:text="@string/app_dialog_cancel"
-            android:textSize="16sp"
-            android:textColor="@color/app_dialog_button_color_selector"
-            android:background="?android:attr/selectableItemBackground"/>
-        <Button
-            android:id="@+id/btnOK"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:gravity="center"
             android:layout_weight="1"
             android:text="升级"
             android:textSize="16sp"
-            android:textColor="@color/app_dialog_button_color_selector"
-            android:background="?android:attr/selectableItemBackground"/>
+            android:textColor="@color/white"
+            android:background="@drawable/btn_confirm_selector"/>
+        <TextView
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:text="@string/ignore"
+            android:textSize="16sp"
+            android:textColor="@color/btn_cancel_color_selector" />
     </LinearLayout>
 
 </LinearLayout>

@@ -98,6 +98,11 @@ public class UpdateConfig implements Parcelable {
     private boolean isDeleteCancelFile = true;
 
     /**
+     * 是否支持通过删除通知栏来取消下载
+     */
+    private boolean isCancelDownload = false;
+
+    /**
      * APK文件的MD5
      */
     private String apkMD5;
@@ -354,12 +359,23 @@ public class UpdateConfig implements Parcelable {
 
     /**
      *  设置是否自动删除取消下载的文件
-     * @param deleteCancelFile 是否删除取消下载的文件（默认为true）
+     * @param deleteCancelFile 是否删除取消下载的文件（默认为：true）
      */
     public void setDeleteCancelFile(boolean deleteCancelFile) {
         isDeleteCancelFile = deleteCancelFile;
     }
 
+    public boolean isCancelDownload(){
+        return isCancelDownload;
+    }
+
+    /**
+     * 是否支持通过删除通知栏来取消下载（默认为：false）
+     * @param cancelDownload
+     */
+    public void setCancelDownload(boolean cancelDownload) {
+        isCancelDownload = cancelDownload;
+    }
 
     @Override
     public int describeContents() {
@@ -395,6 +411,7 @@ public class UpdateConfig implements Parcelable {
         }
 
         dest.writeByte(this.isDeleteCancelFile ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isCancelDownload ? (byte) 1 : (byte) 0);
         dest.writeString(this.apkMD5);
     }
 
@@ -423,6 +440,7 @@ public class UpdateConfig implements Parcelable {
             this.mRequestProperty.put(key, value);
         }
         this.isDeleteCancelFile = in.readByte() != 0;
+        this.isCancelDownload = in.readByte() != 0;
         this.apkMD5 = in.readString();
     }
 

@@ -98,10 +98,10 @@ public class AppDialogConfig extends BaseDialogConfig{
             line.setVisibility(isHideCancel ? View.GONE : View.VISIBLE);
         }
 
-        Button btnDialogOK = getView(okId);
-        if(btnDialogOK != null){
-            setText(btnDialogOK,ok);
-            btnDialogOK.setOnClickListener(onClickOk != null ? onClickOk : AppDialog.INSTANCE.mOnClickDismissDialog);
+        Button btnDialogConfirm = getView(confirmId);
+        if(btnDialogConfirm != null){
+            setText(btnDialogConfirm,confirm);
+            btnDialogConfirm.setOnClickListener(onClickConfirm != null ? onClickConfirm : AppDialog.INSTANCE.mOnClickDismissDialog);
 
         }
 

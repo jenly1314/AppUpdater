@@ -11,7 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:lines="1"
         android:textSize="@dimen/app_dialog_title_text_size"
         android:textColor="@color/app_dialog_title_color"
@@ -20,10 +23,13 @@
         android:id="@+id/tvDialogContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:textSize="@dimen/app_dialog_content_text_size"
-        android:textColor="@color/app_dialog_content_color"
         android:layout_marginBottom="16dp"
+        android:textColor="@color/app_dialog_content_color"
         android:lineSpacingMultiplier="1.2" />
     <include layout="@layout/app_dialog_line_h"/>
     <LinearLayout
@@ -40,21 +46,21 @@
             android:layout_weight="1"
             android:text="@string/app_dialog_cancel"
             android:textSize="@dimen/app_dialog_button_text_size"
-            android:textColor="@color/app_dialog_button_color_selector"
+            android:textColor="@color/app_cancel_color_selector"
             android:background="?android:attr/selectableItemBackground"/>
         <include
             android:id="@+id/line"
             layout="@layout/app_dialog_line_v"/>
         <Button
-            android:id="@+id/btnDialogOK"
+            android:id="@+id/btnDialogConfirm"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:layout_weight="1"
-            android:text="@string/app_dialog_ok"
+            android:text="@string/app_dialog_confirm"
             android:textSize="@dimen/app_dialog_button_text_size"
-            android:textColor="@color/app_dialog_button_color_selector"
+            android:textColor="@color/app_cancel_color_selector"
             android:background="?android:attr/selectableItemBackground"/>
     </LinearLayout>
 

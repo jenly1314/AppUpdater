@@ -28,7 +28,7 @@ public class NotificationUtils {
     }
 
     /**
-     * 显示开始下载是的通知
+     * 显示开始下载时的通知
      * @param notifyId
      * @param channelId
      * @param channelName
@@ -36,12 +36,12 @@ public class NotificationUtils {
      * @param title
      * @param content
      */
-    public static void showStartNotification(Context context, int notifyId,String channelId, String channelName,@DrawableRes int icon,CharSequence title,CharSequence content,boolean isVibrate,boolean isSound){
+    public static void showStartNotification(Context context, int notifyId,String channelId, String channelName,@DrawableRes int icon,CharSequence title,CharSequence content,boolean isVibrate,boolean isSound, boolean isCancelDownload){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             createNotificationChannel(context,channelId,channelName,isVibrate,isSound);
         }
         NotificationCompat.Builder builder = buildNotification(context,channelId,icon,title,content);
-        builder.setPriority(NotificationManager.IMPORTANCE_HIGH);
+        builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
         if(isVibrate && isSound){
             builder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND);
         }else if(isVibrate){
@@ -50,8 +50,20 @@ public class NotificationUtils {
             builder.setDefaults(Notification.DEFAULT_SOUND);
         }
 
+        if(isCancelDownload){
+            Intent intent = new Intent(context, DownloadService.class);
+            intent.putExtra(Constants.KEY_STOP_DOWNLOAD_SERVICE,true);
+            PendingIntent deleteIntent = PendingIntent.getService(context, notifyId,intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            builder.setDeleteIntent(deleteIntent);
+        }
+
         Notification notification = builder.build();
-        notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONLY_ALERT_ONCE;
+        if(isCancelDownload){
+            notification.flags = Notification.FLAG_ONLY_ALERT_ONCE;
+        }else{
+            notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONLY_ALERT_ONCE;
+        }
+
         notifyNotification(context,notifyId,notification);
     }
 
@@ -65,11 +77,24 @@ public class NotificationUtils {
      * @param progress
      * @param size
      */
-    public static void showProgressNotification(Context context, int notifyId,String channelId,@DrawableRes int icon,CharSequence title,CharSequence content,int progress,int size){
+    public static void showProgressNotification(Context context, int notifyId,String channelId,@DrawableRes int icon,CharSequence title,CharSequence content,int progress,int size, boolean isCancelDownload){
         NotificationCompat.Builder builder = buildNotification(context,channelId,icon,title,content,progress,size);
 
+        if(isCancelDownload){
+            Intent intent = new Intent(context, DownloadService.class);
+            intent.putExtra(Constants.KEY_STOP_DOWNLOAD_SERVICE,true);
+            PendingIntent deleteIntent = PendingIntent.getService(context, notifyId,intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            builder.setDeleteIntent(deleteIntent);
+        }
+
         Notification notification = builder.build();
-        notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONLY_ALERT_ONCE;
+
+        if(isCancelDownload){
+            notification.flags = Notification.FLAG_ONLY_ALERT_ONCE;
+        }else{
+           notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONLY_ALERT_ONCE;
+        }
+
         notifyNotification(context,notifyId,notification);
     }
 

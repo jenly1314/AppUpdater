@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#5588FF</color>
 
     <color name="app_dialog_title_color">#333333</color>
     <color name="app_dialog_content_color">#333333</color>
     <color name="app_dialog_button_normal_color">#333333</color>
     <color name="app_dialog_button_pressed_color">@color/colorAccent</color>
 
-    <color name="app_dialog_line_color">#f2f2f2</color>
+    <color name="app_dialog_line_color">#F2F2F2</color>
 
 </resources>

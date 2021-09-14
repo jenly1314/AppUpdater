@@ -1,5 +1,7 @@
 package com.king.app.dialog.fragment;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -57,12 +59,22 @@ public class AppDialogFragment extends BaseDialogFragment {
                 line.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
             }
 
-            Button btnDialogOK = rootView.findViewById(config.getOkId());
-            if(btnDialogOK != null){
-                setText(btnDialogOK,config.getOk());
-                btnDialogOK.setOnClickListener(config.getOnClickOk() != null ? config.getOnClickOk() : getOnClickDismiss());
+            Button btnDialogConfirm = rootView.findViewById(config.getConfirmId());
+            if(btnDialogConfirm != null){
+                setText(btnDialogConfirm,config.getConfirm());
+                btnDialogConfirm.setOnClickListener(config.getOnClickConfirm() != null ? config.getOnClickConfirm() : getOnClickDismiss());
             }
 
+        }
+    }
+
+
+    @Override
+    protected void initDialogWindow(Context context, Dialog dialog, int gravity, float widthRatio, int animationStyleId) {
+        if(config != null){
+            super.initDialogWindow(context,dialog,config.getGravity(), config.getWidthRatio(), config.getAnimationStyleId());
+        }else{
+            super.initDialogWindow(context, dialog, gravity, widthRatio, animationStyleId);
         }
     }
 }

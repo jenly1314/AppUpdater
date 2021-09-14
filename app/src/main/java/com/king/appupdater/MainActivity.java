@@ -3,10 +3,11 @@ package com.king.appupdater;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 //    private String mUrl = "https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk";
     private String mUrl = "https://gitlab.com/jenly1314/AppUpdater/-/raw/master/app/release/app-release.apk";
 
+    private TextView tvProgress;
     private ProgressBar progressBar;
 
     private Toast toast;
@@ -49,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.INVISIBLE);
-        progressBar.setMax(100);
+//        progressBar = findViewById(R.id.progressBar);
+//        progressBar.setVisibility(View.INVISIBLE);
+//        progressBar.setMax(100);
 
         PermissionUtils.verifyReadAndWritePermissions(this,Constants.RE_CODE_STORAGE_PERMISSION);
     }
@@ -96,41 +98,60 @@ public class MainActivity extends AppCompatActivity {
                         if(isDownloading){
                             showToast("已经在下载中,请勿重复下载。");
                         }else{
-                            showToast("开始下载…");
+//                            showToast("开始下载…");
+                            View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_progress,null);
+                            tvProgress = view.findViewById(R.id.tvProgress);
+                            progressBar = view.findViewById(R.id.progressBar);
+                            AppDialog.INSTANCE.showDialog(getContext(),view,false);
                         }
                     }
 
                     @Override
                     public void onStart(String url) {
-                        progressBar.setProgress(0);
-                        progressBar.setVisibility(View.VISIBLE);
+                        updateProgress(0,100);
                     }
 
                     @Override
                     public void onProgress(long progress, long total, boolean isChange) {
-                        int currProgress = (int)(progress * 1.0f / total * 100.0f);
                         if(isChange){
-                            progressBar.setProgress(currProgress);
+                            updateProgress(progress,total);
                         }
-                        Log.d(TAG,String.format("onProgress:%d/%d | %d%%",progress,total,currProgress));
                     }
 
                     @Override
                     public void onFinish(File file) {
-                        progressBar.setVisibility(View.INVISIBLE);
+                        AppDialog.INSTANCE.dismissDialog();
+                        showToast("下载完成");
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        progressBar.setVisibility(View.INVISIBLE);
+                        AppDialog.INSTANCE.dismissDialog();
+                        showToast("下载失败");
                     }
 
                     @Override
                     public void onCancel() {
-                        progressBar.setVisibility(View.INVISIBLE);
+                        AppDialog.INSTANCE.dismissDialog();
+                        showToast("取消下载");
                     }
                 });
         mAppUpdater.start();
+    }
+
+    private void updateProgress(long progress, long total){
+        if(tvProgress == null || progressBar == null){
+            return;
+        }
+        if(progress > 0){
+            int currProgress = (int)(progress * 1.0f / total * 100.0f);
+            tvProgress.setText(getString(R.string.app_updater_progress_notification_content) + currProgress + "%");
+            progressBar.setProgress(currProgress);
+            Log.d(TAG,String.format("onProgress:%d/%d | %d%%",progress,total,currProgress));
+        }else{
+            tvProgress.setText(getString(R.string.app_updater_start_notification_content));
+        }
+
     }
 
     /**
@@ -147,6 +168,29 @@ public class MainActivity extends AppCompatActivity {
                                 .setUrl(mUrl)
                                 .build(getContext())
                                 .setUpdateCallback(new AppUpdateCallback() {
+                                    @Override
+                                    public void onStart(String url) {
+                                        super.onStart(url);
+                                        //模仿系统自带的横幅通知效果
+                                        AppDialogConfig config = new AppDialogConfig(getContext(),R.layout.dialog_heads_up);
+                                        config.setStyleId(R.style.app_dialog_heads_up)
+                                                .setWidthRatio(.95f)
+                                                .setGravity(Gravity.TOP);
+                                        AppDialog.INSTANCE.showDialog(getContext(),config);
+                                        new CountDownTimer(1500,500){
+
+                                            @Override
+                                            public void onTick(long millisUntilFinished) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                AppDialog.INSTANCE.dismissDialog();
+                                            }
+                                        }.start();
+                                    }
+
                                     @Override
                                     public void onProgress(long progress, long total, boolean isChange) {
                                         Log.d(TAG,String.format("onProgress:%d/%d",progress,total));
@@ -168,9 +212,9 @@ public class MainActivity extends AppCompatActivity {
     private void clickBtn4(){
         AppDialogConfig config = new AppDialogConfig(getContext());
         config.setTitle("简单弹框升级")
-                .setOk("升级")
+                .setConfirm("升级")
                 .setContent("1、新增某某功能、\n2、修改某某问题、\n3、优化某某BUG、")
-                .setOnClickOk(new View.OnClickListener() {
+                .setOnClickConfirm(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mAppUpdater = new AppUpdater(getContext(),mUrl);
@@ -186,11 +230,11 @@ public class MainActivity extends AppCompatActivity {
      */
     private void clickBtn5(){
         AppDialogConfig config = new AppDialogConfig(getContext(),R.layout.dialog);
-        config.setOk("升级")
+        config.setConfirm("升级")
                 .setHideCancel(true)
                 .setTitle("简单自定义弹框升级")
                 .setContent("1、新增某某功能、\n2、修改某某问题、\n3、优化某某BUG、")
-                .setOnClickOk(new View.OnClickListener() {
+                .setOnClickConfirm(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mAppUpdater = new AppUpdater.Builder()
@@ -200,8 +244,7 @@ public class MainActivity extends AppCompatActivity {
                         AppDialog.INSTANCE.dismissDialog();
                     }
                 });
-        //强制升级，拦截返回
-        AppDialog.INSTANCE.showDialog(config,false);
+        AppDialog.INSTANCE.showDialog(config);
     }
 
     /**
@@ -215,15 +258,15 @@ public class MainActivity extends AppCompatActivity {
         TextView tvContent = view.findViewById(R.id.tvContent);
         tvContent.setText("1、新增某某功能、\n2、修改某某问题、\n3、优化某某BUG、");
 
-        Button btnCancel = view.findViewById(R.id.btnCancel);
+        View btnCancel = view.findViewById(R.id.btnCancel);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AppDialog.INSTANCE.dismissDialog();
             }
         });
-        Button btnOK = view.findViewById(R.id.btnOK);
-        btnOK.setOnClickListener(new View.OnClickListener() {
+        View btnConfirm = view.findViewById(R.id.btnConfirm);
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAppUpdater = new AppUpdater.Builder()
@@ -247,9 +290,9 @@ public class MainActivity extends AppCompatActivity {
     private void clickBtn7(){
         AppDialogConfig config = new AppDialogConfig(getContext());
         config.setTitle("简单DialogFragment升级")
-                .setOk("升级")
+                .setConfirm("升级")
                 .setContent("1、新增某某功能、\n2、修改某某问题、\n3、优化某某BUG、")
-                .setOnClickOk(new View.OnClickListener() {
+                .setOnClickConfirm(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mAppUpdater = new AppUpdater.Builder()

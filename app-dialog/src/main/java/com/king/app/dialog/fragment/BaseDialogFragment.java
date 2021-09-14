@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,29 +28,44 @@ public abstract class BaseDialogFragment extends DialogFragment {
 
     private View mRootView;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        super.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
         mRootView = inflater.inflate(getRootLayoutId(), container, false);
         init(mRootView);
         return mRootView;
     }
 
+
+    @NonNull
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        super.getDialog().getWindow().getAttributes().windowAnimations = R.style.app_dialog_animation;
-        getDialog().setCanceledOnTouchOutside(false);
-        setDialogWindow(getContext(),getDialog(),DEFAULT_WIDTH_RATIO);
+    public Dialog onCreateDialog(@Nullable  Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        initDialogWindow(getContext(),dialog,Gravity.NO_GRAVITY,DEFAULT_WIDTH_RATIO,R.style.app_dialog_scale_animation);
+        return dialog;
     }
 
-    private void setDialogWindow(Context context, Dialog dialog, float widthRatio){
+    protected void initDialogWindow(Context context,Dialog dialog,int gravity,float widthRatio,int animationStyleId){
+        setDialogWindow(context, dialog, gravity, widthRatio, animationStyleId);
+    }
+
+    /**
+     * 设置弹框窗口配置
+     * @param context
+     * @param dialog
+     * @param gravity
+     * @param widthRatio
+     */
+    private void setDialogWindow(Context context,Dialog dialog,int gravity,float widthRatio,int animationStyleId){
         Window window = dialog.getWindow();
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         WindowManager.LayoutParams lp = window.getAttributes();
+        lp.windowAnimations = animationStyleId;
         lp.width = (int)(context.getResources().getDisplayMetrics().widthPixels * widthRatio);
+        lp.gravity = gravity;
         window.setAttributes(lp);
     }
 

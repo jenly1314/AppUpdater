@@ -58,9 +58,9 @@ allprojects {
 
     //----------AndroidX 版本
     //app-updater
-    implementation 'com.github.jenly1314.AppUpdater:app-updater:1.1.0'
+    implementation 'com.github.jenly1314.AppUpdater:app-updater:1.1.1'
     //app-dialog
-    implementation 'com.github.jenly1314.AppUpdater:app-dialog:1.1.0'
+    implementation 'com.github.jenly1314.AppUpdater:app-dialog:1.1.1'
 
 ```
 
@@ -92,9 +92,9 @@ allprojects {
     //简单弹框升级
     AppDialogConfig config = new AppDialogConfig(context);
     config.setTitle("简单弹框升级")
-            .setOk("升级")
+            .setConfirm("升级") //旧版本使用setOk
             .setContent("1、新增某某功能、\n2、修改某某问题、\n3、优化某某BUG、")
-            .setOnClickOk(new View.OnClickListener() {
+            .setOnClickConfirm(new View.OnClickListener() { //旧版本使用setOnClickOk
                 @Override
                 public void onClick(View v) {
                     new AppUpdater.Builder()
@@ -110,9 +110,9 @@ allprojects {
     //简单DialogFragment升级
     AppDialogConfig config = new AppDialogConfig(context);
     config.setTitle("简单DialogFragment升级")
-            .setOk("升级")
+            .setConfirm("升级") //旧版本使用setOk
             .setContent("1、新增某某功能、\n2、修改某某问题、\n3、优化某某BUG、")
-            .setOnClickOk(new View.OnClickListener() {
+            .setOnClickConfirm(new View.OnClickListener() { //旧版本使用setOnClickOk
                 @Override
                 public void onClick(View v) {
                     new AppUpdater.Builder()
@@ -137,6 +137,10 @@ allprojects {
 **app-dialog** [Proguard rules](app-dialog/proguard-rules.pro)
 
 ## 版本记录
+
+#### v1.1.1：2021-9-14
+*  对外提供更多可配置参数
+*  优化细节
 
 #### v1.1.0：2021-7-2  (从v1.1.0开始不再发布至JCenter)
 *  后续版本只支持androidx，版本名称不再带有androidx标识

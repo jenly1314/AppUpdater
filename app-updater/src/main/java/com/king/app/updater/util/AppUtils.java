@@ -40,7 +40,10 @@ public final class AppUtils {
      */
     public static String getAppFullName(Context context,String url,String defaultName){
         if(url.endsWith(".apk")){
-            return url.substring(url.lastIndexOf("/") + 1);
+            String apkName = url.substring(url.lastIndexOf("/") + 1);
+            if(apkName.length() <= 64){
+                return apkName;
+            }
         }
 
         String filename = getAppName(context);
@@ -84,7 +87,6 @@ public final class AppUtils {
      */
     public static String getAppName(Context context) {
         try{
-
             int labelRes = getPackageInfo(context).applicationInfo.labelRes;
             return context.getResources().getString(labelRes);
         } catch (Exception e) {
