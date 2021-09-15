@@ -30,6 +30,26 @@
         <item name="android:windowExitAnimation">@anim/app_dialog_bottom_out</item>
     </style>
 
+    <style name="app_dialog_scale_left_animation" parent="android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/app_dialog_scale_left_in</item>
+        <item name="android:windowExitAnimation">@anim/app_dialog_scale_left_out</item>
+    </style>
+
+    <style name="app_dialog_scale_top_animation" parent="android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/app_dialog_scale_top_in</item>
+        <item name="android:windowExitAnimation">@anim/app_dialog_scale_top_out</item>
+    </style>
+
+    <style name="app_dialog_scale_right_animation" parent="android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/app_dialog_scale_right_in</item>
+        <item name="android:windowExitAnimation">@anim/app_dialog_scale_right_out</item>
+    </style>
+
+    <style name="app_dialog_scale_bottom_animation" parent="android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/app_dialog_scale_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/app_dialog_scale_bottom_out</item>
+    </style>
+
     <!-- dialog style -->
     <style name="app_dialog" parent="android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
