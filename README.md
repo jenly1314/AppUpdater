@@ -35,6 +35,8 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 ## Gif 展示
 ![Image](GIF.gif)
 
+> 你也可以直接下载 [演示App](https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk) 体验效果
+
 ## 引入
 
 > 由于2021年2月3日 **JFrog宣布将关闭Bintray和JCenter，计划在2022年2月完全关闭。** 所以后续版本不再发布至 **JCenter**
