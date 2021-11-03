@@ -113,7 +113,7 @@ public class BaseDialogConfig {
      * @deprecated 即将废弃，下一个版本可能会移除此方法
      */
     @Deprecated
-    public BaseDialogConfig setLayoutId(@IdRes int layoutId) {
+    public BaseDialogConfig setLayoutId(@LayoutRes int layoutId) {
         this.layoutId = layoutId;
         return this;
     }
