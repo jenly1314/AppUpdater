@@ -40,7 +40,7 @@
             android:layout_weight="1"
             android:text="@string/app_dialog_cancel"
             android:textSize="18sp"
-            android:textColor="@color/app_cancel_color_selector"
+            android:textColor="@color/app_dialog_button_color_selector"
             android:background="?android:attr/selectableItemBackground"/>
         <include
             android:id="@+id/line"
@@ -54,7 +54,7 @@
             android:layout_weight="1"
             android:text="@string/app_dialog_confirm"
             android:textSize="18sp"
-            android:textColor="@color/app_cancel_color_selector"
+            android:textColor="@color/app_dialog_button_color_selector"
             android:background="?android:attr/selectableItemBackground"/>
     </LinearLayout>
 
