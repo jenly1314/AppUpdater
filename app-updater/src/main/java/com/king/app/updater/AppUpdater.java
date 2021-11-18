@@ -84,7 +84,7 @@ public class AppUpdater {
      * 开始下载
      */
     public void start(){
-        if(mConfig!=null && !TextUtils.isEmpty(mConfig.getUrl())){
+        if(mConfig != null && !TextUtils.isEmpty(mConfig.getUrl())){
             //如果mContext是Activity,并且配置了下载路径，则默认会校验一次动态权限。
             if(mContext instanceof Activity && !TextUtils.isEmpty(mConfig.getPath())){
                 PermissionUtils.verifyReadAndWritePermissions((Activity) mContext,Constants.RE_CODE_STORAGE_PERMISSION);

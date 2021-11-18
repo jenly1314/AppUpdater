@@ -9,7 +9,7 @@ public interface UpdateCallback {
 
     /**
      * 最开始调用(在onStart之前调用)
-     * @param isDownloading true 表示已经在下载，false表示准备刚调用下载
+     * @param isDownloading true 表示已经在下载，false表示当前未开始下载，即将开始下载
      */
     void onDownloading(boolean isDownloading);
 

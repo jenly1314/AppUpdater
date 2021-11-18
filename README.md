@@ -60,9 +60,9 @@ allprojects {
 
     //----------AndroidX 版本
     //app-updater
-    implementation 'com.github.jenly1314.AppUpdater:app-updater:1.1.1'
+    implementation 'com.github.jenly1314.AppUpdater:app-updater:1.1.2'
     //app-dialog
-    implementation 'com.github.jenly1314.AppUpdater:app-dialog:1.1.1'
+    implementation 'com.github.jenly1314.AppUpdater:app-dialog:1.1.2'
 
 ```
 
@@ -139,6 +139,9 @@ allprojects {
 **app-dialog** [Proguard rules](app-dialog/proguard-rules.pro)
 
 ## 版本记录
+
+#### v1.1.2：2021-11-18
+*  AppDialog对外提供更多与WindowManager.LayoutParams相关的配置
 
 #### v1.1.1：2021-9-14
 *  对外提供更多可配置参数

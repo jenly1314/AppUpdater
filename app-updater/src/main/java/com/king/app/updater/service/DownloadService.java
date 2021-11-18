@@ -274,7 +274,7 @@ public class DownloadService extends Service {
                 NotificationUtils.showStartNotification(getContext(),notifyId,channelId,channelName,notificationIcon,getString(R.string.app_updater_start_notification_title),getString(R.string.app_updater_start_notification_content),config.isVibrate(),config.isSound(),isCancelDownload);
             }
 
-            if(callback!=null){
+            if(callback != null){
                 callback.onStart(url);
             }
         }
@@ -290,9 +290,9 @@ public class DownloadService extends Service {
                 int currProgress = Math.round(progress * 1.0f / total * 100.0f);
                 if(currProgress != mLastProgress){//百分比改变了才更新
                     isChange = true;
+                    mLastProgress = currProgress;
                     String percentage = currProgress + "%";
                     if(isShowNotification) {
-                        mLastProgress = currProgress;
                         String content = getString(R.string.app_updater_progress_notification_content);
                         if (isShowPercentage) {
                             content += percentage;
@@ -317,7 +317,7 @@ public class DownloadService extends Service {
             if(isInstallApk){
                 AppUtils.installApk(getContext(),file,authority);
             }
-            if(callback!=null){
+            if(callback != null){
                 callback.onFinish(file);
             }
             stopService();
@@ -327,12 +327,14 @@ public class DownloadService extends Service {
         public void onError(Exception e) {
             Log.w(Constants.TAG,"onError:"+ e.getMessage());
             isDownloading = false;
-            //支持下载失败时重新下载，当重新下载次数不超过限制时才被允许
-            boolean isReDownload = this.isReDownload && mCount < reDownloads;
-            String content = isReDownload ? getString(R.string.app_updater_error_notification_content_re_download) : getString(R.string.app_updater_error_notification_content);
-            NotificationUtils.showErrorNotification(getContext(),notifyId,channelId,notificationIcon,getString(R.string.app_updater_error_notification_title),content,isReDownload,config);
+            if(isShowNotification){
+                //支持下载失败时重新下载，当重新下载次数不超过限制时才被允许
+                boolean isReDownload = this.isReDownload && mCount < reDownloads;
+                String content = isReDownload ? getString(R.string.app_updater_error_notification_content_re_download) : getString(R.string.app_updater_error_notification_content);
+                NotificationUtils.showErrorNotification(getContext(),notifyId,channelId,notificationIcon,getString(R.string.app_updater_error_notification_title),content,isReDownload,config);
+            }
 
-            if(callback!=null){
+            if(callback != null){
                 callback.onError(e);
             }
             if(!isReDownload){
@@ -346,7 +348,7 @@ public class DownloadService extends Service {
             Log.d(Constants.TAG,"onCancel");
             isDownloading = false;
             NotificationUtils.cancelNotification(getContext(),notifyId);
-            if(callback!=null){
+            if(callback != null){
                 callback.onCancel();
             }
             if(isDeleteCancelFile && mFile!=null){

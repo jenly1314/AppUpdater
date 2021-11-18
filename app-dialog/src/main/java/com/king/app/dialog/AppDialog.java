@@ -135,7 +135,9 @@ public enum AppDialog {
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
      */
     public void showDialog(Context context,AppDialogConfig config,boolean isCancel){
-        showDialog(context,config.buildAppDialogView(),config.getStyleId(),config.getGravity(),config.getWidthRatio(),isCancel);
+        showDialog(context, config.buildAppDialogView(), config.getStyleId(), config.getGravity(),
+                config.getWidthRatio(), config.x, config.y, config.horizontalMargin, config.verticalMargin,
+                config.horizontalWeight, config.verticalWeight, isCancel);
     }
 
     /**
@@ -223,8 +225,63 @@ public enum AppDialog {
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
      */
     public void showDialog(Context context, View contentView, @StyleRes int styleId,int gravity, float widthRatio,final boolean isCancel){
+        showDialog(context, contentView, styleId, gravity, widthRatio, 0, 0, isCancel);
+    }
+
+
+    /**
+     * 显示弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     * @param styleId Dialog样式
+     * @param gravity Dialog的对齐方式
+     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
+     * @param x x轴偏移量，需与 gravity 结合使用
+     * @param y y轴偏移量，需与 gravity 结合使用
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     * @return
+     */
+    public void showDialog(Context context, View contentView, @StyleRes int styleId,int gravity, float widthRatio, int x, int y, final boolean isCancel){
+        showDialog(context, contentView, styleId, gravity, widthRatio, x, y, 0, 0, isCancel);
+    }
+
+    /**
+     * 显示弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     * @param styleId Dialog样式
+     * @param gravity Dialog的对齐方式
+     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
+     * @param x x轴偏移量，需与 gravity 结合使用
+     * @param y y轴偏移量，需与 gravity 结合使用
+     * @param horizontalMargin 水平方向边距
+     * @param verticalMargin 垂直方向边距
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     * @return
+     */
+    public void showDialog(Context context, View contentView, @StyleRes int styleId,int gravity, float widthRatio, int x, int y, float horizontalMargin, float verticalMargin, final boolean isCancel){
+        showDialog(context, contentView, styleId, gravity, widthRatio, x, y, horizontalMargin, verticalMargin, 0, 0, isCancel);
+    }
+
+    /**
+     * 显示弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     * @param styleId Dialog样式
+     * @param gravity Dialog的对齐方式
+     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
+     * @param x x轴偏移量，需与 gravity 结合使用
+     * @param y y轴偏移量，需与 gravity 结合使用
+     * @param horizontalMargin 水平方向边距
+     * @param verticalMargin 垂直方向边距
+     * @param horizontalWeight 水平方向权重
+     * @param verticalWeight 垂直方向权重
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     * @return
+     */
+    public void showDialog(Context context, View contentView, @StyleRes int styleId,int gravity, float widthRatio, int x, int y, float horizontalMargin, float verticalMargin, float horizontalWeight, float verticalWeight, final boolean isCancel){
         dismissDialog();
-        mDialog = createDialog(context, contentView, styleId, gravity, widthRatio, isCancel);
+        mDialog = createDialog(context, contentView, styleId, gravity, widthRatio, x, y, horizontalMargin, verticalMargin, horizontalWeight, verticalWeight, isCancel);
         mDialog.show();
     }
 
@@ -232,14 +289,26 @@ public enum AppDialog {
      * 设置弹框窗口配置
      * @param context
      * @param dialog
-     * @param gravity
-     * @param widthRatio
+     * @param gravity Dialog的对齐方式
+     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
+     * @param x x轴偏移量，需与 gravity 结合使用
+     * @param y y轴偏移量，需与 gravity 结合使用
+     * @param horizontalMargin 水平方向边距
+     * @param verticalMargin 垂直方向边距
+     * @param horizontalWeight 水平方向权重
+     * @param verticalWeight 垂直方向权重
      */
-    private void setDialogWindow(Context context,Dialog dialog,int gravity,float widthRatio){
+    private void setDialogWindow(Context context,Dialog dialog,int gravity,float widthRatio, int x, int y, float horizontalMargin, float verticalMargin, float horizontalWeight, float verticalWeight){
         Window window = dialog.getWindow();
         WindowManager.LayoutParams lp = window.getAttributes();
         lp.width = (int)(context.getResources().getDisplayMetrics().widthPixels * widthRatio);
         lp.gravity = gravity;
+        lp.x = x;
+        lp.y = y;
+        lp.horizontalMargin = horizontalMargin;
+        lp.verticalMargin = verticalMargin;
+        lp.horizontalWeight = horizontalWeight;
+        lp.verticalWeight = verticalWeight;
         window.setAttributes(lp);
     }
 
@@ -365,6 +434,60 @@ public enum AppDialog {
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
      */
     public Dialog createDialog(Context context, View contentView, @StyleRes int styleId,int gravity, float widthRatio,final boolean isCancel){
+        return createDialog(context, contentView, styleId, gravity, widthRatio, 0, 0, isCancel);
+    }
+
+    /**
+     * 创建弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     * @param styleId Dialog样式
+     * @param gravity Dialog的对齐方式
+     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
+     * @param x x轴偏移量，需与 gravity 结合使用
+     * @param y y轴偏移量，需与 gravity 结合使用
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     * @return
+     */
+    public Dialog createDialog(Context context, View contentView, @StyleRes int styleId,int gravity, float widthRatio, int x, int y,final boolean isCancel){
+        return createDialog(context, contentView, styleId, gravity, widthRatio, x, y, 0, 0, isCancel);
+    }
+
+    /**
+     * 创建弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     * @param styleId Dialog样式
+     * @param gravity Dialog的对齐方式
+     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
+     * @param x x轴偏移量，需与 gravity 结合使用
+     * @param y y轴偏移量，需与 gravity 结合使用
+     * @param horizontalMargin 水平方向边距
+     * @param verticalMargin 垂直方向边距
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     * @return
+     */
+    public Dialog createDialog(Context context, View contentView, @StyleRes int styleId,int gravity, float widthRatio, int x, int y, float horizontalMargin, float verticalMargin,final boolean isCancel){
+        return createDialog(context, contentView, styleId, gravity, widthRatio, x, y, horizontalMargin, verticalMargin, 0, 0, isCancel);
+    }
+
+    /**
+     * 创建弹框
+     * @param context
+     * @param contentView 弹框内容视图
+     * @param styleId Dialog样式
+     * @param gravity Dialog的对齐方式
+     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
+     * @param x x轴偏移量，需与 gravity 结合使用
+     * @param y y轴偏移量，需与 gravity 结合使用
+     * @param horizontalMargin 水平方向边距
+     * @param verticalMargin 垂直方向边距
+     * @param horizontalWeight 水平方向权重
+     * @param verticalWeight 垂直方向权重
+     * @param isCancel 是否可取消（默认为true，false则拦截back键）
+     * @return
+     */
+    public Dialog createDialog(Context context, View contentView, @StyleRes int styleId,int gravity, float widthRatio, int x, int y, float horizontalMargin, float verticalMargin, float horizontalWeight, float verticalWeight,final boolean isCancel){
         Dialog dialog = new Dialog(context,styleId);
         dialog.setContentView(contentView);
         dialog.setCanceledOnTouchOutside(false);
@@ -381,7 +504,7 @@ public enum AppDialog {
 
             }
         });
-        setDialogWindow(context, dialog, gravity, widthRatio);
+        setDialogWindow(context, dialog, gravity, widthRatio, x, y, horizontalMargin, verticalMargin, horizontalWeight, verticalWeight);
         return dialog;
     }
 

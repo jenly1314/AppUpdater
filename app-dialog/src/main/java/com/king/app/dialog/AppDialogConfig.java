@@ -42,10 +42,10 @@ public class AppDialogConfig extends BaseDialogConfig{
     private ViewHolder viewHolder;
 
     public AppDialogConfig(@NonNull Context context){
-        this(context,R.layout.app_dialog);
+        this(context, R.layout.app_dialog);
     }
 
-    public AppDialogConfig(@NonNull Context context,@LayoutRes int layoutId){
+    public AppDialogConfig(@NonNull Context context, @LayoutRes int layoutId){
         super(layoutId);
         this.context = context;
         views = new SparseArray<>();
@@ -54,7 +54,6 @@ public class AppDialogConfig extends BaseDialogConfig{
     public Context getContext(){
         return context;
     }
-
 
     /**
      *

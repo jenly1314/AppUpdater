@@ -3,6 +3,7 @@ package com.king.app.dialog;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
@@ -81,13 +82,40 @@ public class BaseDialogConfig {
     float widthRatio = AppDialog.INSTANCE.DEFAULT_WIDTH_RATIO;
 
     /**
-     * Dialog对齐方式
+     * Dialog对齐方式 {@link WindowManager.LayoutParams#gravity}
+     *
      */
     int gravity = Gravity.NO_GRAVITY;
+
+    /**
+     * {@link WindowManager.LayoutParams#x}
+     */
+    int x;
+    /**
+     * {@link WindowManager.LayoutParams#y}
+     */
+    int y;
+    /**
+     * {@link WindowManager.LayoutParams#verticalMargin}
+     */
+    float verticalMargin;
+    /**
+     * {@link WindowManager.LayoutParams#horizontalMargin}
+     */
+    float horizontalMargin;
+    /**
+     * {@link WindowManager.LayoutParams#horizontalWeight}
+     */
+    float horizontalWeight;
+    /**
+     * {@link WindowManager.LayoutParams#verticalWeight}
+     */
+    float verticalWeight;
 
     View.OnClickListener onClickCancel;
 
     View.OnClickListener onClickConfirm;
+
 
     public BaseDialogConfig(){
         this(R.layout.app_dialog);
@@ -408,7 +436,7 @@ public class BaseDialogConfig {
     }
 
     /**
-     * 设置Dialog的对齐方式
+     * 设置Dialog的对齐方式  {@link WindowManager.LayoutParams#gravity}
      * @param gravity
      * @return
      */
@@ -465,5 +493,91 @@ public class BaseDialogConfig {
         return setOnClickConfirm(onClickOk);
     }
 
+    /**
+     * {@link WindowManager.LayoutParams#x}
+     */
+    public int getX() {
+        return x;
+    }
 
+    /**
+     * {@link WindowManager.LayoutParams#x}
+     */
+    public BaseDialogConfig setX(int x) {
+        this.x = x;
+        return this;
+    }
+
+    /**
+     * {@link WindowManager.LayoutParams#y}
+     */
+    public int getY() {
+        return y;
+    }
+
+    /**
+     * {@link WindowManager.LayoutParams#y}
+     */
+    public BaseDialogConfig setY(int y) {
+        this.y = y;
+        return this;
+    }
+
+    /**
+     * {@link WindowManager.LayoutParams#verticalMargin}
+     */
+    public float getVerticalMargin() {
+        return verticalMargin;
+    }
+
+    /**
+     * {@link WindowManager.LayoutParams#verticalMargin}
+     */
+    public void setVerticalMargin(float verticalMargin) {
+        this.verticalMargin = verticalMargin;
+    }
+
+    /**
+     * {@link WindowManager.LayoutParams#horizontalMargin}
+     */
+    public float getHorizontalMargin() {
+        return horizontalMargin;
+    }
+
+    /**
+     * {@link WindowManager.LayoutParams#horizontalMargin}
+     */
+    public BaseDialogConfig setHorizontalMargin(float horizontalMargin) {
+        this.horizontalMargin = horizontalMargin;
+        return this;
+    }
+
+    /**
+     * {@link WindowManager.LayoutParams#horizontalWeight}
+     */
+    public float getHorizontalWeight() {
+        return horizontalWeight;
+    }
+
+    /**
+     * {@link WindowManager.LayoutParams#horizontalWeight}
+     */
+    public BaseDialogConfig setHorizontalWeight(float horizontalWeight) {
+        this.horizontalWeight = horizontalWeight;
+        return this;
+    }
+    /**
+     * {@link WindowManager.LayoutParams#verticalWeight}
+     */
+    public float getVerticalWeight() {
+        return verticalWeight;
+    }
+
+    /**
+     * {@link WindowManager.LayoutParams#verticalWeight}
+     */
+    public BaseDialogConfig setVerticalWeight(float verticalWeight) {
+        this.verticalWeight = verticalWeight;
+        return this;
+    }
 }

@@ -70,11 +70,11 @@ public class AppDialogFragment extends BaseDialogFragment {
 
 
     @Override
-    protected void initDialogWindow(Context context, Dialog dialog, int gravity, float widthRatio, int animationStyleId) {
+    protected void initDialogWindow(Context context, Dialog dialog, int gravity, float widthRatio, int x, int y, float horizontalMargin, float verticalMargin, float horizontalWeight, float verticalWeight, int animationStyleId) {
         if(config != null){
-            super.initDialogWindow(context,dialog,config.getGravity(), config.getWidthRatio(), config.getAnimationStyleId());
+            super.initDialogWindow(context,dialog,config.getGravity(), config.getWidthRatio(), config.getX(), config.getY(), config.getHorizontalMargin(), config.getVerticalMargin(), config.getHorizontalWeight(), config.getVerticalWeight(), config.getAnimationStyleId());
         }else{
-            super.initDialogWindow(context, dialog, gravity, widthRatio, animationStyleId);
+            super.initDialogWindow(context, dialog, gravity, widthRatio, x, y, horizontalMargin, verticalMargin, horizontalWeight, verticalWeight, animationStyleId);
         }
     }
 }

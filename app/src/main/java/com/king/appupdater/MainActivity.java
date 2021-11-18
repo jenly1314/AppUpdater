@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                                                 .setWidthRatio(.95f)
                                                 .setGravity(Gravity.TOP);
                                         AppDialog.INSTANCE.showDialog(getContext(),config);
-                                        new CountDownTimer(1500,500){
+                                        new CountDownTimer(2000,500){
 
                                             @Override
                                             public void onTick(long millisUntilFinished) {
