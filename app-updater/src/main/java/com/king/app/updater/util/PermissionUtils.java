@@ -20,51 +20,49 @@ import androidx.core.app.ActivityCompat;
  */
 public final class PermissionUtils {
 
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_PHONE_STATE};
-
-    private PermissionUtils(){
+    private PermissionUtils() {
         throw new AssertionError();
     }
 
     /**
      * 校验权限
+     *
      * @param activity
      * @param requestCode
      * @return
      */
-    public static boolean verifyReadAndWritePermissions(@NonNull Activity activity,int requestCode){
-
-        int readResult = checkPermission(activity,Manifest.permission.READ_EXTERNAL_STORAGE);
-        int writeResult = checkPermission(activity,Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int readPhoneState = checkPermission(activity,Manifest.permission.READ_PHONE_STATE);
-        if(readResult != PackageManager.PERMISSION_GRANTED || writeResult != PackageManager.PERMISSION_GRANTED || readPhoneState != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(activity,PERMISSIONS_STORAGE,requestCode);
-            return false;
+    public static boolean verifyReadAndWritePermissions(@NonNull Activity activity, int requestCode) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            int readResult = checkPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE);
+            int writeResult = checkPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (readResult != PackageManager.PERMISSION_GRANTED || writeResult != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
+                return false;
+            }
         }
         return true;
     }
 
-    public static int checkPermission(@NonNull Activity activity,@NonNull String permission){
-        return ActivityCompat.checkSelfPermission(activity,permission);
+    public static int checkPermission(@NonNull Activity activity, @NonNull String permission) {
+        return ActivityCompat.checkSelfPermission(activity, permission);
     }
 
     /**
      * 获取通知权限
+     *
      * @param context
      */
     public static boolean isNotificationEnabled(Context context) {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             if (notificationManager.getImportance() == NotificationManager.IMPORTANCE_NONE) {
                 return false;
             }
         }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             String CHECK_OP_NO_THROW = "checkOpNoThrow";
             String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
 

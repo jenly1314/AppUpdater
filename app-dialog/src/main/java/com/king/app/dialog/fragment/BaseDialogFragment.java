@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 /**
+ * 基础对话框 Fragment
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public abstract class BaseDialogFragment extends DialogFragment {
@@ -48,6 +49,20 @@ public abstract class BaseDialogFragment extends DialogFragment {
         return dialog;
     }
 
+    /**
+     * 初始化对话框视图
+     * @param context 上下文
+     * @param dialog 对话框
+     * @param gravity 对齐方式
+     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
+     * @param x x轴偏移量，需与 gravity 结合使用
+     * @param y y轴偏移量，需与 gravity 结合使用
+     * @param horizontalMargin 水平方向边距
+     * @param verticalMargin 垂直方向边距
+     * @param horizontalWeight 水平方向权重
+     * @param verticalWeight 垂直方向权重
+     * @param animationStyleId 话框动画样式ID
+     */
     protected void initDialogWindow(Context context,Dialog dialog,int gravity,float widthRatio, int x, int y, float horizontalMargin, float verticalMargin, float horizontalWeight, float verticalWeight, int animationStyleId){
         setDialogWindow(context, dialog, gravity, widthRatio, x, y, horizontalMargin, verticalMargin, horizontalWeight, verticalWeight, animationStyleId);
     }
@@ -82,6 +97,10 @@ public abstract class BaseDialogFragment extends DialogFragment {
         window.setAttributes(lp);
     }
 
+    /**
+     * 根视图
+     * @return
+     */
     protected View getRootView(){
         return mRootView;
     }
@@ -103,8 +122,16 @@ public abstract class BaseDialogFragment extends DialogFragment {
         }
     };
 
+    /**
+     * 获取根布局ID
+     * @return 根布局ID
+     */
     public abstract int getRootLayoutId();
 
+    /**
+     * 初始化
+     * @param rootView
+     */
     public abstract void init(View rootView);
 
 }

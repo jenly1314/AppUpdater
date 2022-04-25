@@ -12,6 +12,7 @@ import androidx.annotation.StringRes;
 import androidx.annotation.StyleRes;
 
 /**
+ * 基础对话框配置
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public class BaseDialogConfig {
@@ -116,7 +117,9 @@ public class BaseDialogConfig {
 
     View.OnClickListener onClickConfirm;
 
-
+    /**
+     * 构造
+     */
     public BaseDialogConfig(){
         this(R.layout.app_dialog);
     }
@@ -129,15 +132,18 @@ public class BaseDialogConfig {
         this.layoutId = layoutId;
     }
 
-
+    /**
+     * 布局ID
+     * @return 布局ID
+     */
     public @LayoutRes int getLayoutId() {
         return layoutId;
     }
 
     /**
      * 此方法即将废弃，请通过构造{@link #BaseDialogConfig(int)}来初始化
-     * @param layoutId
-     * @return
+     * @param layoutId 布局ID
+     * @return {@link BaseDialogConfig}
      * @deprecated 即将废弃，下一个版本可能会移除此方法
      */
     @Deprecated
@@ -146,20 +152,28 @@ public class BaseDialogConfig {
         return this;
     }
 
+    /**
+     * 标题视图ID
+     * @return 视图ID
+     */
     public int getTitleId() {
         return titleId;
     }
 
     /**
-     * 设置标题布局ID
-     * @param titleId
-     * @return
+     * 设置标题视图ID
+     * @param titleId 视图ID
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setTitleId(@IdRes int titleId) {
         this.titleId = titleId;
         return this;
     }
 
+    /**
+     * 样式ID
+     * @return 样式ID
+     */
     public int getStyleId() {
         return styleId;
     }
@@ -167,13 +181,17 @@ public class BaseDialogConfig {
     /**
      * 设置Dialog样式ID(仅对Dialog有效，如果使用的是DialogFragment，请使用{@link #setAnimationStyleId(int)})
      * @param styleId
-     * @return
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setStyleId(@StyleRes int styleId) {
         this.styleId = styleId;
         return this;
     }
 
+    /**
+     * 对话框动画样式ID
+     * @return
+     */
     public int getAnimationStyleId(){
         return animationStyleId;
     }
@@ -181,35 +199,43 @@ public class BaseDialogConfig {
     /**
      * 对话框动画样式ID (仅对DialogFragment有效，如果使用的是Dialog，请使用{@link #setStyleId(int)})
      * @param animationStyleId
-     * @return
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setAnimationStyleId(@StyleRes int animationStyleId) {
         this.animationStyleId = animationStyleId;
         return this;
     }
 
+    /**
+     * 内容视图ID
+     * @return 视图ID
+     */
     public @IdRes int getContentId() {
         return contentId;
     }
 
     /**
-     * 设置内容布局ID
-     * @param contentId
-     * @return
+     * 设置内容视图ID
+     * @param contentId 内容视图ID
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setContentId(@IdRes int contentId) {
         this.contentId = contentId;
         return this;
     }
 
+    /**
+     * 取消按钮视图ID
+     * @return 视图ID
+     */
     public @IdRes int getCancelId() {
         return cancelId;
     }
 
     /**
-     * 设置取消按钮布局ID
-     * @param cancelId
-     * @return
+     * 设置取消按钮视图ID
+     * @param cancelId 取消按钮视图ID
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setCancelId(@IdRes int cancelId) {
         this.cancelId = cancelId;
@@ -217,8 +243,8 @@ public class BaseDialogConfig {
     }
 
     /**
-     * 获取确定按钮布局ID
-     * @return
+     * 获取确定按钮视图ID
+     * @return 确定按钮视图ID
      * @Deprecated 请使用 {@link #getConfirmId()}来代替，后续版本可能会移除此方法
      */
     @Deprecated
@@ -227,9 +253,9 @@ public class BaseDialogConfig {
     }
 
     /**
-     * 设置确定按钮布局ID
-     * @param okId
-     * @return
+     * 设置确定按钮视图ID
+     * @param okId 确定按钮视图ID
+     * @return {@link BaseDialogConfig}
      * @Deprecated 请使用 {@link #setConfirmId(int)}来代替，后续版本可能移除此方法
      */
     @Deprecated
@@ -238,45 +264,53 @@ public class BaseDialogConfig {
     }
 
     /**
-     * 获取确定按钮布局ID
-     * @return
+     * 获取确定按钮视图ID
+     * @return 视图ID
      */
     public @IdRes int getConfirmId() {
         return confirmId;
     }
 
     /**
-     * 设置确定按钮布局ID
-     * @param confirmId
-     * @return
+     * 设置确定按钮视图ID
+     * @param confirmId 确定按钮视图ID
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setConfirmId(@IdRes int confirmId) {
         this.confirmId = confirmId;
         return this;
     }
 
+    /**
+     * 分割线视图ID
+     * @return 视图ID
+     */
     public @IdRes int getLineId() {
         return lineId;
     }
 
     /**
-     * 设置分割线布局ID
-     * @param lineId
-     * @return
+     * 设置分割线视图ID
+     * @param lineId 分割线视图ID
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setLineId(@IdRes int lineId) {
         this.lineId = lineId;
         return this;
     }
 
+    /**
+     * 标题
+     * @return 标题
+     */
     public CharSequence getTitle() {
         return title;
     }
 
     /**
      * 设置标题
-     * @param title
-     * @return
+     * @param title 标题
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setTitle(CharSequence title) {
         this.title = title;
@@ -285,37 +319,45 @@ public class BaseDialogConfig {
 
     /**
      * 设置标题
-     * @param context
-     * @param resId
-     * @return
+     * @param context 上下文
+     * @param resId 标题资源ID
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setTitle(@NonNull Context context, @StringRes int resId) {
         this.title = context.getString(resId);
         return this;
     }
 
+    /**
+     * 文本内容
+     * @return 文本内容
+     */
     public CharSequence getContent() {
         return content;
     }
 
     /**
      * 设置文本内容
-     * @param content
-     * @return
+     * @param content 文本内容
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setContent(CharSequence content) {
         this.content = content;
         return this;
     }
 
+    /**
+     * 取消按钮文本内容
+     * @return 取消按钮文本内容
+     */
     public CharSequence getCancel() {
         return cancel;
     }
 
     /**
      * 设置取消按钮文本内容
-     * @param cancel
-     * @return
+     * @param cancel 取消按钮文本内容
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setCancel(CharSequence cancel) {
         this.cancel = cancel;
@@ -324,9 +366,9 @@ public class BaseDialogConfig {
 
     /**
      * 设置取消按钮文本内容
-     * @param context
-     * @param resId
-     * @return
+     * @param context 上下文
+     * @param resId 取消按钮文本内容资源ID
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setCancel(@NonNull Context context, @StringRes int resId) {
         this.cancel = context.getString(resId);
@@ -335,7 +377,7 @@ public class BaseDialogConfig {
 
     /**
      * 获取确定按钮文本内容
-     * @return
+     * @return 确定按钮文本内容
      * @deprecated 请使用 {@link #getConfirm()} 来代替，后续版本可能会移除此方法
      */
     public CharSequence getOk() {
@@ -344,8 +386,8 @@ public class BaseDialogConfig {
 
     /**
      * 设置确定按钮文本内容
-     * @param ok
-     * @return
+     * @param ok 确定按钮文本内容
+     * @return {@link BaseDialogConfig}
      * @deprecated 请使用 {@link #setConfirm(CharSequence)} 来代替，后续版本可能会移除此方法
      */
     public BaseDialogConfig setOk(CharSequence ok) {
@@ -354,23 +396,27 @@ public class BaseDialogConfig {
 
     /**
      * 设置确定按钮文本内容
-     * @param context
-     * @param resId
-     * @return
+     * @param context 上下文
+     * @param resId 确定按钮文本内容资源ID
+     * @return {@link BaseDialogConfig}
      * @deprecated 请使用 {@link #setConfirm(Context, int)}来代替，后续版本可能会移除此方法
      */
     public BaseDialogConfig setOk(@NonNull Context context, @StringRes int resId) {
         return setConfirm(context,resId);
     }
 
+    /**
+     * 确定按钮文本内容
+     * @return 确定按钮文本内容
+     */
     public CharSequence getConfirm() {
         return confirm;
     }
 
     /**
      * 设置确定按钮文本内容
-     * @param confirm
-     * @return
+     * @param confirm 确定按钮文本内容
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setConfirm(CharSequence confirm) {
         this.confirm = confirm;
@@ -379,9 +425,9 @@ public class BaseDialogConfig {
 
     /**
      * 设置确定按钮文本内容
-     * @param context
-     * @param resId
-     * @return
+     * @param context 上下文
+     * @param resId 确定按钮文本内容资源ID
+     * @return {@link BaseDialogConfig}
      *
      */
     public BaseDialogConfig setConfirm(@NonNull Context context, @StringRes int resId) {
@@ -389,84 +435,108 @@ public class BaseDialogConfig {
         return this;
     }
 
+    /**
+     * 是否隐藏取消按钮
+     * @return {@link #isHideCancel}
+     */
     public boolean isHideCancel() {
         return isHideCancel;
     }
 
     /**
      * 设置是否隐藏取消按钮
-     * @param hideCancel
-     * @return
+     * @param hideCancel 是否隐藏取消按钮
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setHideCancel(boolean hideCancel) {
         isHideCancel = hideCancel;
         return this;
     }
 
+    /**
+     * 是否隐藏标题
+     * @return {@link #isHideTitle}
+     */
     public boolean isHideTitle(){
         return isHideTitle;
     }
 
     /**
      * 设置是否隐藏标题
-     * @param hideTitle
-     * @return
+     * @param hideTitle 是否隐藏标题
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setHideTitle(boolean hideTitle){
         isHideTitle = hideTitle;
         return this;
     }
 
+    /**
+     * Dialog的宽度比例，根据屏幕宽度计算得来
+     * @return {@link #widthRatio}
+     */
     public float getWidthRatio() {
         return widthRatio;
     }
 
     /**
      * 设置Dialog的宽度比例，根据屏幕宽度计算得来
-     * @param widthRatio
-     * @return
+     * @param widthRatio Dialog的宽度比例；默认值：{@link AppDialog#DEFAULT_WIDTH_RATIO}
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setWidthRatio(float widthRatio){
         this.widthRatio = widthRatio;
         return this;
     }
 
+    /**
+     * Dialog的对齐方式  {@link WindowManager.LayoutParams#gravity}
+     * @return Dialog的对齐方式
+     */
     public int getGravity() {
         return gravity;
     }
 
     /**
      * 设置Dialog的对齐方式  {@link WindowManager.LayoutParams#gravity}
-     * @param gravity
-     * @return
+     * @param gravity Dialog的对齐方式
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setGravity(int gravity){
         this.gravity = gravity;
         return this;
     }
 
+    /**
+     * “取消”按钮点击监听，不设置默认点击关闭弹框
+     * @return “取消”按钮点击监听
+     */
     public View.OnClickListener getOnClickCancel() {
         return onClickCancel;
     }
 
     /**
      * 设置“取消”按钮点击监听，不设置默认点击关闭弹框
-     * @param onClickCancel
-     * @return
+     * @param onClickCancel “取消”按钮点击监听
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setOnClickCancel(View.OnClickListener onClickCancel) {
         this.onClickCancel = onClickCancel;
         return this;
     }
 
+    /**
+     * “确定”按钮点击监听，不设置默认点击关闭弹框
+     * @return “确定”按钮点击监听
+     */
     public View.OnClickListener getOnClickConfirm() {
         return onClickConfirm;
     }
 
     /**
      * 设置“确定”按钮点击监听，不设置默认点击关闭弹框
-     * @param onClickConfirm
-     * @return
+     * @param onClickConfirm “确定”按钮点击监听
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setOnClickConfirm(View.OnClickListener onClickConfirm) {
         this.onClickConfirm = onClickConfirm;
@@ -476,7 +546,7 @@ public class BaseDialogConfig {
 
     /**
      * 获取“确定”按钮点击监听，不设置默认点击关闭弹框
-     * @return
+     * @return “确定”按钮点击监听
      * @deprecated 请使用 {@link #getOnClickConfirm()}来代替，后续版本可能会移除此方法
      */
     public View.OnClickListener getOnClickOk() {
@@ -485,8 +555,8 @@ public class BaseDialogConfig {
 
     /**
      * 设置“确定”按钮点击监听，不设置默认点击关闭弹框
-     * @param onClickOk
-     * @return
+     * @param onClickOk “确定”按钮点击监听
+     * @return {@link BaseDialogConfig}
      * @deprecated 请使用 {@link #setOnClickConfirm(View.OnClickListener)}来代替，后续版本可能会移除此方法
      */
     public BaseDialogConfig setOnClickOk(View.OnClickListener onClickOk) {
@@ -495,6 +565,7 @@ public class BaseDialogConfig {
 
     /**
      * {@link WindowManager.LayoutParams#x}
+     * @return {@link #x}
      */
     public int getX() {
         return x;
@@ -502,6 +573,7 @@ public class BaseDialogConfig {
 
     /**
      * {@link WindowManager.LayoutParams#x}
+     * @param x x轴坐标
      */
     public BaseDialogConfig setX(int x) {
         this.x = x;
@@ -510,6 +582,7 @@ public class BaseDialogConfig {
 
     /**
      * {@link WindowManager.LayoutParams#y}
+     * @return {@link #y}
      */
     public int getY() {
         return y;
@@ -517,6 +590,8 @@ public class BaseDialogConfig {
 
     /**
      * {@link WindowManager.LayoutParams#y}
+     * @param y y轴坐标
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setY(int y) {
         this.y = y;
@@ -525,6 +600,7 @@ public class BaseDialogConfig {
 
     /**
      * {@link WindowManager.LayoutParams#verticalMargin}
+     * @return {@link #verticalMargin}
      */
     public float getVerticalMargin() {
         return verticalMargin;
@@ -532,6 +608,7 @@ public class BaseDialogConfig {
 
     /**
      * {@link WindowManager.LayoutParams#verticalMargin}
+     * @param verticalMargin 垂直边距
      */
     public void setVerticalMargin(float verticalMargin) {
         this.verticalMargin = verticalMargin;
@@ -539,6 +616,7 @@ public class BaseDialogConfig {
 
     /**
      * {@link WindowManager.LayoutParams#horizontalMargin}
+     * @return {@link #horizontalMargin}
      */
     public float getHorizontalMargin() {
         return horizontalMargin;
@@ -546,6 +624,8 @@ public class BaseDialogConfig {
 
     /**
      * {@link WindowManager.LayoutParams#horizontalMargin}
+     * @param horizontalMargin 水平边距
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setHorizontalMargin(float horizontalMargin) {
         this.horizontalMargin = horizontalMargin;
@@ -554,6 +634,7 @@ public class BaseDialogConfig {
 
     /**
      * {@link WindowManager.LayoutParams#horizontalWeight}
+     * @return {@link #horizontalWeight}
      */
     public float getHorizontalWeight() {
         return horizontalWeight;
@@ -561,6 +642,8 @@ public class BaseDialogConfig {
 
     /**
      * {@link WindowManager.LayoutParams#horizontalWeight}
+     * @param horizontalWeight 水平方向权重
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setHorizontalWeight(float horizontalWeight) {
         this.horizontalWeight = horizontalWeight;
@@ -568,6 +651,7 @@ public class BaseDialogConfig {
     }
     /**
      * {@link WindowManager.LayoutParams#verticalWeight}
+     * @return {@link #verticalWeight}
      */
     public float getVerticalWeight() {
         return verticalWeight;
@@ -575,6 +659,8 @@ public class BaseDialogConfig {
 
     /**
      * {@link WindowManager.LayoutParams#verticalWeight}
+     * @param verticalWeight 垂直方向权重
+     * @return {@link BaseDialogConfig}
      */
     public BaseDialogConfig setVerticalWeight(float verticalWeight) {
         this.verticalWeight = verticalWeight;

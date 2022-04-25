@@ -18,7 +18,9 @@ import androidx.annotation.DrawableRes;
  */
 public class UpdateConfig implements Parcelable {
 
-
+    /**
+     * APK下载的Url
+     */
     private String mUrl;
     /**
      * 保存路径
@@ -56,7 +58,7 @@ public class UpdateConfig implements Parcelable {
      */
     private String mChannelName;
     /**
-     *  默认{@link Context#getPackageName() + ".fileProvider"}
+     *  默认{@link Context#getPackageName() + ".AppUpdaterFileProvider"}
      */
     private String mAuthority;
     /**
@@ -229,7 +231,7 @@ public class UpdateConfig implements Parcelable {
 
     /**
      * 设置FileProvider的authority
-     * @param authority FileProvider的authority（默认兼容N，默认值{@link Context#getPackageName() + ".fileProvider"}）
+     * @param authority FileProvider的authority（默认兼容N，默认值{@link Context#getPackageName() + ".AppUpdaterFileProvider"}）
      */
     public void setAuthority(String authority) {
         this.mAuthority = authority;

@@ -47,7 +47,7 @@ public final class AppUtils {
         }
 
         String filename = getAppName(context);
-
+        Log.d(Constants.TAG, "AppName:" + filename);
         if(TextUtils.isEmpty(filename)){
             filename = defaultName;
         }
@@ -65,7 +65,7 @@ public final class AppUtils {
      */
     public static PackageInfo getPackageInfo(Context context) throws PackageManager.NameNotFoundException {
         PackageManager packageManager = context.getPackageManager();
-        PackageInfo packageInfo = packageManager.getPackageInfo( context.getPackageName(), 0);
+        PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
         return packageInfo;
     }
 
@@ -75,7 +75,7 @@ public final class AppUtils {
      * @param archiveFilePath
      * @return
      */
-    public static PackageInfo getPackageInfo(Context context, String archiveFilePath) throws Exception {
+    public static PackageInfo getPackageInfo(Context context, String archiveFilePath) {
         PackageManager packageManager = context.getPackageManager();
         PackageInfo packageInfo = packageManager.getPackageArchiveInfo(archiveFilePath, PackageManager.GET_ACTIVITIES);
         return packageInfo;
@@ -106,7 +106,6 @@ public final class AppUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return 0;
     }
 
@@ -128,7 +127,6 @@ public final class AppUtils {
      * @return
      */
     public static Intent getInstallIntent(Context context,File file,String authority){
-
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -152,11 +150,11 @@ public final class AppUtils {
      * @return
      * @throws Exception
      */
-    public static boolean apkExists(Context context,int versionCode,File file) throws Exception{
-        if(file!=null && file.exists()){
+    public static boolean apkExists(Context context,int versionCode,File file){
+        if(file != null && file.exists()){
             String packageName = context.getPackageName();
             PackageInfo packageInfo = AppUtils.getPackageInfo(context,file.getAbsolutePath());
-            if(packageInfo != null){//比对versionCode
+            if(packageInfo != null){// 比对versionCode
                 Log.d(Constants.TAG,String.format("ApkVersionCode:%d",packageInfo.versionCode));
                 if(versionCode == packageInfo.versionCode){
                     ApplicationInfo applicationInfo = packageInfo.applicationInfo;
@@ -242,6 +240,10 @@ public final class AppUtils {
         }
 
         return null;
+    }
+
+    public static String getFileProviderAuthority(Context context){
+        return context.getPackageName() + Constants.DEFAULT_FILE_PROVIDER;
     }
 
     /**

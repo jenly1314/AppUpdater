@@ -28,9 +28,11 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 - [x] 支持下载失败，重新下载
 - [x] 支持下载优先取本地缓存
 - [x] 支持通知栏提示内容和过程全部可配置
-- [x] 支持Android Q(10)
 - [x] 支持取消下载
 - [x] 支持使用OkHttpClient下载
+- [x] 支持Android 10(Q)
+- [x] 支持Android 11(R)
+- [x] 支持Android 12(S)
 
 ## Gif 展示
 ![Image](GIF.gif)
@@ -38,8 +40,6 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 > 你也可以直接下载 [演示App](https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk) 体验效果
 
 ## 引入
-
-> 由于2021年2月3日 **JFrog宣布将关闭Bintray和JCenter，计划在2022年2月完全关闭。** 所以后续版本不再发布至 **JCenter**
 
 ### Gradle:
 
@@ -60,9 +60,9 @@ allprojects {
 
     //----------AndroidX 版本
     //app-updater
-    implementation 'com.github.jenly1314.AppUpdater:app-updater:1.1.2'
+    implementation 'com.github.jenly1314.AppUpdater:app-updater:1.1.3'
     //app-dialog
-    implementation 'com.github.jenly1314.AppUpdater:app-dialog:1.1.2'
+    implementation 'com.github.jenly1314.AppUpdater:app-dialog:1.1.3'
 
 ```
 
@@ -139,6 +139,11 @@ allprojects {
 **app-dialog** [Proguard rules](app-dialog/proguard-rules.pro)
 
 ## 版本记录
+
+#### v1.1.3：2021-04-25
+*  统一日志管理
+*  适配Android 12(S)
+*  优化细节
 
 #### v1.1.2：2021-11-18
 *  AppDialog对外提供更多与WindowManager.LayoutParams相关的配置

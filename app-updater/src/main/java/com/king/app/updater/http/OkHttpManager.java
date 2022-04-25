@@ -1,9 +1,8 @@
 package com.king.app.updater.http;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.king.app.updater.constant.Constants;
+import com.king.app.updater.util.LogUtils;
 import com.king.app.updater.util.SSLSocketFactoryUtils;
 
 import org.apache.http.conn.ssl.SSLSocketFactory;
@@ -23,8 +22,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * OkHttpManager使用{@link OkHttpClient}实现{@link IHttpManager}
- * 使用OkHttpManager时必须依赖OkHttp库
+ * OkHttpManager使用 {@link OkHttpClient} 实现的 {@link IHttpManager}
+ * <p>使用 OkHttpManager 时必须依赖 OkHttp 库
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public class OkHttpManager implements IHttpManager {
@@ -33,7 +32,7 @@ public class OkHttpManager implements IHttpManager {
 
     private OkHttpClient okHttpClient;
 
-    private boolean isCancel;
+    private DownloadTask mDownloadTask;
 
     private static volatile OkHttpManager INSTANCE;
 
@@ -77,20 +76,23 @@ public class OkHttpManager implements IHttpManager {
 
     @Override
     public void download(String url,final String path,final String filename, @Nullable Map<String, String> requestProperty,final DownloadCallback callback) {
-        isCancel = false;
-        new DownloadTask(okHttpClient,url,path,filename,requestProperty,callback).execute();
+        mDownloadTask = new DownloadTask(okHttpClient, url, path, filename, requestProperty, callback);
+        mDownloadTask.execute();
     }
 
     @Override
     public void cancel() {
-        isCancel = true;
+        if(mDownloadTask != null){
+            mDownloadTask.isCancel = true;
+        }
     }
 
 
     /**
      * 异步下载任务
      */
-    private class DownloadTask extends AsyncTask<Void,Long,File> {
+    private static class DownloadTask extends AsyncTask<Void,Long,File> {
+
         private String url;
 
         private String path;
@@ -104,6 +106,8 @@ public class OkHttpManager implements IHttpManager {
         private Exception exception;
 
         private OkHttpClient okHttpClient;
+
+        private volatile boolean isCancel;
 
         public DownloadTask(OkHttpClient okHttpClient,String url, String path, String filename ,@Nullable Map<String,String> requestProperty, DownloadCallback callback){
             this.okHttpClient = okHttpClient;
@@ -138,7 +142,7 @@ public class OkHttpManager implements IHttpManager {
 
                     long length = response.body().contentLength();
 
-                    Log.d(Constants.TAG,"contentLength:" + length);
+                    LogUtils.d("contentLength:" + length);
 
                     long progress = 0;
 
@@ -157,7 +161,7 @@ public class OkHttpManager implements IHttpManager {
                         }
                         fos.write(buffer,0,len);
                         progress += len;
-                        //更新进度
+                        // 更新进度
                         if(length > 0){
                             publishProgress(progress,length);
                         }
@@ -175,7 +179,7 @@ public class OkHttpManager implements IHttpManager {
 
                     return file;
 
-                }else {//连接失败
+                }else {// 连接失败
                     throw new ConnectException(String.format("responseCode = %d",response.code()));
                 }
 

@@ -96,7 +96,7 @@ public class AppUpdater {
 
             startDownloadService();
         }else{
-            throw new NullPointerException("Url = null");
+            throw new NullPointerException("Url must not be empty.");
         }
     }
 
@@ -104,7 +104,6 @@ public class AppUpdater {
      * 启动下载服务
      */
     private void startDownloadService(){
-
         Intent intent = new Intent(mContext, DownloadService.class);
         if(mCallback!=null || mHttpManager!=null){//bindService
             mServiceConnection = new ServiceConnection() {
@@ -147,6 +146,7 @@ public class AppUpdater {
      * AppUpdater建造者
      */
     public static class Builder{
+
 
         private UpdateConfig mConfig;
 
@@ -269,7 +269,7 @@ public class AppUpdater {
 
         /**
          * 设置FileProvider的authority
-         * @param authority FileProvider的authority（默认兼容N，默认值{@link Context#getPackageName() + ".fileProvider"}）
+         * @param authority FileProvider的authority（默认兼容N，默认值{@link Context#getPackageName() + ".AppUpdaterFileProvider"}）
          * @return
          */
         public Builder setAuthority(String authority){
@@ -373,8 +373,7 @@ public class AppUpdater {
 
 
         public AppUpdater build(@NonNull Context context){
-            AppUpdater appUpdater = new AppUpdater(context,mConfig);
-            return appUpdater;
+            return new AppUpdater(context,mConfig);
         }
 
     }

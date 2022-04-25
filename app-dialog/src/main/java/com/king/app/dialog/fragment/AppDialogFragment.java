@@ -11,6 +11,7 @@ import com.king.app.dialog.BaseDialogConfig;
 import com.king.app.dialog.R;
 
 /**
+ * App对话框 Fragment：封装便捷的对话框API，使用时更简单
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public class AppDialogFragment extends BaseDialogFragment {
@@ -18,7 +19,6 @@ public class AppDialogFragment extends BaseDialogFragment {
     private BaseDialogConfig config;
 
     public static AppDialogFragment newInstance(BaseDialogConfig config) {
-
         Bundle args = new Bundle();
         AppDialogFragment fragment = new AppDialogFragment();
         fragment.config = config;

@@ -53,7 +53,7 @@ public class NotificationUtils {
         if(isCancelDownload){
             Intent intent = new Intent(context, DownloadService.class);
             intent.putExtra(Constants.KEY_STOP_DOWNLOAD_SERVICE,true);
-            PendingIntent deleteIntent = PendingIntent.getService(context, notifyId,intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent deleteIntent = PendingIntent.getService(context, notifyId,intent, getPendingIntentFlags(PendingIntent.FLAG_CANCEL_CURRENT));
             builder.setDeleteIntent(deleteIntent);
         }
 
@@ -83,7 +83,7 @@ public class NotificationUtils {
         if(isCancelDownload){
             Intent intent = new Intent(context, DownloadService.class);
             intent.putExtra(Constants.KEY_STOP_DOWNLOAD_SERVICE,true);
-            PendingIntent deleteIntent = PendingIntent.getService(context, notifyId,intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent deleteIntent = PendingIntent.getService(context, notifyId, intent, getPendingIntentFlags(PendingIntent.FLAG_CANCEL_CURRENT));
             builder.setDeleteIntent(deleteIntent);
         }
 
@@ -112,7 +112,7 @@ public class NotificationUtils {
         NotificationCompat.Builder builder = buildNotification(context,channelId,icon,title,content);
         builder.setAutoCancel(true);
         Intent intent = AppUtils.getInstallIntent(context,file,authority);
-        PendingIntent clickIntent = PendingIntent.getActivity(context, notifyId,intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent clickIntent = PendingIntent.getActivity(context, notifyId, intent, getPendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT));
         builder.setContentIntent(clickIntent);
         Notification notification = builder.build();
         notification.flags = Notification.FLAG_AUTO_CANCEL;
@@ -133,14 +133,15 @@ public class NotificationUtils {
     public static void showErrorNotification(Context context, int notifyId, String channelId, @DrawableRes int icon, CharSequence title, CharSequence content, boolean isReDownload, UpdateConfig config){
         NotificationCompat.Builder builder = buildNotification(context,channelId,icon,title,content);
         builder.setAutoCancel(true);
-        if(isReDownload){//重新下载
-            Intent intent  = new Intent(context, DownloadService.class);
+        int flag = getPendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT);
+        if(isReDownload){// 重新下载
+            Intent intent = new Intent(context, DownloadService.class);
             intent.putExtra(Constants.KEY_RE_DOWNLOAD,true);
             intent.putExtra(Constants.KEY_UPDATE_CONFIG,config);
-            PendingIntent clickIntent = PendingIntent.getService(context, notifyId,intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent clickIntent = PendingIntent.getService(context, notifyId,intent, flag);
             builder.setContentIntent(clickIntent);
         }else{
-            PendingIntent clickIntent = PendingIntent.getService(context, notifyId,new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent clickIntent = PendingIntent.getService(context, notifyId, new Intent(), flag);
             builder.setContentIntent(clickIntent);
         }
 
@@ -229,7 +230,7 @@ public class NotificationUtils {
         builder.setContentText(content);
         builder.setOngoing(true);
 
-        if(progress!= Constants.NONE && size!=Constants.NONE){
+        if(progress != Constants.NONE && size != Constants.NONE){
             builder.setProgress(size,progress,false);
         }
 
@@ -245,4 +246,15 @@ public class NotificationUtils {
         getNotificationManager(context).notify(id,notification);
     }
 
+    /**
+     * 获取 PendingIntent 的 flags
+     * @param flag
+     * @return
+     */
+    private static int getPendingIntentFlags(int flag){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return flag | PendingIntent.FLAG_IMMUTABLE;
+        }
+        return flag;
+    }
 }

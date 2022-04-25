@@ -23,7 +23,7 @@ public final class Constants {
 
     public static final int NONE = -1;
 
-    public static final String DEFAULT_FILE_PROVIDER = ".fileProvider";
+    public static final String DEFAULT_FILE_PROVIDER = ".AppUpdaterFileProvider";
 
     public static final String DEFAULT_DIR = "apk";
 

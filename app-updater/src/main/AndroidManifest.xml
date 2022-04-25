@@ -2,11 +2,8 @@
     package="com.king.app.updater">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application>
@@ -15,7 +12,7 @@
 
         <provider
             android:name="com.king.app.updater.provider.AppUpdaterFileProvider"
-            android:authorities="${applicationId}.fileProvider"
+            android:authorities="${applicationId}.AppUpdaterFileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

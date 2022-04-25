@@ -2,9 +2,8 @@ package com.king.app.updater.http;
 
 import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
 
-import com.king.app.updater.constant.Constants;
+import com.king.app.updater.util.LogUtils;
 import com.king.app.updater.util.SSLSocketFactoryUtils;
 
 import java.io.File;
@@ -20,7 +19,7 @@ import javax.net.ssl.HttpsURLConnection;
 import androidx.annotation.Nullable;
 
 /**
- * HttpManager使用{@link HttpURLConnection}实现{@link IHttpManager}
+ * HttpManager使用 {@link HttpURLConnection} 实现的 {@link IHttpManager}
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public class HttpManager implements IHttpManager {
@@ -32,7 +31,7 @@ public class HttpManager implements IHttpManager {
 
     private int mTimeout;
 
-    private boolean isCancel;
+    private DownloadTask mDownloadTask;
 
     private static volatile HttpManager INSTANCE;
 
@@ -61,19 +60,21 @@ public class HttpManager implements IHttpManager {
 
     @Override
     public void download(String url, String path, String filename, @Nullable Map<String,String> requestProperty, DownloadCallback callback) {
-        isCancel = false;
-        new DownloadTask(url,path,filename,requestProperty,callback).execute();
+        mDownloadTask = new DownloadTask(url, path, filename, mTimeout, requestProperty, callback);
+        mDownloadTask.execute();
     }
 
     @Override
     public void cancel() {
-        isCancel = true;
+        if(mDownloadTask != null){
+            mDownloadTask.isCancel = true;
+        }
     }
 
     /**
      * 异步下载任务
      */
-    private class DownloadTask extends AsyncTask<Void,Long,File> {
+    private static class DownloadTask extends AsyncTask<Void,Long,File> {
 
         private String url;
 
@@ -87,13 +88,17 @@ public class HttpManager implements IHttpManager {
 
         private Exception exception;
 
-        public DownloadTask(String url, String path, String filename ,@Nullable Map<String,String> requestProperty, DownloadCallback callback){
+        private int timeout;
+
+        private volatile boolean isCancel;
+
+        public DownloadTask(String url, String path, String filename, int timeout, @Nullable Map<String,String> requestProperty, DownloadCallback callback){
             this.url = url;
             this.path = path;
             this.filename = filename;
+            this.timeout = timeout;
             this.callback = callback;
             this.requestProperty = requestProperty;
-
         }
 
         private File download(String url) throws Exception{
@@ -101,8 +106,8 @@ public class HttpManager implements IHttpManager {
             connect.setRequestMethod("GET");
             connect.setRequestProperty("Accept-Encoding", "identity");
 
-            connect.setReadTimeout(mTimeout);
-            connect.setConnectTimeout(mTimeout);
+            connect.setReadTimeout(timeout);
+            connect.setConnectTimeout(timeout);
 
             if(requestProperty != null){
                 for(Map.Entry<String,String> entry : requestProperty.entrySet()){
@@ -112,7 +117,7 @@ public class HttpManager implements IHttpManager {
 
             connect.connect();
 
-            Log.d(Constants.TAG,"Content-Type:" + connect.getContentType());
+            LogUtils.d("Content-Type:" + connect.getContentType());
             int responseCode = connect.getResponseCode();
             switch (responseCode){
                 case HttpURLConnection.HTTP_OK: {
@@ -124,7 +129,7 @@ public class HttpManager implements IHttpManager {
                         length = connect.getContentLengthLong();
                     }
 
-                    Log.d(Constants.TAG, "contentLength:" + length);
+                    LogUtils.d( "contentLength:" + length);
 
                     long progress = 0;
 
@@ -140,7 +145,7 @@ public class HttpManager implements IHttpManager {
                         }
                         fos.write(buffer, 0, len);
                         progress += len;
-                        //更新进度
+                        // 更新进度
                         if (length > 0) {
                             publishProgress(progress, length);
                         }
@@ -163,9 +168,9 @@ public class HttpManager implements IHttpManager {
                 case HttpURLConnection.HTTP_MOVED_TEMP:
                 case HttpURLConnection.HTTP_SEE_OTHER:
                 case HTTP_TEMP_REDIRECT:
-                case HTTP_PERM_REDIRECT: {//重定向
+                case HTTP_PERM_REDIRECT: {// 重定向
                     String redirectUrl = connect.getHeaderField("Location");
-                    Log.d(Constants.TAG,"redirectUrl = " + redirectUrl);
+                    LogUtils.d("redirectUrl = " + redirectUrl);
                     connect.disconnect();
                     return download(redirectUrl);
                 }
@@ -229,7 +234,6 @@ public class HttpManager implements IHttpManager {
                 callback.onCancel();
             }
         }
-
 
     }
 

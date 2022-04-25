@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +17,7 @@ import com.king.app.updater.AppUpdater;
 import com.king.app.updater.UpdateConfig;
 import com.king.app.updater.callback.AppUpdateCallback;
 import com.king.app.updater.callback.UpdateCallback;
-import com.king.app.updater.constant.Constants;
 import com.king.app.updater.http.OkHttpManager;
-import com.king.app.updater.util.PermissionUtils;
 
 import java.io.File;
 
@@ -32,11 +29,9 @@ import androidx.appcompat.app.AppCompatActivity;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private static String TAG = MainActivity.class.getSimpleName();
-
     private final Object mLock = new Object();
 
-    //下载出现Failed to connect to raw.githubusercontent.com时，可以换个下载链接测试，github的raw.githubusercontent.com目前不太稳定。
+    // 下载出现Failed to connect to raw.githubusercontent.com时，可以换个下载链接测试，github的raw.githubusercontent.com目前不太稳定。
 //    private String mUrl = "https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk";
     private String mUrl = "https://gitlab.com/jenly1314/AppUpdater/-/raw/master/app/release/app-release.apk";
 
@@ -55,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 //        progressBar.setVisibility(View.INVISIBLE);
 //        progressBar.setMax(100);
 
-        PermissionUtils.verifyReadAndWritePermissions(this,Constants.RE_CODE_STORAGE_PERMISSION);
+//        PermissionUtils.verifyReadAndWritePermissions(this,Constants.RE_CODE_STORAGE_PERMISSION);
     }
 
     public Context getContext(){
@@ -147,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
             int currProgress = (int)(progress * 1.0f / total * 100.0f);
             tvProgress.setText(getString(R.string.app_updater_progress_notification_content) + currProgress + "%");
             progressBar.setProgress(currProgress);
-            Log.d(TAG,String.format("onProgress:%d/%d | %d%%",progress,total,currProgress));
         }else{
             tvProgress.setText(getString(R.string.app_updater_start_notification_content));
         }
@@ -171,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void onStart(String url) {
                                         super.onStart(url);
-                                        //模仿系统自带的横幅通知效果
+                                        // 模仿系统自带的横幅通知效果
                                         AppDialogConfig config = new AppDialogConfig(getContext(),R.layout.dialog_heads_up);
                                         config.setStyleId(R.style.app_dialog_heads_up)
                                                 .setWidthRatio(.95f)
@@ -193,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onProgress(long progress, long total, boolean isChange) {
-                                        Log.d(TAG,String.format("onProgress:%d/%d",progress,total));
+
                                     }
 
                                     @Override
@@ -271,8 +265,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mAppUpdater = new AppUpdater.Builder()
                         .setUrl(mUrl)
-//                        .setApkMD5("3df5b1c1d2bbd01b4a7ddb3f2722ccca")//支持MD5校验，如果缓存APK的MD5与此MD5相同，则直接取本地缓存安装，推荐使用MD5校验的方式
-                        .setVersionCode(BuildConfig.VERSION_CODE)//支持versionCode校验，设置versionCode之后，新版本versionCode相同的apk只下载一次,优先取本地缓存,推荐使用MD5校验的方式
+//                        .setApkMD5("3df5b1c1d2bbd01b4a7ddb3f2722ccca")// 支持MD5校验，如果缓存APK的MD5与此MD5相同，则直接取本地缓存安装，推荐使用MD5校验的方式
+                        .setVersionCode(BuildConfig.VERSION_CODE)// 支持versionCode校验，设置versionCode之后，新版本versionCode相同的apk只下载一次,优先取本地缓存,推荐使用MD5校验的方式
                         .setFilename("AppUpdater.apk")
                         .setVibrate(true)
                         .build(getContext());

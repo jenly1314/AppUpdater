@@ -16,6 +16,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 /**
+ * App对话框：封装便捷的对话框API，使用时更简单
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public enum AppDialog {
@@ -40,11 +41,20 @@ public enum AppDialog {
 
     //-------------------------------------------
 
+    /**
+     * {@link DialogFragment#dismiss()}
+     * @param fragmentManager {@link FragmentManager}
+     */
     public void dismissDialogFragment(FragmentManager fragmentManager){
         dismissDialogFragment(fragmentManager,mTag);
         mTag = null;
     }
 
+    /**
+     * {@link DialogFragment#dismiss()}
+     * @param fragmentManager {@link FragmentManager}
+     * @param tag  dialogFragment对应的标签
+     */
     public void dismissDialogFragment(FragmentManager fragmentManager,String tag){
         if(tag!=null){
             DialogFragment dialogFragment = (DialogFragment) fragmentManager.findFragmentByTag(tag);
@@ -52,8 +62,12 @@ public enum AppDialog {
         }
     }
 
+    /**
+     * {@link DialogFragment#dismiss()}
+     * @param dialogFragment {@link DialogFragment}
+     */
     public void dismissDialogFragment(DialogFragment dialogFragment){
-        if(dialogFragment!=null){
+        if(dialogFragment != null){
             dialogFragment.dismiss();
         }
     }
@@ -62,7 +76,8 @@ public enum AppDialog {
 
     /**
      * 显示DialogFragment
-     * @param fragmentManager
+     * @param fragmentManager {@link FragmentManager}
+     * @param config {@link AppDialogConfig}
      * @return
      */
     public String showDialogFragment(FragmentManager fragmentManager,AppDialogConfig config){
@@ -75,8 +90,8 @@ public enum AppDialog {
 
     /**
      * 显示DialogFragment
-     * @param fragmentManager
-     * @param dialogFragment
+     * @param fragmentManager {@link FragmentManager}
+     * @param dialogFragment {@link DialogFragment}
      * @return
      */
     public String showDialogFragment(FragmentManager fragmentManager,DialogFragment dialogFragment){
@@ -88,9 +103,9 @@ public enum AppDialog {
 
     /**
      * 显示DialogFragment
-     * @param fragmentManager
-     * @param dialogFragment
-     * @param tag
+     * @param fragmentManager {@link FragmentManager}
+     * @param dialogFragment {@link DialogFragment}
+     * @param tag dialogFragment对应的标签
      * @return
      */
     public String showDialogFragment(FragmentManager fragmentManager,DialogFragment dialogFragment, String tag) {
@@ -121,7 +136,7 @@ public enum AppDialog {
 
     /**
      * 显示弹框
-     * @param context
+     * @param context 上下文
      * @param config 弹框配置 {@link AppDialogConfig}
      */
     public void showDialog(Context context,AppDialogConfig config){
@@ -130,7 +145,7 @@ public enum AppDialog {
 
     /**
      * 显示弹框
-     * @param context
+     * @param context 上下文
      * @param config 弹框配置 {@link AppDialogConfig}
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
      */
@@ -142,7 +157,7 @@ public enum AppDialog {
 
     /**
      * 显示弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      */
     public void showDialog(Context context,View contentView){
@@ -151,7 +166,7 @@ public enum AppDialog {
 
     /**
      * 显示弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
      */
@@ -161,7 +176,7 @@ public enum AppDialog {
 
     /**
      * 显示弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param widthRatio 宽度比例，根据屏幕宽度计算得来
      */
@@ -171,7 +186,7 @@ public enum AppDialog {
 
     /**
      * 显示弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param widthRatio 宽度比例，根据屏幕宽度计算得来
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
@@ -183,7 +198,7 @@ public enum AppDialog {
 
     /**
      * 显示弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param styleId Dialog样式
      * @param widthRatio 宽度比例，根据屏幕宽度计算得来
@@ -194,7 +209,7 @@ public enum AppDialog {
 
     /**
      * 显示弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param styleId Dialog样式
      * @param widthRatio 宽度比例，根据屏幕宽度计算得来
@@ -205,7 +220,7 @@ public enum AppDialog {
 
     /**
      * 显示弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param styleId Dialog样式
      * @param widthRatio 宽度比例，根据屏幕宽度计算得来
@@ -217,7 +232,7 @@ public enum AppDialog {
 
     /**
      * 显示弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param styleId Dialog样式
      * @param gravity Dialog的对齐方式
@@ -231,7 +246,7 @@ public enum AppDialog {
 
     /**
      * 显示弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param styleId Dialog样式
      * @param gravity Dialog的对齐方式
@@ -247,7 +262,7 @@ public enum AppDialog {
 
     /**
      * 显示弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param styleId Dialog样式
      * @param gravity Dialog的对齐方式
@@ -265,7 +280,7 @@ public enum AppDialog {
 
     /**
      * 显示弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param styleId Dialog样式
      * @param gravity Dialog的对齐方式
@@ -287,8 +302,8 @@ public enum AppDialog {
 
     /**
      * 设置弹框窗口配置
-     * @param context
-     * @param dialog
+     * @param context 上下文
+     * @param dialog Dialog对话框
      * @param gravity Dialog的对齐方式
      * @param widthRatio 宽度比例，根据屏幕宽度计算得来
      * @param x x轴偏移量，需与 gravity 结合使用
@@ -331,7 +346,7 @@ public enum AppDialog {
 
     /**
      * 创建弹框
-     * @param context
+     * @param context 上下文
      * @param config 弹框配置 {@link AppDialogConfig}
      */
     public Dialog createDialog(Context context,AppDialogConfig config){
@@ -340,7 +355,7 @@ public enum AppDialog {
 
     /**
      * 创建弹框
-     * @param context
+     * @param context 上下文
      * @param config 弹框配置 {@link AppDialogConfig}
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
      */
@@ -350,7 +365,7 @@ public enum AppDialog {
 
     /**
      * 创建弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      */
     public Dialog createDialog(Context context,View contentView){
@@ -359,7 +374,7 @@ public enum AppDialog {
 
     /**
      * 创建弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
      */
@@ -369,7 +384,7 @@ public enum AppDialog {
 
     /**
      * 创建弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param widthRatio 宽度比例，根据屏幕宽度计算得来
      */
@@ -379,7 +394,7 @@ public enum AppDialog {
 
     /**
      * 创建弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param widthRatio 宽度比例，根据屏幕宽度计算得来
      * @param isCancel 是否可取消（默认为true，false则拦截back键）
@@ -390,7 +405,7 @@ public enum AppDialog {
 
     /**
      * 创建弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param styleId Dialog样式
      * @param widthRatio 宽度比例，根据屏幕宽度计算得来
@@ -401,7 +416,7 @@ public enum AppDialog {
 
     /**
      * 创建弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param styleId Dialog样式
      * @param gravity Dialog的对齐方式
@@ -414,7 +429,7 @@ public enum AppDialog {
 
     /**
      * 创建弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param styleId Dialog样式
      * @param widthRatio 宽度比例，根据屏幕宽度计算得来
@@ -426,7 +441,7 @@ public enum AppDialog {
 
     /**
      * 创建弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param styleId Dialog样式
      * @param gravity Dialog的对齐方式
@@ -439,7 +454,7 @@ public enum AppDialog {
 
     /**
      * 创建弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param styleId Dialog样式
      * @param gravity Dialog的对齐方式
@@ -455,7 +470,7 @@ public enum AppDialog {
 
     /**
      * 创建弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param styleId Dialog样式
      * @param gravity Dialog的对齐方式
@@ -473,7 +488,7 @@ public enum AppDialog {
 
     /**
      * 创建弹框
-     * @param context
+     * @param context 上下文
      * @param contentView 弹框内容视图
      * @param styleId Dialog样式
      * @param gravity Dialog的对齐方式
@@ -508,15 +523,26 @@ public enum AppDialog {
         return dialog;
     }
 
+    /**
+     * 获取Dialog
+     * @return {@link #mDialog}
+     */
     public Dialog getDialog(){
         return mDialog;
     }
 
+    /**
+     * {@link Dialog#dismiss()}
+     */
     public void dismissDialog(){
         dismissDialog(mDialog);
         mDialog = null;
     }
 
+    /**
+     * {@link Dialog#dismiss()}
+     * @param dialog {@link Dialog}
+     */
     public void dismissDialog(Dialog dialog){
         if(dialog != null){
             dialog.dismiss();
