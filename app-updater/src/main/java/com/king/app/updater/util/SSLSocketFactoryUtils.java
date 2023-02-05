@@ -1,168 +1,93 @@
 package com.king.app.updater.util;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
-import androidx.annotation.RawRes;
-
-import java.io.InputStream;
-import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.Arrays;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
-
 /**
+ * SSLSocketFactory 工具
+ *
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public final class SSLSocketFactoryUtils {
-
-    private static final String[] VERIFY_HOST_NAME = new String[]{};
 
     private SSLSocketFactoryUtils() {
         throw new AssertionError();
     }
 
+    /**
+     * 创建 SSLSocketFactory
+     *
+     * @return {@link SSLSocketFactory}
+     */
     public static SSLSocketFactory createSSLSocketFactory() {
-        SSLSocketFactory sslSocketFactory = null;
         try {
             SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, getTrustAllManager(), new SecureRandom());
-            sslSocketFactory = sslContext.getSocketFactory();
+            sslContext.init(null, getTrustAllManager(), null);
+            return sslContext.getSocketFactory();
         } catch (Exception e) {
-
-        }
-        return sslSocketFactory;
-    }
-
-    public static X509TrustManager createTrustAllManager() {
-        X509TrustManager tm = null;
-        try {
-            tm = new X509TrustManager() {
-                public void checkClientTrusted(X509Certificate[] chain, String authType)
-                        throws CertificateException {
-                    //do nothing
-                }
-
-                public void checkServerTrusted(X509Certificate[] chain, String authType)
-                        throws CertificateException {
-                    //do nothing
-                }
-
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }
-            };
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return tm;
-    }
-
-    public static TrustAllHostnameVerifier createTrustAllHostnameVerifier() {
-        return new TrustAllHostnameVerifier();
-    }
-
-    public static class TrustAllHostnameVerifier implements HostnameVerifier {
-        @Override
-        public boolean verify(String hostname, SSLSession session) {
-            if (TextUtils.isEmpty(hostname)) {
-                return false;
-            }
-            return !Arrays.asList(VERIFY_HOST_NAME).contains(hostname);
+            throw new RuntimeException(e);
         }
     }
 
     /**
-     * @param context
-     * @param keyServerStoreID
-     * @return
-     */
-    public static SSLSocketFactory createSSLSocketFactory(Context context, @RawRes int keyServerStoreID) {
-        InputStream trustStream = context.getResources().openRawResource(keyServerStoreID);
-        return createSSLSocketFactory(trustStream);
-    }
-
-    /**
-     * @param certificates
-     * @return
-     */
-    public static SSLSocketFactory createSSLSocketFactory(InputStream... certificates) {
-        SSLSocketFactory sSLSocketFactory = null;
-        if (sSLSocketFactory == null) {
-            synchronized (SSLSocketFactoryUtils.class) {
-                if (sSLSocketFactory == null) {
-                    try {
-                        SSLContext sslContext = SSLContext.getInstance("TLS");
-                        sslContext.init(null, getTrustManager(certificates), new SecureRandom());
-                        sSLSocketFactory = sslContext.getSocketFactory();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        return sSLSocketFactory;
-    }
-
-    /**
-     * 获得指定流中的服务器端证书库
+     * 创建 X509TrustManager
      *
-     * @param certificates
-     * @return
+     * @return {@link X509TrustManager}
      */
-    public static TrustManager[] getTrustManager(InputStream... certificates) {
-        try {
-            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            keyStore.load(null, null);
-            int index = 0;
-            for (InputStream certificate : certificates) {
-                if (certificate == null) {
-                    continue;
-                }
-                Certificate certificate1;
-                try {
-                    certificate1 = certificateFactory.generateCertificate(certificate);
-                } finally {
-                    certificate.close();
-                }
+    @SuppressLint("TrustAllX509TrustManager")
+    public static X509TrustManager createX509TrustManager() {
+        return new X509TrustManager() {
 
-                String certificateAlias = Integer.toString(index++);
-                keyStore.setCertificateEntry(certificateAlias, certificate1);
+            @SuppressLint("TrustAllX509TrustManager")
+            @Override
+            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                //do nothing
             }
 
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory
-                    .getDefaultAlgorithm());
+            @SuppressLint("TrustAllX509TrustManager")
+            @Override
+            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                //do nothing
+            }
 
-            trustManagerFactory.init(keyStore);
-            return trustManagerFactory.getTrustManagers();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-
-        return getTrustAllManager();
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return new X509Certificate[0];
+            }
+        };
     }
 
     /**
-     * 获得信任所有服务器端证书库
+     * 创建一个忽略校验信任所有主机的验证器
+     *
+     * @return {@link HostnameVerifier}
      */
-    public static TrustManager[] getTrustAllManager() {
-        return new TrustManager[]{createTrustAllManager()};
+    public static HostnameVerifier createAllowAllHostnameVerifier() {
+        return new HostnameVerifier() {
+            @Override
+            public boolean verify(String hostname, SSLSession session) {
+                return !TextUtils.isEmpty(hostname);
+            }
+        };
     }
 
+    /**
+     * 获得信任所有服务器端证书
+     *
+     * @return {@link TrustManager}
+     */
+    private static TrustManager[] getTrustAllManager() {
+        return new TrustManager[]{createX509TrustManager()};
+    }
 
 }

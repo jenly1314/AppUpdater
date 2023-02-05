@@ -27,13 +27,15 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 
-
 /**
  * 下载服务
+ *
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public class DownloadService extends Service {
-
+    /**
+     * DownloadBinder
+     */
     private DownloadBinder mDownloadBinder = new DownloadBinder();
     /**
      * 是否在下载，防止重复下载。
@@ -47,30 +49,46 @@ public class DownloadService extends Service {
      * Http管理器
      */
     private IHttpManager mHttpManager;
-
+    /**
+     * 更新回调
+     */
+    private UpdateCallback mUpdateCallback;
+    /**
+     * 通知栏
+     */
+    private INotification mNotification;
+    /**
+     * APK文件
+     */
     private File mApkFile;
 
-    private Context getContext(){
+    /**
+     * 获取Context
+     *
+     * @return
+     */
+    private Context getContext() {
         return this;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent != null){
-            boolean isStop = intent.getBooleanExtra(Constants.KEY_STOP_DOWNLOAD_SERVICE,false);
-            if(isStop){
+        if (intent != null) {
+            boolean isStop = intent.getBooleanExtra(Constants.KEY_STOP_DOWNLOAD_SERVICE, false);
+            if (isStop) {
                 stopDownload();
-            } else if(!isDownloading){
-                //是否实通过通知栏触发重复下载
-                boolean isReDownload = intent.getBooleanExtra(Constants.KEY_RE_DOWNLOAD,false);
-                if(isReDownload){
+            } else if (!isDownloading) {
+                // 是否实通过通知栏触发重复下载
+                boolean isReDownload = intent.getBooleanExtra(Constants.KEY_RE_DOWNLOAD, false);
+                if (isReDownload) {
                     mCount++;
                 }
-                //获取配置信息
+                // 获取配置信息
                 UpdateConfig config = intent.getParcelableExtra(Constants.KEY_UPDATE_CONFIG);
-                startDownload(config,null,null, new NotificationImpl());
-            }else{
-                LogUtils.w("Please do not duplicate downloads.");
+
+                startDownload(config);
+            } else {
+                LogUtils.w("Please do not repeat the download.");
             }
         }
 
@@ -83,17 +101,27 @@ public class DownloadService extends Service {
 
     /**
      * 开始下载
+     *
+     * @param config
+     */
+    private void startDownload(@NonNull UpdateConfig config) {
+        startDownload(config, mHttpManager, mUpdateCallback, mNotification);
+    }
+
+    /**
+     * 开始下载
+     *
      * @param config
      * @param httpManager
      * @param callback
      */
-    public void startDownload(@NonNull UpdateConfig config,@Nullable IHttpManager httpManager,@Nullable UpdateCallback callback, @Nullable INotification notification){
-        if(callback != null){
+    private void startDownload(@NonNull UpdateConfig config, @Nullable IHttpManager httpManager, @Nullable UpdateCallback callback, @Nullable INotification notification) {
+        if (callback != null) {
             callback.onDownloading(isDownloading);
         }
 
-        if(isDownloading){
-            LogUtils.w("Please do not duplicate downloads.");
+        if (isDownloading) {
+            LogUtils.w("Please do not repeat the download.");
             return;
         }
 
@@ -101,84 +129,122 @@ public class DownloadService extends Service {
         String path = config.getPath();
         String filename = config.getFilename();
 
-        //如果保存路径为空则使用缓存路径
-        if(TextUtils.isEmpty(path)){
+        // 如果保存路径为空则使用缓存路径
+        if (TextUtils.isEmpty(path)) {
             path = getCacheFilesDir(getContext());
         }
         File dirFile = new File(path);
-        if(!dirFile.exists()){
+        if (!dirFile.exists()) {
             dirFile.mkdirs();
         }
 
-        //如果文件名为空则使用路径
-        if(TextUtils.isEmpty(filename)){
-            filename = AppUtils.getAppFullName(getContext(),url,getResources().getString(R.string.app_name));
+        // 如果文件名为空则使用路径
+        if (TextUtils.isEmpty(filename)) {
+            filename = AppUtils.getAppFullName(getContext(), url, getResources().getString(R.string.app_name));
         }
 
         mApkFile = new File(path, filename);
-        if(mApkFile.exists()){//文件是否存在
-            Integer versionCode = config.getVersionCode();
+        // 文件是否存在
+        if (mApkFile.exists()) {
+            long versionCode = config.getVersionCode();
             String apkMD5 = config.getApkMD5();
-            //是否存在相同的apk
+            // 是否存在相同的apk
             boolean isExistApk = false;
-            if(!TextUtils.isEmpty(apkMD5)){//如果存在MD5，则优先校验MD5
-                LogUtils.d(String.format(Locale.getDefault(),"UpdateConfig.apkMD5:%s",apkMD5));
-                isExistApk = AppUtils.checkFileMD5(mApkFile,apkMD5);
-            }else if(versionCode != null){//如果存在versionCode，则校验versionCode
-                LogUtils.d(String.format(Locale.getDefault(),"UpdateConfig.versionCode:%d",versionCode));
-                isExistApk = AppUtils.apkExists(getContext(),versionCode,mApkFile);
+            if (!TextUtils.isEmpty(apkMD5)) {
+                // 如果存在MD5，则优先校验MD5
+                LogUtils.d(String.format(Locale.getDefault(), "UpdateConfig.apkMD5: %s", apkMD5));
+                isExistApk = AppUtils.verifyFileMD5(mApkFile, apkMD5);
+            } else if (versionCode > 0) {
+                // 如果存在versionCode，则校验versionCode
+                LogUtils.d(String.format(Locale.getDefault(), "UpdateConfig.versionCode: %d", versionCode));
+                isExistApk = AppUtils.apkExists(getContext(), versionCode, mApkFile);
             }
 
-            if(isExistApk){
-                //本地已经存在要下载的APK
-                LogUtils.d("CacheFile:" + mApkFile);
-                if(config.isInstallApk()){
+            if (isExistApk) {
+                // 本地已经存在要下载的APK
+                LogUtils.d("CacheFile: " + mApkFile);
+                if (config.isInstallApk()) {
                     String authority = config.getAuthority();
-                    if(TextUtils.isEmpty(authority)){//如果为空则默认
+                    // 如果为空则默认
+                    if (TextUtils.isEmpty(authority)) {
                         authority = AppUtils.getFileProviderAuthority(getContext());
                     }
                     AppUtils.installApk(getContext(), mApkFile, authority);
                 }
-                if(callback != null){
+                if (callback != null) {
                     callback.onFinish(mApkFile);
                 }
                 stopService();
                 return;
             }
 
-            //删除旧文件
+            // 删除旧文件
             mApkFile.delete();
         }
-        LogUtils.d("File:" + mApkFile);
+        LogUtils.d("File: " + mApkFile);
+        this.mUpdateCallback = callback;
+        IHttpManager.DownloadCallback downloadCallback = new AppDownloadCallback(getContext(), this, config, mApkFile, callback, getNotification(notification));
+        getHttpManager(httpManager).download(url, mApkFile.getAbsolutePath(), config.getRequestProperty(), downloadCallback);
 
-        mHttpManager = httpManager != null ? httpManager : HttpManager.getInstance();
-        IHttpManager.DownloadCallback downloadCallback = new AppDownloadCallback(getContext(),this, config, mApkFile, callback, notification);
-        mHttpManager.download(url,path,filename,config.getRequestProperty(), downloadCallback);
+    }
 
+    /**
+     * 获取 IHttpManager
+     *
+     * @param httpManager {@link IHttpManager}
+     * @return
+     */
+    @NonNull
+    private IHttpManager getHttpManager(@Nullable IHttpManager httpManager) {
+        if (httpManager != null) {
+            mHttpManager = httpManager;
+        }
+        if (mHttpManager == null) {
+            mHttpManager = HttpManager.getInstance();
+        }
+        return mHttpManager;
+    }
+
+    /**
+     * 获取 INotification
+     *
+     * @param notification {@link INotification}
+     * @return
+     */
+    @NonNull
+    private INotification getNotification(@Nullable INotification notification) {
+        if (notification != null) {
+            mNotification = notification;
+        }
+        if (mNotification == null) {
+            mNotification = new NotificationImpl();
+        }
+        return mNotification;
     }
 
     /**
      * 停止下载
      */
-    public void stopDownload(){
-        if(mHttpManager != null){
+    private void stopDownload() {
+        if (mHttpManager != null) {
             mHttpManager.cancel();
         }
     }
 
     /**
      * 获取缓存路径
+     *
      * @param context
      * @return
      */
     private String getCacheFilesDir(Context context) {
         File[] files = ContextCompat.getExternalFilesDirs(context, Constants.DEFAULT_DIR);
-        if(files != null && files.length > 0){
+        if (files != null && files.length > 0) {
             return files[0].getAbsolutePath();
         }
 
         File externalFilesDir = context.getExternalFilesDir(Constants.DEFAULT_DIR);
-        if(externalFilesDir != null){
+        if (externalFilesDir != null) {
             return externalFilesDir.getAbsolutePath();
         }
 
@@ -189,7 +255,7 @@ public class DownloadService extends Service {
     /**
      * 停止服务
      */
-    private void stopService(){
+    private void stopService() {
         mCount = 0;
         stopSelf();
     }
@@ -228,7 +294,7 @@ public class DownloadService extends Service {
 
         private boolean isDeleteCancelFile;
 
-        private boolean isCancelDownload;
+        private boolean isSupportCancelDownload;
 
         private UpdateCallback callback;
 
@@ -247,8 +313,7 @@ public class DownloadService extends Service {
          */
         private File apkFile;
 
-
-        private AppDownloadCallback(Context context, DownloadService downloadService, UpdateConfig config, File apkFile, UpdateCallback callback, INotification notification){
+        private AppDownloadCallback(Context context, DownloadService downloadService, UpdateConfig config, File apkFile, UpdateCallback callback, INotification notification) {
             this.context = context;
             this.downloadService = downloadService;
             this.config = config;
@@ -258,86 +323,97 @@ public class DownloadService extends Service {
             this.isShowNotification = config.isShowNotification();
             this.notifyId = config.getNotificationId();
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 this.channelId = TextUtils.isEmpty(config.getChannelId()) ? Constants.DEFAULT_NOTIFICATION_CHANNEL_ID : config.getChannelId();
                 this.channelName = TextUtils.isEmpty(config.getChannelName()) ? Constants.DEFAULT_NOTIFICATION_CHANNEL_NAME : config.getChannelName();
             }
-            if(config.getNotificationIcon() <= 0){
+            if (config.getNotificationIcon() <= 0) {
                 this.notificationIcon = AppUtils.getAppIcon(context);
-            }else{
+            } else {
                 this.notificationIcon = config.getNotificationIcon();
             }
 
             this.isInstallApk = config.isInstallApk();
 
             this.authority = config.getAuthority();
-            if(TextUtils.isEmpty(config.getAuthority())){//如果为空则默认
+            // 如果为空则默认
+            if (TextUtils.isEmpty(config.getAuthority())) {
                 authority = AppUtils.getFileProviderAuthority(context);
             }
 
             this.isShowPercentage = config.isShowPercentage();
             this.isDeleteCancelFile = config.isDeleteCancelFile();
-            this.isCancelDownload = config.isCancelDownload();
+            this.isSupportCancelDownload = config.isSupportCancelDownload();
 
-            //支持下载失败时重新下载，当重新下载次数不超过限制时才被允许
+            // 支持下载失败时重新下载，当重新下载次数不超过限制时才被允许
             this.isReDownload = config.isReDownload() && downloadService.mCount < config.getReDownloads();
 
         }
 
         @Override
         public void onStart(String url) {
-            LogUtils.i("url:" + url);
+            LogUtils.i("url: " + url);
             downloadService.isDownloading = true;
             lastProgress = 0;
-            if(isShowNotification && notification != null){
-                notification.onStart(context,notifyId,channelId,channelName,notificationIcon,getString(R.string.app_updater_start_notification_title),getString(R.string.app_updater_start_notification_content),config.isVibrate(),config.isSound(),isCancelDownload);
+            if (isShowNotification && notification != null) {
+                notification.onStart(context, notifyId, channelId, channelName, notificationIcon, getString(R.string.app_updater_start_notification_title), getString(R.string.app_updater_start_notification_content), config.isVibrate(), config.isSound(), isSupportCancelDownload);
             }
 
-            if(callback != null){
+            if (callback != null) {
                 callback.onStart(url);
             }
         }
 
         @Override
         public void onProgress(long progress, long total) {
-            boolean isChange = false;
+            boolean isChanged = false;
             long curTime = System.currentTimeMillis();
-            if(lastTime + 200 < curTime || progress == total) {//降低更新频率
+            // 降低更新频率
+            if (lastTime + Constants.MINIMUM_INTERVAL_MILLIS < curTime || progress == total) {
                 lastTime = curTime;
+                int progressPercentage = 0;
+                if (total > 0) {
+                    progressPercentage = Math.round(progress * 1.0f / total * 100.0f);
+                    // 百分比改变了才更新
+                    if (progressPercentage != lastProgress) {
+                        isChanged = true;
+                        lastProgress = progressPercentage;
+                    }
+                    LogUtils.i(String.format(Locale.getDefault(), "%d%%\t| %d/%d", progressPercentage, progress, total));
+                } else {
+                    LogUtils.i(String.format(Locale.getDefault(), "%d/%d", progress, total));
+                }
 
-                int currProgress = Math.round(progress * 1.0f / total * 100.0f);
-                if(currProgress != lastProgress){//百分比改变了才更新
-                    isChange = true;
-                    lastProgress = currProgress;
-                    String percentage = currProgress + "%";
-                    LogUtils.i(String.format(Locale.getDefault(),"%s \t(%d/%d)", percentage, progress, total));
-                    if(isShowNotification && notification != null) {
-                        String content = context.getString(R.string.app_updater_progress_notification_content);
+                if (isShowNotification && notification != null) {
+                    String content = context.getString(R.string.app_updater_progress_notification_content);
+                    if (total > 0) {
                         if (isShowPercentage) {
-                            content += percentage;
+                            content = String.format(Locale.getDefault(), "%s%d%%", content, progressPercentage);
                         }
-
-                        notification.onProgress(context,notifyId, channelId, notificationIcon, context.getString(R.string.app_updater_progress_notification_title), content, currProgress, 100,isCancelDownload);
+                        notification.onProgress(context, notifyId, channelId, notificationIcon, context.getString(R.string.app_updater_progress_notification_title), content, progressPercentage, 100, isSupportCancelDownload);
+                    } else {
+                        notification.onProgress(context, notifyId, channelId, notificationIcon, context.getString(R.string.app_updater_progress_notification_title), content, (int) progress, Constants.NONE, isSupportCancelDownload);
                     }
                 }
             }
 
-            if(callback != null){
-                callback.onProgress(progress,total,isChange);
+            if (callback != null && total > 0) {
+                callback.onProgress(progress, total, isChanged);
             }
+
         }
 
         @Override
         public void onFinish(File file) {
-            LogUtils.d("File:" + file);
+            LogUtils.d("File: " + file);
             downloadService.isDownloading = false;
-            if(isShowNotification && notification != null){
-                notification.onFinish(context,notifyId,channelId,notificationIcon,getString(R.string.app_updater_finish_notification_title),getString(R.string.app_updater_finish_notification_content),file,authority);
+            if (isShowNotification && notification != null) {
+                notification.onFinish(context, notifyId, channelId, notificationIcon, getString(R.string.app_updater_finish_notification_title), getString(R.string.app_updater_finish_notification_content), file, authority);
             }
-            if(isInstallApk){
-                AppUtils.installApk(context,file,authority);
+            if (isInstallApk) {
+                AppUtils.installApk(context, file, authority);
             }
-            if(callback != null){
+            if (callback != null) {
                 callback.onFinish(file);
             }
             downloadService.stopService();
@@ -347,15 +423,15 @@ public class DownloadService extends Service {
         public void onError(Exception e) {
             LogUtils.w(e.getMessage());
             downloadService.isDownloading = false;
-            if(isShowNotification && notification != null){
+            if (isShowNotification && notification != null) {
                 String content = isReDownload ? getString(R.string.app_updater_error_notification_content_re_download) : getString(R.string.app_updater_error_notification_content);
-                notification.onError(context,notifyId,channelId,notificationIcon,getString(R.string.app_updater_error_notification_title),content,isReDownload,config);
+                notification.onError(context, notifyId, channelId, notificationIcon, getString(R.string.app_updater_error_notification_title), content, isReDownload, config);
             }
 
-            if(callback != null){
+            if (callback != null) {
                 callback.onError(e);
             }
-            if(!isReDownload){
+            if (!isReDownload) {
                 downloadService.stopService();
             }
 
@@ -365,19 +441,19 @@ public class DownloadService extends Service {
         public void onCancel() {
             LogUtils.d("Cancel download.");
             downloadService.isDownloading = false;
-            if(isShowNotification && notification != null){
-                notification.onCancel(context,notifyId);
+            if (isShowNotification && notification != null) {
+                notification.onCancel(context, notifyId);
             }
-            if(callback != null){
+            if (callback != null) {
                 callback.onCancel();
             }
-            if(isDeleteCancelFile && apkFile != null){
+            if (isDeleteCancelFile && apkFile != null) {
                 apkFile.delete();
             }
             downloadService.stopService();
         }
 
-        private String getString(@StringRes int resId){
+        private String getString(@StringRes int resId) {
             return context.getString(resId);
         }
     }
@@ -386,6 +462,8 @@ public class DownloadService extends Service {
     public void onDestroy() {
         isDownloading = false;
         mHttpManager = null;
+        mUpdateCallback = null;
+        mNotification = null;
         super.onDestroy();
     }
 
@@ -404,39 +482,43 @@ public class DownloadService extends Service {
 
         /**
          * 开始下载
+         *
          * @param config {@link UpdateConfig}
          */
-        public void start(@NonNull UpdateConfig config){
-            start(config,null);
+        public void start(@NonNull UpdateConfig config) {
+            start(config, null);
         }
 
         /**
          * 开始下载
-         * @param config {@link UpdateConfig}
+         *
+         * @param config   {@link UpdateConfig}
          * @param callback {@link UpdateCallback}
          */
-        public void start(@NonNull UpdateConfig config, @Nullable UpdateCallback callback){
-            start(config,null, callback);
+        public void start(@NonNull UpdateConfig config, @Nullable UpdateCallback callback) {
+            start(config, null, callback);
         }
 
         /**
          * 开始下载
-         * @param config {@link UpdateConfig}
+         *
+         * @param config      {@link UpdateConfig}
          * @param httpManager {@link IHttpManager}
-         * @param callback {@link UpdateCallback}
+         * @param callback    {@link UpdateCallback}
          */
-        public void start(@NonNull UpdateConfig config, @Nullable IHttpManager httpManager, @Nullable UpdateCallback callback){
-            start(config, httpManager, callback, new NotificationImpl());
+        public void start(@NonNull UpdateConfig config, @Nullable IHttpManager httpManager, @Nullable UpdateCallback callback) {
+            start(config, httpManager, callback, null);
         }
 
         /**
          * 开始下载
-         * @param config {@link UpdateConfig}
-         * @param httpManager {@link IHttpManager}
-         * @param callback {@link UpdateCallback}
+         *
+         * @param config       {@link UpdateConfig}
+         * @param httpManager  {@link IHttpManager}
+         * @param callback     {@link UpdateCallback}
          * @param notification {@link INotification}
          */
-        public void start(@NonNull UpdateConfig config, @Nullable IHttpManager httpManager, @Nullable UpdateCallback callback,@NonNull INotification notification){
+        public void start(@NonNull UpdateConfig config, @Nullable IHttpManager httpManager, @Nullable UpdateCallback callback, @Nullable INotification notification) {
             startDownload(config, httpManager, callback, notification);
         }
     }

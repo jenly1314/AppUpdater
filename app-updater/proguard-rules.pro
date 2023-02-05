@@ -26,6 +26,8 @@
 -keep class * implements com.king.app.updater.**{ *;}
 -keepattributes InnerClasses
 
+-keep public class * extends android.app.Service
+
 -keep class * implements android.os.Parcelable {
     public static final android.os.Parcelable$Creator *;
 }

@@ -60,9 +60,9 @@ allprojects {
 
     //----------AndroidX 版本
     //app-updater
-    implementation 'com.github.jenly1314.AppUpdater:app-updater:1.1.3'
+    implementation 'com.github.jenly1314.AppUpdater:app-updater:1.1.4'
     //app-dialog
-    implementation 'com.github.jenly1314.AppUpdater:app-dialog:1.1.3'
+    implementation 'com.github.jenly1314.AppUpdater:app-dialog:1.1.4'
 
 ```
 
@@ -96,12 +96,12 @@ allprojects {
     config.setTitle("简单弹框升级")
             .setConfirm("升级") //旧版本使用setOk
             .setContent("1、新增某某功能、\n2、修改某某问题、\n3、优化某某BUG、")
-            .setOnClickConfirm(new View.OnClickListener() { //旧版本使用setOnClickOk
+            .setOnClickConfirm(new View.OnClickListener() { // 旧版本使用setOnClickOk
                 @Override
                 public void onClick(View v) {
-                    new AppUpdater.Builder()
+                    new AppUpdater.Builder(getContext())
                             .setUrl(mUrl)
-                            .build(getContext())
+                            .build()
                             .start();
                     AppDialog.INSTANCE.dismissDialog();
                 }
@@ -110,25 +110,72 @@ allprojects {
 ```
 ```Java
     //简单DialogFragment升级
-    AppDialogConfig config = new AppDialogConfig(context);
+    AppDialogConfig config = new AppDialogConfig(getContext());
     config.setTitle("简单DialogFragment升级")
-            .setConfirm("升级") //旧版本使用setOk
+            .setConfirm("升级")
             .setContent("1、新增某某功能、\n2、修改某某问题、\n3、优化某某BUG、")
-            .setOnClickConfirm(new View.OnClickListener() { //旧版本使用setOnClickOk
+            .setOnClickConfirm(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new AppUpdater.Builder()
+                    AppUpdater appUpdater = new AppUpdater.Builder(getContext())
                             .setUrl(mUrl)
-                            .setFilename("AppUpdater.apk")
-                            .build(getContext())
-                            .setHttpManager(OkHttpManager.getInstance())//不设置HttpManager时，默认使用HttpsURLConnection下载，如果使用OkHttpClient实现下载，需依赖okhttp库
-                            .start();
+                            .build();
+                    appUpdater.setHttpManager(OkHttpManager.getInstance()) // 使用OkHttp的实现进行下载
+                            .setUpdateCallback(new UpdateCallback() { // 更新回调
+                                @Override
+                                public void onDownloading(boolean isDownloading) {
+                                    // 下载中：isDownloading为true时，表示已经在下载，即之前已经启动了下载；为false时，表示当前未开始下载，即将开始下载
+                                }
+
+                                @Override
+                                public void onStart(String url) {
+                                    // 开始下载
+                                }
+
+                                @Override
+                                public void onProgress(long progress, long total, boolean isChanged) {
+                                    // 下载进度更新：建议在isChanged为true时，才去更新界面的进度；因为实际的进度变化频率很高
+                                }
+
+                                @Override
+                                public void onFinish(File file) {
+                                    // 下载完成
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    // 下载失败
+                                }
+
+                                @Override
+                                public void onCancel() {
+                                    // 取消下载
+                                }
+                            }).start();
+
                     AppDialog.INSTANCE.dismissDialogFragment(getSupportFragmentManager());
                 }
             });
-    AppDialog.INSTANCE.showDialogFragment(getSupportFragmentManager(),config);
+    AppDialog.INSTANCE.showDialogFragment(getSupportFragmentManager(), config);
 
 ```
+
+## 补充说明
+
+#### app-updater
+
+- 不设置 **HttpManager** 时，默认使用 **HttpsURLConnection** 实现的 **HttpManager** 进行下载，如果想要使用 **OkHttpClient** 实现下载，需依赖 **okhttp** 库；（内部默认提供 **HttpManager** 和 **OkHttpManager** 两种实现）
+- 支持下载APK时，优先取本地缓存策略，避免多次重复下载相同的APK文件；（校验方式支持 **文件MD5** 或 **VersionCode** 比对）
+- 如需自定义更新App时通知栏中的相关文案信息；你只需在 **string.xml** 定义相同的名字进行覆盖即可（**app-updater** 中的资源定义都是以 **app_updater** 开头）。
+- 不设置 **Notification** 时，默认使用 **NotificationImpl** 实现的，如果当前的通知栏的布局不满足你的需求，可通过参考 **NotificationImpl** 去自定义实现一个 **INotification**；
+- **AppUpdater** 中的日志统一使用 **LogUtils** 进行管理，通过 **LogUtils.setShowLog** 可以全局设置是否显示日志；需要定位**AppUpdater** 内部日志信息时，只需过滤以 **AppUpdater** 开头的 **Log Tag** 即可。
+- **AppUpdater** 的更多配置说明请查看 **AppUpdater.Builder** 或 **UpdateConfig**；每个方法上都有相应的说明。
+
+#### app-dialog
+
+- **AppDialogConfig** 主要提供一些对话框配置，内部提供了一套默认的配置，你也可以通过 **AppDialogConfig** 对外暴露的方法，自定义对话框配置；**AppDialog** 主要负责对话框的显示与消失；通过 **AppDialog** 和 **AppDialogConfig**，你可以很容易的实现一个自定义对话框；
+- **AppDialog** 足够抽象，也足够通用，这里只列个特别的场景说明：如需你想不通过自定义布局的方式定义对话框布局，只想修改 **AppDialog** 内置默认对话框提示文字的颜色（包括按钮文字），你可以通过在 **colors.xml** 定义相同的名字进行覆盖即可（**app-dialog** 中的资源定义都是以 **app_dialog** 开头）。
+
 
 更多使用详情，请查看[app](app)中的源码使用示例或直接查看[API帮助文档](https://javadoc.jitpack.io/com/github/jenly1314/AppUpdater/1.1.0/javadoc/index.html)
 
@@ -140,7 +187,11 @@ allprojects {
 
 ## 版本记录
 
-#### v1.1.3：2022-04-25
+#### v1.1.4：2023-2-5
+* 优化注释
+* 优化细节
+
+#### v1.1.3：2022-4-25
 *  统一日志管理
 *  适配Android 12(S)
 *  优化细节

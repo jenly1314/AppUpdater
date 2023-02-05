@@ -27,4 +27,6 @@ public final class Constants {
 
     public static final String DEFAULT_DIR = "apk";
 
+    public static final long MINIMUM_INTERVAL_MILLIS = 200L;
+
 }

@@ -21,14 +21,18 @@ import androidx.fragment.app.DialogFragment;
 
 /**
  * 基础对话框 Fragment
+ *
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public abstract class BaseDialogFragment extends DialogFragment {
-
+    /**
+     * 默认对话框宽度比例（基于屏幕的宽度）
+     */
     protected static final float DEFAULT_WIDTH_RATIO = 0.85f;
-
+    /**
+     * 根视图
+     */
     private View mRootView;
-
 
     @Nullable
     @Override
@@ -41,52 +45,54 @@ public abstract class BaseDialogFragment extends DialogFragment {
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(@Nullable  Bundle savedInstanceState) {
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.setCanceledOnTouchOutside(false);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        initDialogWindow(getContext(),dialog,Gravity.NO_GRAVITY,DEFAULT_WIDTH_RATIO,0, 0, 0, 0, 0, 0, R.style.app_dialog_scale_animation);
+        initDialogWindow(getContext(), dialog, Gravity.NO_GRAVITY, DEFAULT_WIDTH_RATIO, 0, 0, 0, 0, 0, 0, R.style.app_dialog_scale_animation);
         return dialog;
     }
 
     /**
      * 初始化对话框视图
-     * @param context 上下文
-     * @param dialog 对话框
-     * @param gravity 对齐方式
-     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
-     * @param x x轴偏移量，需与 gravity 结合使用
-     * @param y y轴偏移量，需与 gravity 结合使用
+     *
+     * @param context          上下文
+     * @param dialog           对话框
+     * @param gravity          对齐方式
+     * @param widthRatio       宽度比例，根据屏幕宽度计算得来
+     * @param x                x轴偏移量，需与 gravity 结合使用
+     * @param y                y轴偏移量，需与 gravity 结合使用
      * @param horizontalMargin 水平方向边距
-     * @param verticalMargin 垂直方向边距
+     * @param verticalMargin   垂直方向边距
      * @param horizontalWeight 水平方向权重
-     * @param verticalWeight 垂直方向权重
+     * @param verticalWeight   垂直方向权重
      * @param animationStyleId 话框动画样式ID
      */
-    protected void initDialogWindow(Context context,Dialog dialog,int gravity,float widthRatio, int x, int y, float horizontalMargin, float verticalMargin, float horizontalWeight, float verticalWeight, int animationStyleId){
+    protected void initDialogWindow(Context context, Dialog dialog, int gravity, float widthRatio, int x, int y, float horizontalMargin, float verticalMargin, float horizontalWeight, float verticalWeight, int animationStyleId) {
         setDialogWindow(context, dialog, gravity, widthRatio, x, y, horizontalMargin, verticalMargin, horizontalWeight, verticalWeight, animationStyleId);
     }
 
     /**
      * 设置弹框窗口配置
+     *
      * @param context
      * @param dialog
-     * @param gravity Dialog的对齐方式
-     * @param widthRatio 宽度比例，根据屏幕宽度计算得来
-     * @param x x轴偏移量，需与 gravity 结合使用
-     * @param y y轴偏移量，需与 gravity 结合使用
+     * @param gravity          Dialog的对齐方式
+     * @param widthRatio       宽度比例，根据屏幕宽度计算得来
+     * @param x                x轴偏移量，需与 gravity 结合使用
+     * @param y                y轴偏移量，需与 gravity 结合使用
      * @param horizontalMargin 水平方向边距
-     * @param verticalMargin 垂直方向边距
+     * @param verticalMargin   垂直方向边距
      * @param horizontalWeight 水平方向权重
-     * @param verticalWeight 垂直方向权重
+     * @param verticalWeight   垂直方向权重
      * @param animationStyleId 动画样式
      */
-    private void setDialogWindow(Context context,Dialog dialog,int gravity,float widthRatio,int x, int y, float horizontalMargin, float verticalMargin, float horizontalWeight, float verticalWeight, int animationStyleId){
+    private void setDialogWindow(Context context, Dialog dialog, int gravity, float widthRatio, int x, int y, float horizontalMargin, float verticalMargin, float horizontalWeight, float verticalWeight, int animationStyleId) {
         Window window = dialog.getWindow();
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         WindowManager.LayoutParams lp = window.getAttributes();
         lp.windowAnimations = animationStyleId;
-        lp.width = (int)(context.getResources().getDisplayMetrics().widthPixels * widthRatio);
+        lp.width = (int) (context.getResources().getDisplayMetrics().widthPixels * widthRatio);
         lp.gravity = gravity;
         lp.x = x;
         lp.y = y;
@@ -98,20 +104,32 @@ public abstract class BaseDialogFragment extends DialogFragment {
     }
 
     /**
-     * 根视图
+     * 获取根视图
+     *
      * @return
      */
-    protected View getRootView(){
+    protected View getRootView() {
         return mRootView;
     }
 
-    protected void setText(TextView tv, CharSequence text){
-        if(text != null){
+    /**
+     * 设置文本
+     *
+     * @param tv   {@link TextView}
+     * @param text {@link CharSequence}
+     */
+    protected void setText(TextView tv, CharSequence text) {
+        if (text != null) {
             tv.setText(text);
         }
     }
 
-    protected View.OnClickListener getOnClickDismiss(){
+    /**
+     * 点击监听器 - 解散对话框
+     *
+     * @return {@link View.OnClickListener}
+     */
+    protected View.OnClickListener getOnClickDismiss() {
         return mOnClickDismissDialog;
     }
 
@@ -124,12 +142,14 @@ public abstract class BaseDialogFragment extends DialogFragment {
 
     /**
      * 获取根布局ID
+     *
      * @return 根布局ID
      */
     public abstract int getRootLayoutId();
 
     /**
      * 初始化
+     *
      * @param rootView
      */
     public abstract void init(View rootView);

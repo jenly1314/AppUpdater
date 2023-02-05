@@ -5,8 +5,6 @@ import android.os.AsyncTask;
 import com.king.app.updater.util.LogUtils;
 import com.king.app.updater.util.SSLSocketFactoryUtils;
 
-import org.apache.http.conn.ssl.SSLSocketFactory;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -24,6 +22,7 @@ import okhttp3.Response;
 /**
  * OkHttpManager使用 {@link OkHttpClient} 实现的 {@link IHttpManager}
  * <p>使用 OkHttpManager 时必须依赖 OkHttp 库
+ *
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public class OkHttpManager implements IHttpManager {
@@ -36,10 +35,10 @@ public class OkHttpManager implements IHttpManager {
 
     private static volatile OkHttpManager INSTANCE;
 
-    public static OkHttpManager getInstance(){
-        if(INSTANCE == null){
-            synchronized (HttpManager.class){
-                if(INSTANCE == null){
+    public static OkHttpManager getInstance() {
+        if (INSTANCE == null) {
+            synchronized (HttpManager.class) {
+                if (INSTANCE == null) {
                     INSTANCE = new OkHttpManager();
                 }
             }
@@ -48,41 +47,43 @@ public class OkHttpManager implements IHttpManager {
         return INSTANCE;
     }
 
-    private OkHttpManager(){
+    private OkHttpManager() {
         this(DEFAULT_TIME_OUT);
     }
 
     /**
      * HttpManager对外暴露。如果没有特殊需求，推荐使用{@link HttpManager#getInstance()}
+     *
      * @param timeout 超时时间，单位：毫秒
      */
-    public OkHttpManager(int timeout){
+    public OkHttpManager(int timeout) {
         this(new OkHttpClient.Builder()
                 .readTimeout(timeout, TimeUnit.MILLISECONDS)
                 .connectTimeout(timeout, TimeUnit.MILLISECONDS)
-                .sslSocketFactory(SSLSocketFactoryUtils.createSSLSocketFactory(),SSLSocketFactoryUtils.createTrustAllManager())
-                .hostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
+                .sslSocketFactory(SSLSocketFactoryUtils.createSSLSocketFactory(), SSLSocketFactoryUtils.createX509TrustManager())
+                .hostnameVerifier(SSLSocketFactoryUtils.createAllowAllHostnameVerifier())
                 .build());
     }
 
     /**
      * HttpManager对外暴露，推荐使用{@link HttpManager#getInstance()}
+     *
      * @param okHttpClient {@link OkHttpClient}
      */
-    public OkHttpManager(@NonNull OkHttpClient okHttpClient){
+    public OkHttpManager(@NonNull OkHttpClient okHttpClient) {
         this.okHttpClient = okHttpClient;
     }
 
 
     @Override
-    public void download(String url,final String path,final String filename, @Nullable Map<String, String> requestProperty,final DownloadCallback callback) {
-        mDownloadTask = new DownloadTask(okHttpClient, url, path, filename, requestProperty, callback);
+    public void download(String url, String saveFilePath, @Nullable Map<String, String> requestProperty, final DownloadCallback callback) {
+        mDownloadTask = new DownloadTask(okHttpClient, url, saveFilePath, requestProperty, callback);
         mDownloadTask.execute();
     }
 
     @Override
     public void cancel() {
-        if(mDownloadTask != null){
+        if (mDownloadTask != null) {
             mDownloadTask.isCancel = true;
         }
     }
@@ -91,15 +92,13 @@ public class OkHttpManager implements IHttpManager {
     /**
      * 异步下载任务
      */
-    private static class DownloadTask extends AsyncTask<Void,Long,File> {
+    private static class DownloadTask extends AsyncTask<Void, Long, File> {
 
         private String url;
 
-        private String path;
+        private String saveFilePath;
 
-        private String filename;
-
-        private Map<String,String> requestProperty;
+        private Map<String, String> requestProperty;
 
         private DownloadCallback callback;
 
@@ -109,11 +108,10 @@ public class OkHttpManager implements IHttpManager {
 
         private volatile boolean isCancel;
 
-        public DownloadTask(OkHttpClient okHttpClient,String url, String path, String filename ,@Nullable Map<String,String> requestProperty, DownloadCallback callback){
+        public DownloadTask(OkHttpClient okHttpClient, String url, String saveFilePath, @Nullable Map<String, String> requestProperty, DownloadCallback callback) {
             this.okHttpClient = okHttpClient;
             this.url = url;
-            this.path = path;
-            this.filename = filename;
+            this.saveFilePath = saveFilePath;
             this.callback = callback;
             this.requestProperty = requestProperty;
 
@@ -121,50 +119,47 @@ public class OkHttpManager implements IHttpManager {
 
         @Override
         protected File doInBackground(Void... voids) {
-
-            try{
+            try {
                 Request.Builder builder = new Request.Builder()
                         .url(url)
                         .addHeader("Accept-Encoding", "identity")
                         .get();
 
-                if(requestProperty!=null){
-                    for(Map.Entry<String,String> entry : requestProperty.entrySet()){
-                        builder.addHeader(entry.getKey(),entry.getValue());
+                if (requestProperty != null) {
+                    for (Map.Entry<String, String> entry : requestProperty.entrySet()) {
+                        builder.addHeader(entry.getKey(), entry.getValue());
                     }
                 }
 
                 Call call = okHttpClient.newCall(builder.build());
                 Response response = call.execute();
 
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     InputStream is = response.body().byteStream();
 
                     long length = response.body().contentLength();
 
-                    LogUtils.d("contentLength:" + length);
+                    LogUtils.d("contentLength: " + length);
 
                     long progress = 0;
 
-                    byte[] buffer = new byte[8192];
+                    byte[] buffer = new byte[4096];
 
                     int len;
-                    File file = new File(path,filename);
+                    File file = new File(saveFilePath);
                     FileOutputStream fos = new FileOutputStream(file);
-                    while ((len = is.read(buffer)) != -1){
-                        if(isCancel){
-                            if(call != null){
+                    while ((len = is.read(buffer)) != -1) {
+                        if (isCancel) {
+                            if (call != null) {
                                 call.cancel();
                             }
                             cancel(true);
                             break;
                         }
-                        fos.write(buffer,0,len);
+                        fos.write(buffer, 0, len);
                         progress += len;
                         // 更新进度
-                        if(length > 0){
-                            publishProgress(progress,length);
-                        }
+                        publishProgress(progress, length);
                     }
 
                     fos.flush();
@@ -173,17 +168,17 @@ public class OkHttpManager implements IHttpManager {
 
                     response.close();
 
-                    if(progress <= 0 && length <= 0){
-                        throw new IllegalStateException(String.format("contentLength = %d",length));
+                    if (progress <= 0 && length <= 0) {
+                        throw new IllegalStateException(String.format("contentLength = %d", length));
                     }
 
                     return file;
 
-                }else {// 连接失败
-                    throw new ConnectException(String.format("responseCode = %d",response.code()));
+                } else {// 连接失败
+                    throw new ConnectException(String.format("responseCode = %d", response.code()));
                 }
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 this.exception = e;
                 e.printStackTrace();
             }
@@ -194,7 +189,7 @@ public class OkHttpManager implements IHttpManager {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if(callback != null){
+            if (callback != null) {
                 callback.onStart(url);
             }
         }
@@ -202,10 +197,10 @@ public class OkHttpManager implements IHttpManager {
         @Override
         protected void onPostExecute(File file) {
             super.onPostExecute(file);
-            if(callback != null){
-                if(file != null){
+            if (callback != null) {
+                if (file != null) {
                     callback.onFinish(file);
-                }else{
+                } else {
                     callback.onError(exception);
                 }
 
@@ -215,9 +210,9 @@ public class OkHttpManager implements IHttpManager {
         @Override
         protected void onProgressUpdate(Long... values) {
             super.onProgressUpdate(values);
-            if(callback != null){
-                if(!isCancelled()){
-                    callback.onProgress(values[0],values[1]);
+            if (callback != null) {
+                if (!isCancelled()) {
+                    callback.onProgress(values[0], values[1]);
                 }
 
             }
@@ -226,7 +221,7 @@ public class OkHttpManager implements IHttpManager {
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            if(callback != null){
+            if (callback != null) {
                 callback.onCancel();
             }
         }

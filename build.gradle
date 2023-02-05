@@ -23,8 +23,24 @@ allprojects {
     }
 }
 
+allprojects {
+    plugins.withId("com.vanniktech.maven.publish") {
+        mavenPublish {
+            sonatypeHost = "S01"
+        }
+    }
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
 }
 
 allprojects {
@@ -35,7 +51,6 @@ allprojects {
             links "http://docs.oracle.com/javase/8/docs/api"
         }
         options.addStringOption('Xdoclint:none', '-quiet')
-//        options.compilerArgs << "-Xlint:unchecked" << "- Xlint:deprecation"
         failOnError false
     }
 }

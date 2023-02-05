@@ -1,6 +1,5 @@
 package com.king.app.updater;
 
-
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,8 +11,9 @@ import java.util.Map;
 
 import androidx.annotation.DrawableRes;
 
-
 /**
+ * AppUpdater的配置信息
+ *
  * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 public class UpdateConfig implements Parcelable {
@@ -58,7 +58,7 @@ public class UpdateConfig implements Parcelable {
      */
     private String mChannelName;
     /**
-     *  默认{@link Context#getPackageName() + ".AppUpdaterFileProvider"}
+     * 默认{@link Context#getPackageName() + ".AppUpdaterFileProvider"}
      */
     private String mAuthority;
     /**
@@ -87,12 +87,12 @@ public class UpdateConfig implements Parcelable {
     /**
      * 要下载的APK的versionCode
      */
-    private Integer versionCode;
+    private long versionCode = Constants.NONE;
 
     /**
      * 请求头参数
      */
-    private Map<String,String> mRequestProperty;
+    private Map<String, String> mRequestProperty;
 
     /**
      * 是否删除取消下载的文件
@@ -102,13 +102,12 @@ public class UpdateConfig implements Parcelable {
     /**
      * 是否支持通过删除通知栏来取消下载
      */
-    private boolean isCancelDownload = false;
+    private boolean isSupportCancelDownload = false;
 
     /**
      * APK文件的MD5
      */
     private String apkMD5;
-
 
     public UpdateConfig() {
 
@@ -120,6 +119,7 @@ public class UpdateConfig implements Parcelable {
 
     /**
      * 设置APK下载地址
+     *
      * @param url 下载地址
      */
     public void setUrl(String url) {
@@ -132,7 +132,8 @@ public class UpdateConfig implements Parcelable {
 
     /**
      * 设置保存的路径，（建议使用默认，不做设置）
-     * @param path  下载保存的文件路径
+     *
+     * @param path 下载保存的文件路径
      * @return
      * @deprecated 因为适配Android Q的分区存储，所以此方法已弃用，不建议再使用
      */
@@ -147,6 +148,7 @@ public class UpdateConfig implements Parcelable {
 
     /**
      * 设置保存的文件名
+     *
      * @param filename 下载的保存的apk文件名 （默认优先取url文件名）
      */
     public void setFilename(String filename) {
@@ -159,6 +161,7 @@ public class UpdateConfig implements Parcelable {
 
     /**
      * 设置是否显示通知栏
+     *
      * @param isShowNotification 是否显示通知栏 （默认true）
      */
     public void setShowNotification(boolean isShowNotification) {
@@ -170,8 +173,9 @@ public class UpdateConfig implements Parcelable {
     }
 
     /**
-     * 设置通知渠道ID
-     * @param channelId 通知渠道ID （默认兼容O）
+     * 设置通知通道ID
+     *
+     * @param channelId 通知通道ID（默认兼容O）
      */
     public void setChannelId(String channelId) {
         this.mChannelId = channelId;
@@ -182,34 +186,38 @@ public class UpdateConfig implements Parcelable {
     }
 
     /**
-     * 设置通知渠道名称
-     * @param channelName 通知渠道名称 （默认兼容O）
+     * 设置通知通道名称
+     *
+     * @param channelName 通知通道名称（默认兼容O）
      */
     public void setChannelName(String channelName) {
         this.mChannelName = channelName;
     }
+
     /**
      * 设置通知ID
+     *
      * @param notificationId 通知ID
      */
-    public void setNotificationId(int notificationId){
+    public void setNotificationId(int notificationId) {
         this.mNotificationId = notificationId;
     }
 
-    public int getNotificationId(){
+    public int getNotificationId() {
         return this.mNotificationId;
     }
 
 
     /**
      * 设置通知图标
-     * @param icon 通知栏图标 （默认取App的icon）
+     *
+     * @param icon 通知栏图标 默认取App的icon）
      */
-    public void setNotificationIcon(@DrawableRes int icon){
+    public void setNotificationIcon(@DrawableRes int icon) {
         this.mNotificationIcon = icon;
     }
 
-    public int getNotificationIcon(){
+    public int getNotificationIcon() {
         return this.mNotificationIcon;
     }
 
@@ -219,6 +227,7 @@ public class UpdateConfig implements Parcelable {
 
     /**
      * 设置下载完成后知否自动触发安装APK
+     *
      * @param isInstallApk 下载完成后是否自动调用安装APK（默认true）
      */
     public void setInstallApk(boolean isInstallApk) {
@@ -231,6 +240,7 @@ public class UpdateConfig implements Parcelable {
 
     /**
      * 设置FileProvider的authority
+     *
      * @param authority FileProvider的authority（默认兼容N，默认值{@link Context#getPackageName() + ".AppUpdaterFileProvider"}）
      */
     public void setAuthority(String authority) {
@@ -243,6 +253,7 @@ public class UpdateConfig implements Parcelable {
 
     /**
      * 设置下载时，通知栏是否显示下载百分比
+     *
      * @param showPercentage 下载时通知栏是否显示百分比
      */
     public void setShowPercentage(boolean showPercentage) {
@@ -255,6 +266,7 @@ public class UpdateConfig implements Parcelable {
 
     /**
      * 设置下载失败时，是否支持点击通知栏重新下载。与之相关联的方法{@link #setReDownloads(int)}
+     *
      * @param reDownload 下载失败时是否支持点击通知栏重新下载，默认true
      */
     public void setReDownload(boolean reDownload) {
@@ -267,6 +279,7 @@ public class UpdateConfig implements Parcelable {
 
     /**
      * 设置下载失败时，最多重新下载次数。与之相关联的方法{@link #setReDownload(boolean)}
+     *
      * @param reDownloads 下载失败时是否支持点击通知栏重新下载，默认最多重新下载3次
      */
     public void setReDownloads(int reDownloads) {
@@ -279,6 +292,7 @@ public class UpdateConfig implements Parcelable {
 
     /**
      * 设置通知是否震动提示
+     *
      * @param vibrate 是否震动提示，为true时使用通知默认震动，Android O(8.0)以上设置，只有初次创建channel时有效，后续修改属性无效，想要重新有效需修改channelId或卸载App重装。
      */
     public void setVibrate(boolean vibrate) {
@@ -291,24 +305,26 @@ public class UpdateConfig implements Parcelable {
 
     /**
      * 设置通知是否铃声提示
+     *
      * @param sound 是否铃声提示，为true时使用通知默认铃声，Android O(8.0)以上设置，只有初次创建channel时有效，后续修改属性无效，想要重新有效需修改channelId或卸载App重装。
      */
     public void setSound(boolean sound) {
         isSound = sound;
     }
 
-    public Integer getVersionCode(){
+    public long getVersionCode() {
         return versionCode;
     }
 
     /**
      * 设置要下载APK的versionCode，用于优先取缓存时通过versionCode校验APK文件是否一致。
-     * 缓存校验目前支持两种方式，一种是通过versionCode校验，即{@link #setVersionCode(Integer)}；一种是文件MD5校验，即{@link #setApkMD5(String)}。推荐使用MD5校验方式
+     * 缓存校验目前支持两种方式，一种是通过versionCode校验，即{@link #setVersionCode(long)}；一种是文件MD5校验，即{@link #setApkMD5(String)}。推荐使用MD5校验方式
      * 如果两种方式都设置了，则只校验MD5
+     *
      * @param versionCode 为null表示不处理，默认不存在则下载，存在则重新下载。不为null时，表示会优先校验本地是否存在已下载版本号为versionCode的APK。
      *                    如果存在则不会重新下载(AppUpdater会自动校验packageName一致性)，直接取本地APK，反之重新下载。
      */
-    public void setVersionCode(Integer versionCode){
+    public void setVersionCode(long versionCode) {
         this.versionCode = versionCode;
     }
 
@@ -318,39 +334,42 @@ public class UpdateConfig implements Parcelable {
 
     /**
      * 设置APK文件的MD5，用于优先取缓存时通过MD5校验文件APK是否一致。
-     * 缓存校验目前支持两种方式，一种是通过versionCode校验，即{@link #setVersionCode(Integer)}；一种是文件MD5校验，即{@link #setApkMD5(String)}。推荐使用MD5校验方式
+     * 缓存校验目前支持两种方式，一种是通过versionCode校验，即{@link #setVersionCode(long)}；一种是文件MD5校验，即{@link #setApkMD5(String)}。推荐使用MD5校验方式
      * 如果两种方式都设置了，则只校验MD5
+     *
      * @param md5 为null表示不处理，如果设置了MD5，则缓存APK的MD5相同时，只下载一次，优先取本地缓存
      */
-    public void setApkMD5(String md5){
+    public void setApkMD5(String md5) {
         this.apkMD5 = md5;
     }
 
-    public String getApkMD5(){
+    public String getApkMD5() {
         return apkMD5;
     }
 
     /**
      * 请求头添加参数
+     *
      * @param key
      * @param value
      */
-    public void addHeader(String key, String value){
+    public void addHeader(String key, String value) {
         initRequestProperty();
-        mRequestProperty.put(key,value);
+        mRequestProperty.put(key, value);
     }
 
     /**
      * 请求头添加参数
+     *
      * @param headers
      */
-    public void addHeader(Map<String,String> headers){
+    public void addHeader(Map<String, String> headers) {
         initRequestProperty();
         mRequestProperty.putAll(headers);
     }
 
-    private void initRequestProperty(){
-        if(mRequestProperty == null){
+    private void initRequestProperty() {
+        if (mRequestProperty == null) {
             mRequestProperty = new HashMap<>();
         }
     }
@@ -360,24 +379,40 @@ public class UpdateConfig implements Parcelable {
     }
 
     /**
-     *  设置是否自动删除取消下载的文件
+     * 设置是否自动删除取消下载的文件
+     *
      * @param deleteCancelFile 是否删除取消下载的文件（默认为：true）
      */
     public void setDeleteCancelFile(boolean deleteCancelFile) {
         isDeleteCancelFile = deleteCancelFile;
     }
 
-    public boolean isCancelDownload(){
-        return isCancelDownload;
+
+    public boolean isSupportCancelDownload() {
+        return isSupportCancelDownload;
     }
 
     /**
      * 是否支持通过删除通知栏来取消下载（默认为：false）
+     *
      * @param cancelDownload
+     * @return
+     * @deprecated 此方法已标记为废弃，后续可能会删除；请使用 {@link #setSupportCancelDownload(boolean)}
      */
+    @Deprecated
     public void setCancelDownload(boolean cancelDownload) {
-        isCancelDownload = cancelDownload;
+        setSupportCancelDownload(cancelDownload);
     }
+
+    /**
+     * 是否支持通过删除通知栏来取消下载（默认为：false）
+     *
+     * @param supportCancelDownload
+     */
+    public void setSupportCancelDownload(boolean supportCancelDownload) {
+        isSupportCancelDownload = supportCancelDownload;
+    }
+
 
     @Override
     public int describeContents() {
@@ -401,19 +436,19 @@ public class UpdateConfig implements Parcelable {
         dest.writeByte(this.isShowPercentage ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isVibrate ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isSound ? (byte) 1 : (byte) 0);
-        dest.writeValue(this.versionCode);
-        if(mRequestProperty!=null){
+        dest.writeLong(this.versionCode);
+        if (mRequestProperty != null) {
             dest.writeInt(this.mRequestProperty.size());
             for (Map.Entry<String, String> entry : this.mRequestProperty.entrySet()) {
                 dest.writeString(entry.getKey());
                 dest.writeString(entry.getValue());
             }
-        }else{
+        } else {
             dest.writeInt(0);
         }
 
         dest.writeByte(this.isDeleteCancelFile ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.isCancelDownload ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isSupportCancelDownload ? (byte) 1 : (byte) 0);
         dest.writeString(this.apkMD5);
     }
 
@@ -433,7 +468,7 @@ public class UpdateConfig implements Parcelable {
         this.isShowPercentage = in.readByte() != 0;
         this.isVibrate = in.readByte() != 0;
         this.isSound = in.readByte() != 0;
-        this.versionCode = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.versionCode = in.readLong();
         int mRequestPropertySize = in.readInt();
         this.mRequestProperty = new HashMap<>(mRequestPropertySize);
         for (int i = 0; i < mRequestPropertySize; i++) {
@@ -442,7 +477,7 @@ public class UpdateConfig implements Parcelable {
             this.mRequestProperty.put(key, value);
         }
         this.isDeleteCancelFile = in.readByte() != 0;
-        this.isCancelDownload = in.readByte() != 0;
+        this.isSupportCancelDownload = in.readByte() != 0;
         this.apkMD5 = in.readString();
     }
 

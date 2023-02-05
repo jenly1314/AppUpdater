@@ -16,7 +16,6 @@
  */
 package com.king.app.updater.util;
 
-
 import android.util.Log;
 
 import java.util.Locale;
