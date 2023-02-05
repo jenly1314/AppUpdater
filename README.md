@@ -160,24 +160,23 @@ allprojects {
 
 ```
 
+更多使用详情，请查看[app](app)中的源码使用示例或直接查看[API帮助文档](https://javadoc.jitpack.io/com/github/jenly1314/AppUpdater/1.1.0/javadoc/index.html)
+
 ## 补充说明
 
-#### app-updater
+### app-updater
 
-- 不设置 **HttpManager** 时，默认使用 **HttpsURLConnection** 实现的 **HttpManager** 进行下载，如果想要使用 **OkHttpClient** 实现下载，需依赖 **okhttp** 库；（内部默认提供 **HttpManager** 和 **OkHttpManager** 两种实现）
-- 支持下载APK时，优先取本地缓存策略，避免多次重复下载相同的APK文件；（校验方式支持 **文件MD5** 或 **VersionCode** 比对）
-- 如需自定义更新App时通知栏中的相关文案信息；你只需在 **string.xml** 定义相同的名字进行覆盖即可（**app-updater** 中的资源定义都是以 **app_updater** 开头）。
-- 不设置 **Notification** 时，默认使用 **NotificationImpl** 实现的，如果当前的通知栏的布局不满足你的需求，可通过参考 **NotificationImpl** 去自定义实现一个 **INotification**；
-- **AppUpdater** 中的日志统一使用 **LogUtils** 进行管理，通过 **LogUtils.setShowLog** 可以全局设置是否显示日志；需要定位**AppUpdater** 内部日志信息时，只需过滤以 **AppUpdater** 开头的 **Log Tag** 即可。
-- **AppUpdater** 的更多配置说明请查看 **AppUpdater.Builder** 或 **UpdateConfig**；每个方法上都有相应的说明。
+1. 不设置 **HttpManager** 时，默认使用 **HttpsURLConnection** 实现的 **HttpManager** 进行下载，如果想要使用 **OkHttpClient** 实现下载，需依赖 **okhttp** 库；（内部默认提供 **HttpManager** 和 **OkHttpManager** 两种实现）
+2. 支持下载APK时，优先取本地缓存策略，避免多次重复下载相同的APK文件；（校验方式支持 **文件MD5** 或 **VersionCode** 比对）
+3. 如需自定义更新App时通知栏中的相关文案信息；你只需在 **string.xml** 定义相同的名字进行覆盖即可（**app-updater** 中的资源定义都是以 **app_updater** 开头）。
+4. 不设置 **Notification** 时，默认使用 **NotificationImpl** 实现的，如果当前的通知栏的布局不满足你的需求，可通过参考 **NotificationImpl** 去自定义实现一个 **INotification**；
+5. **AppUpdater** 中的日志统一使用 **LogUtils** 进行管理，通过 **LogUtils.setShowLog** 可以全局设置是否显示日志；需要定位**AppUpdater** 内部日志信息时，只需过滤以 **AppUpdater** 开头的 **Log Tag** 即可。
+6. **AppUpdater** 的更多配置说明请查看 **AppUpdater.Builder** 或 **UpdateConfig**；方法上基本都有详细的说明。
 
-#### app-dialog
+### app-dialog
 
-- **AppDialogConfig** 主要提供一些对话框配置，内部提供了一套默认的配置，你也可以通过 **AppDialogConfig** 对外暴露的方法，自定义对话框配置；**AppDialog** 主要负责对话框的显示与消失；通过 **AppDialog** 和 **AppDialogConfig**，你可以很容易的实现一个自定义对话框；
-- **AppDialog** 足够抽象，也足够通用，这里只列个特别的场景说明：如需你想不通过自定义布局的方式定义对话框布局，只想修改 **AppDialog** 内置默认对话框提示文字的颜色（包括按钮文字），你可以通过在 **colors.xml** 定义相同的名字进行覆盖即可（**app-dialog** 中的资源定义都是以 **app_dialog** 开头）。
-
-
-更多使用详情，请查看[app](app)中的源码使用示例或直接查看[API帮助文档](https://javadoc.jitpack.io/com/github/jenly1314/AppUpdater/1.1.0/javadoc/index.html)
+1. **AppDialogConfig** 主要提供一些对话框配置，内部提供了一套默认的配置，你也可以通过 **AppDialogConfig** 对外暴露的方法，自定义对话框配置；**AppDialog** 主要负责对话框的显示与消失；通过 **AppDialog** 和 **AppDialogConfig**，你可以很容易的实现一个自定义对话框；
+2. **AppDialog** 足够抽象，也足够通用，这里只列个特别的场景说明：如需你想不通过自定义布局的方式定义对话框布局，只想修改 **AppDialog** 内置默认对话框提示文字的颜色（包括按钮文字），你可以通过在 **colors.xml** 定义相同的名字进行覆盖即可（**app-dialog** 中的资源定义都是以 **app_dialog** 开头）。
 
 ## 混淆
 
@@ -204,8 +203,9 @@ allprojects {
 *  优化细节
 
 #### v1.1.0：2021-7-2  (从v1.1.0开始不再发布至JCenter)
-*  后续版本只支持androidx，版本名称不再带有androidx标识
-*  优化细节
+* 后续版本只支持androidx，版本名称不再带有androidx标识
+* 优化细节
+* 迁移发布至Maven Central
 
 #### v1.0.10：2021-3-4
 *  AppDialogConfig添加构造参数，简化自定义扩展用法
