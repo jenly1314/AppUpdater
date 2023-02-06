@@ -13,7 +13,7 @@
 [![Blog](https://img.shields.io/badge/blog-Jenly-9933CC.svg)](https://jenly1314.github.io/)
 [![QQGroup](https://img.shields.io/badge/QQGroup-20867961-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=8fcc6a2f88552ea44b1411582c94fd124f7bb3ec227e2a400dbbfaad3dc2f5ad)
 
-AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版本升级的轻量开源库。(无需担心通知栏适配；无需担心重复点击下载；无需担心App安装等问题；这些AppUpdater都已帮您处理好。)
+AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版本升级的轻量开源库。(无需担心各种细节的处理和适配问题；包括但不仅限于：通知栏适配、重复下载；文件访问App安装等问题；这些AppUpdater都已帮您处理好。)
  核心库主要包括app-updater和app-dialog。
 > 下载更新和弹框提示分开，是因为这本来就是两个逻辑。完全独立开来能有效的解耦。
 * app-updater 主要负责后台下载更新App，无需担心下载时各种配置相关的细节，一键傻瓜式升级。
@@ -24,12 +24,12 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 ## 功能介绍
 - [x] 专注于App更新一键傻瓜式升级
 - [x] 够轻量，体积小
-- [x] 支持监听下载过程
+- [x] 支持监听下载和自定义下载流程
 - [x] 支持下载失败，重新下载
 - [x] 支持下载优先取本地缓存
-- [x] 支持通知栏提示内容和过程全部可配置
+- [x] 支持通知栏提示内容和流程全部可配置
 - [x] 支持取消下载
-- [x] 支持使用OkHttpClient下载
+- [x] 支持使用HttpsURLConnection或OkHttpClient进行下载
 - [x] 支持Android 10(Q)
 - [x] 支持Android 11(R)
 - [x] 支持Android 12(S)
@@ -175,8 +175,9 @@ allprojects {
 
 ### app-dialog
 
-*  **AppDialogConfig** 主要提供一些对话框配置，内部提供了一套默认的配置，你也可以通过 **AppDialogConfig** 对外暴露的方法，自定义对话框配置；**AppDialog** 主要负责对话框的显示与消失；通过 **AppDialog** 和 **AppDialogConfig**，你可以很容易的实现一个自定义对话框；
-*  **AppDialog** 足够抽象，也足够通用，这里只列个特别的场景说明：如需你想不通过自定义布局的方式定义对话框布局，只想修改 **AppDialog** 内置默认对话框提示文字的颜色（包括按钮文字），你可以通过在 **colors.xml** 定义相同的名字进行覆盖即可（**app-dialog** 中的资源定义都是以 **app_dialog** 开头）。
+* **AppDialogConfig** 主要提供一些对话框配置，内部提供了一套默认的配置，你也可以通过 **AppDialogConfig** 对外暴露的方法，自定义对话框配置；**AppDialog** 主要负责对话框的显示与消失；通过 **AppDialog** 和 **AppDialogConfig**，你可以很容易的实现一个自定义对话框；
+* **AppDialog** 足够通用，其内部实现了一套最常见对话框，并给予一系列的默认配置，让使用者可以尽可能的通过少的配置就能实现功能；**AppDialog** 也足够抽象，对话框布局样式是可随意定制；
+* 基于以上几点，这里列个特别的场景说明：如需你想不通过自定义布局的方式定义对话框布局，同时默认的对话框的文字或按钮颜色不太符合你的需求场景，只想修改 **AppDialog** 内置默认对话框提示文字的颜色（包括按钮文字），你可以通过在 **colors.xml** 定义相同的名字进行覆盖即可（**app-dialog** 中的资源定义都是以 **app_dialog** 开头）。
 
 ## 混淆
 

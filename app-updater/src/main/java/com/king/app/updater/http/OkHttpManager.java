@@ -60,7 +60,7 @@ public class OkHttpManager implements IHttpManager {
         this(new OkHttpClient.Builder()
                 .readTimeout(timeout, TimeUnit.MILLISECONDS)
                 .connectTimeout(timeout, TimeUnit.MILLISECONDS)
-                .sslSocketFactory(SSLSocketFactoryUtils.createSSLSocketFactory(), SSLSocketFactoryUtils.createX509TrustManager())
+                .sslSocketFactory(SSLSocketFactoryUtils.createSSLSocketFactory(), SSLSocketFactoryUtils.createTrustAllX509TrustManager())
                 .hostnameVerifier(SSLSocketFactoryUtils.createAllowAllHostnameVerifier())
                 .build());
     }

@@ -88,7 +88,6 @@ public final class AppUtils {
         return packageInfo;
     }
 
-
     /**
      * 获取App的名称
      *
@@ -120,7 +119,7 @@ public final class AppUtils {
     }
 
     /**
-     * 安装apk
+     * 安装APK
      *
      * @param context   上下文
      * @param file      APK文件
@@ -223,7 +222,7 @@ public final class AppUtils {
     }
 
     /**
-     * 校验文件MD5
+     * 校验文件的MD5
      *
      * @param file 文件
      * @param md5  MD5
@@ -240,7 +239,7 @@ public final class AppUtils {
     }
 
     /**
-     * 获取文件MD5
+     * 获取文件的MD5
      *
      * @param file 文件
      * @return 返回文件的MD5
