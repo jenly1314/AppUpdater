@@ -13,17 +13,20 @@
 [![Blog](https://img.shields.io/badge/blog-Jenly-9933CC.svg)](https://jenly1314.github.io/)
 [![QQGroup](https://img.shields.io/badge/QQGroup-20867961-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=8fcc6a2f88552ea44b1411582c94fd124f7bb3ec227e2a400dbbfaad3dc2f5ad)
 
-AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版本升级的轻量开源库。(无需担心各种细节的处理和适配问题；包括但不仅限于：通知栏适配、重复下载、文件访问授权、App安装等问题；这些AppUpdater都已帮您处理好。)
+AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版本升级的轻量开源库。
+
+    无需担心各种细节的处理和适配问题；包括但不仅限于：通知栏适配、重复下载、文件访问授权、App安装等问题；这些 **AppUpdater** 都已帮您处理好。
  
-* 核心库主要包括 **app-updater** 和 **app-dialog**。
+* **AppUpdater** 核心库主要包括 **app-updater** 和 **app-dialog**。
 
 > **app-updater** 主要负责后台下载更新App，无需担心下载时各种配置相关的细节，一键傻瓜式升级。
 
-> **app-dialog** 主要是提供常用的Dialog和DialogFragment，简化弹框提示，布局样式可随意定制。
+> **app-dialog** 主要是提供常用的Dialog和DialogFragment，简化弹框提示的实现，布局样式可随意定制。
  
 * 下载更新和弹框提示之所以分开是因为这本来就是两个功能。二者完全独立，可以在解耦同时减少侵入性。
 
-> 如果你只需要单纯的 App下载更新功能，仅依赖 **app-updater** 即可；如果你在需要App下载更新功能的同时，还需要有对话框来进行交互； 那么 **app-updater** + **app-dialog** 二者配合使用，谁用谁知道。
+> 如果你只需要单纯的 App下载更新功能，仅依赖 **app-updater** 即可；
+> 如果你在需要App下载更新功能的同时，还需要有对话框来进行交互； 那么 **app-updater** + **app-dialog** 二者配合使用，谁用谁知道。
 
 
 ## 功能介绍
