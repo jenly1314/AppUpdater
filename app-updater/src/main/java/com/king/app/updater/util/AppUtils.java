@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Locale;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.content.pm.PackageInfoCompat;
 
@@ -317,4 +318,49 @@ public final class AppUtils {
         }
     }
 
+    /**
+     * 删除文件或文件夹
+     *
+     * @param file
+     */
+    public static boolean deleteFile(File file) {
+        if (file == null || !file.exists()) {
+            return true;
+        }
+        if (file.isFile()) {
+            return file.delete();
+        } else if (file.isDirectory()) {
+            for (File f : file.listFiles()) {
+                if (f.isFile()) {
+                    f.delete(); // 删除所有文件
+                } else if (f.isDirectory()) {
+                    deleteFile(f); // 递规的方式删除文件夹
+                }
+            }
+            // 删除目录本身
+            return file.delete();
+        }
+        return false;
+    }
+
+    /**
+     * 获取APK缓存的文件夹
+     *
+     * @param context
+     * @return
+     */
+    public static String getApkCacheFilesDir(Context context) {
+        File[] files = ContextCompat.getExternalFilesDirs(context, Constants.DEFAULT_DIR);
+        if (files != null && files.length > 0) {
+            return files[0].getAbsolutePath();
+        }
+
+        File externalFilesDir = context.getExternalFilesDir(Constants.DEFAULT_DIR);
+        if (externalFilesDir != null) {
+            return externalFilesDir.getAbsolutePath();
+        }
+
+        return new File(context.getFilesDir(), Constants.DEFAULT_DIR).getAbsolutePath();
+
+    }
 }
