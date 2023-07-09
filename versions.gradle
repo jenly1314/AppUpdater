@@ -1,7 +1,7 @@
 //App
 def app_version = [:]
-app_version.versionCode = 23
-app_version.versionName = "1.1.4"
+app_version.versionCode = 24
+app_version.versionName = "1.2.0"
 ext.app_version = app_version
 
 //build version
@@ -15,8 +15,8 @@ ext.build_versions = build_versions
 // App dependencies
 def versions = [:]
 
-versions.mavenPublish = '0.18.0'
-versions.gradle = "4.1.1"
+versions.mavenPublish = '0.22.0'
+versions.gradle = "7.2.1"
 
 //androidx
 versions.appcompat = "1.2.0"

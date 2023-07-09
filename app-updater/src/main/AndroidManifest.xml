@@ -8,7 +8,8 @@
 
     <application>
 
-        <service android:name="com.king.app.updater.service.DownloadService"/>
+        <service android:name="com.king.app.updater.service.DownloadService"
+            android:exported="false"/>
 
         <provider
             android:name="com.king.app.updater.provider.AppUpdaterFileProvider"

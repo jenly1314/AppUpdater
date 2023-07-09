@@ -429,6 +429,7 @@ public class BaseDialogConfig {
      * @return 确定按钮文本内容
      * @deprecated 请使用 {@link #getConfirm()} 来代替，后续版本可能会移除此方法
      */
+    @Deprecated
     public CharSequence getOk() {
         return getConfirm();
     }
@@ -440,6 +441,7 @@ public class BaseDialogConfig {
      * @return {@link BaseDialogConfig}
      * @deprecated 请使用 {@link #setConfirm(CharSequence)} 来代替，后续版本可能会移除此方法
      */
+    @Deprecated
     public BaseDialogConfig setOk(CharSequence ok) {
         return setConfirm(ok);
     }
@@ -452,6 +454,7 @@ public class BaseDialogConfig {
      * @return {@link BaseDialogConfig}
      * @deprecated 请使用 {@link #setConfirm(Context, int)}来代替，后续版本可能会移除此方法
      */
+    @Deprecated
     public BaseDialogConfig setOk(@NonNull Context context, @StringRes int resId) {
         return setConfirm(context, resId);
     }
@@ -615,6 +618,7 @@ public class BaseDialogConfig {
      * @return “确定”按钮点击监听
      * @deprecated 请使用 {@link #getOnClickConfirm()}来代替，后续版本可能会移除此方法
      */
+    @Deprecated
     public View.OnClickListener getOnClickOk() {
         return getOnClickConfirm();
     }
@@ -626,6 +630,7 @@ public class BaseDialogConfig {
      * @return {@link BaseDialogConfig}
      * @deprecated 请使用 {@link #setOnClickConfirm(View.OnClickListener)}来代替，后续版本可能会移除此方法
      */
+    @Deprecated
     public BaseDialogConfig setOnClickOk(View.OnClickListener onClickOk) {
         return setOnClickConfirm(onClickOk);
     }

@@ -354,13 +354,6 @@ public final class AppUtils {
         if (files != null && files.length > 0) {
             return files[0].getAbsolutePath();
         }
-
-        File externalFilesDir = context.getExternalFilesDir(Constants.DEFAULT_DIR);
-        if (externalFilesDir != null) {
-            return externalFilesDir.getAbsolutePath();
-        }
-
         return new File(context.getFilesDir(), Constants.DEFAULT_DIR).getAbsolutePath();
-
     }
 }

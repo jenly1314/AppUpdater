@@ -68,28 +68,10 @@ allprojects {
 
     //----------AndroidX 版本
     //app-updater
-    implementation 'com.github.jenly1314.AppUpdater:app-updater:1.1.4'
+    implementation 'com.github.jenly1314.AppUpdater:app-updater:1.2.0'
     //app-dialog
-    implementation 'com.github.jenly1314.AppUpdater:app-dialog:1.1.4'
+    implementation 'com.github.jenly1314.AppUpdater:app-dialog:1.2.0'
 
-```
-
-
-以前发布至JCenter的版本
-
-```gradle
-
-    //----------AndroidX 版本
-    //app-updater
-    implementation 'com.king.app:app-updater:1.0.10-androidx'
-    //app-dialog
-    implementation 'com.king.app:app-dialog:1.0.10-androidx'
-
-    //----------Android Support 版本
-    //app-updater
-    implementation 'com.king.app:app-updater:1.0.10'
-    //app-dialog
-    implementation 'com.king.app:app-dialog:1.0.10'
 ```
 
 ## 示例
@@ -194,6 +176,10 @@ allprojects {
 **app-dialog** [Proguard rules](app-dialog/proguard-rules.pro)
 
 ## 版本记录
+
+#### v1.2.0：2023-7-9
+* 更新Gradle至v7.3.3
+* 优化lint检测
 
 #### v1.1.4：2023-2-5
 * 优化注释

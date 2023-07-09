@@ -1,5 +1,7 @@
 package com.king.app.updater.util;
 
+import android.annotation.SuppressLint;
+
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -46,6 +48,7 @@ public final class SSLSocketFactoryUtils {
      *
      * @return {@link X509TrustManager}
      */
+    @SuppressLint("CustomX509TrustManager")
     public static class TrustAllX509TrustManager implements X509TrustManager {
         private X509TrustManager standardTrustManager;
         private boolean isTrustAll;

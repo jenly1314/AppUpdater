@@ -46,11 +46,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        progressBar = findViewById(R.id.progressBar);
-//        progressBar.setVisibility(View.INVISIBLE);
-//        progressBar.setMax(100);
-
-//        PermissionUtils.verifyReadAndWritePermissions(this,Constants.RE_CODE_STORAGE_PERMISSION);
     }
 
     public Context getContext() {
@@ -160,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         mAppUpdater = new AppUpdater.Builder(getContext())
                                 .setUrl(mUrl)
+                                .setSupportCancelDownload(true)
                                 .build()
                                 .setUpdateCallback(new AppUpdateCallback() {
                                     @Override

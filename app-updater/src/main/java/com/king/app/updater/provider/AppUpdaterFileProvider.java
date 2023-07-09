@@ -1,6 +1,5 @@
 package com.king.app.updater.provider;
 
-
 import androidx.core.content.FileProvider;
 
 /**

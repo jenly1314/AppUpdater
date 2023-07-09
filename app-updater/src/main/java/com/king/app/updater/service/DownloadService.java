@@ -25,7 +25,6 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.core.content.ContextCompat;
 
 /**
  * 下载服务
@@ -131,7 +130,7 @@ public class DownloadService extends Service {
 
         // 如果保存路径为空则使用缓存路径
         if (TextUtils.isEmpty(path)) {
-            path = getCacheFilesDir(getContext());
+            path = AppUtils.getApkCacheFilesDir(getContext());
         }
         File dirFile = new File(path);
         if (!dirFile.exists()) {
@@ -229,27 +228,6 @@ public class DownloadService extends Service {
         if (mHttpManager != null) {
             mHttpManager.cancel();
         }
-    }
-
-    /**
-     * 获取缓存路径
-     *
-     * @param context
-     * @return
-     */
-    private String getCacheFilesDir(Context context) {
-        File[] files = ContextCompat.getExternalFilesDirs(context, Constants.DEFAULT_DIR);
-        if (files != null && files.length > 0) {
-            return files[0].getAbsolutePath();
-        }
-
-        File externalFilesDir = context.getExternalFilesDir(Constants.DEFAULT_DIR);
-        if (externalFilesDir != null) {
-            return externalFilesDir.getAbsolutePath();
-        }
-
-        return new File(context.getFilesDir(), Constants.DEFAULT_DIR).getAbsolutePath();
-
     }
 
     /**
@@ -522,6 +500,5 @@ public class DownloadService extends Service {
             startDownload(config, httpManager, callback, notification);
         }
     }
-
 
 }
