@@ -4,14 +4,11 @@
 
 [![Download](https://img.shields.io/badge/download-App-blue.svg)](https://raw.githubusercontent.com/jenly1314/AppUpdater/master/app/release/app-release.apk)
 [![MavenCentral](https://img.shields.io/maven-central/v/com.github.jenly1314.AppUpdater/app-updater)](https://repo1.maven.org/maven2/com/github/jenly1314/AppUpdater)
-[![JCenter](https://img.shields.io/badge/JCenter-1.0.10-46C018.svg)](https://bintray.com/beta/#/jenly/maven/app-updater)
 [![JitPack](https://jitpack.io/v/jenly1314/AppUpdater.svg)](https://jitpack.io/#jenly1314/AppUpdater)
 [![CI](https://travis-ci.org/jenly1314/AppUpdater.svg?branch=master)](https://travis-ci.org/jenly1314/AppUpdater)
 [![CircleCI](https://circleci.com/gh/jenly1314/AppUpdater.svg?style=svg)](https://circleci.com/gh/jenly1314/AppUpdater)
 [![API](https://img.shields.io/badge/API-15%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=15)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/mit-license.php)
-[![Blog](https://img.shields.io/badge/blog-Jenly-9933CC.svg)](https://jenly1314.github.io/)
-[![QQGroup](https://img.shields.io/badge/QQGroup-20867961-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=8fcc6a2f88552ea44b1411582c94fd124f7bb3ec227e2a400dbbfaad3dc2f5ad)
 
 AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版本升级的轻量开源库。
 
@@ -30,17 +27,17 @@ AppUpdater for Android 是一个专注于App更新，一键傻瓜式集成App版
 
 
 ## 功能介绍
-- [x] 专注于App更新一键傻瓜式升级
-- [x] 够轻量，体积小
-- [x] 支持监听下载和自定义下载流程
-- [x] 支持下载失败时，可重新下载
-- [x] 支持文件MD5校验，避免重复下载
-- [x] 支持通知栏提示内容和流程全部可配置
-- [x] 支持取消下载
-- [x] 支持使用HttpsURLConnection或OkHttpClient进行下载
-- [x] 支持Android 10(Q)
-- [x] 支持Android 11(R)
-- [x] 支持Android 12(S)
+- ✅ 专注于App更新一键傻瓜式升级
+- ✅ 够轻量，体积小
+- ✅ 支持监听下载和自定义下载流程
+- ✅ 支持下载失败时，可重新下载
+- ✅ 支持文件MD5校验，避免重复下载
+- ✅ 支持通知栏提示内容和流程全部可配置
+- ✅ 支持取消下载
+- ✅ 支持使用HttpsURLConnection或OkHttpClient进行下载
+- ✅ 支持Android 10(Q)
+- ✅ 支持Android 11(R)
+- ✅ 支持Android 12(S)
 
 ## Gif 展示
 ![Image](GIF.gif)
@@ -150,7 +147,7 @@ allprojects {
 
 ```
 
-更多使用详情，请查看[app](app)中的源码使用示例或直接查看[API帮助文档](https://javadoc.jitpack.io/com/github/jenly1314/AppUpdater/1.1.0/javadoc/index.html)
+更多使用详情，请查看[app](app)中的源码使用示例或直接查看[API帮助文档](https://jenly1314.github.io/AppUpdater/api/)
 
 ## 补充说明
 
