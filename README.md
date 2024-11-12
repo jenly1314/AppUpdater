@@ -171,6 +171,13 @@ allprojects {
 
 **app-dialog** [Proguard rules](app-dialog/proguard-rules.pro)
 
+## 相关推荐
+
+- [RetrofitHelper](https://github.com/jenly1314/RetrofitHelper) 是一个支持配置多个BaseUrl，支持动态改变BaseUrl，动态配置超时时长的Retrofit帮助类。
+- [BaseUrlManager](https://github.com/jenly1314/BaseUrlManager) BaseUrl管理器，主要打测试包时，一个App可动态切换到不同的开发环境或测试环境。
+- [MVVMFrame](https://github.com/jenly1314/MVVMFrame) 一个基于Google官方推出的JetPack构建的MVVM快速开发框架。
+- [LogX](https://github.com/jenly1314/LogX) 一个小而美的日志记录框架；好用不解释。
+
 <!-- end -->
 
 ## 版本日志
