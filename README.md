@@ -19,9 +19,11 @@ AppUpdater 是一个轻量级开源库，专注于实现 App 版本更新功能�
 
 * 下载更新和弹框提示之所以分开是因为这本来就是两个功能。二者完全独立，可以在解耦的同时减少侵入性。
 
-- 如果你仅需要纯粹的App下载更新功能，单独依赖 **app-updater** 即可满足需求；
-- 如果你需要在下载更新时配合对话框进行用户交互，那么 **app-updater** + **app-dialog** 的组合将是完美搭配；
-- 当然，你也可以单独使用 **app-dialog**，它适用于任何需要对话框交互的场景。
+> 如果你仅需要纯粹的App下载更新功能，单独依赖 **app-updater** 即可满足需求；
+
+> 如果你需要在下载更新时配合对话框进行用户交互，那么 **app-updater** + **app-dialog** 的组合将是完美搭配；
+
+> 当然，你也可以单独使用 **app-dialog**，它适用于任何需要对话框交互的场景。
 
 ## 功能介绍
 - ✅ 专注于App更新一键傻瓜式升级
@@ -80,19 +82,20 @@ AppUpdater 是一个轻量级开源库，专注于实现 App 版本更新功能�
 新版本在兼容 Java 调用的同时，显著提升了 Kotlin 环境下的使用体验。整体架构延续了 **1.x** 版本的设计思路，主要针对
 接口定义与配置字段进行了部分优化与调整。
 
-如果不想升级，也可以继续使用：[**1.x**](https://github.com/jenly1314/AppUpdater/tree/1.x)
+> 如果你是从 **1.x** 版本升级至 **2.x**的，请注意版本间存在一些不兼容的变更。最新使用方式参考下方的使用说明。
 
-> 如果你是从 **1.x** 版本升级至 **2.x**的，请注意版本间存在一些不兼容的配置变更。最新使用方式参考下方的使用说明。
+如果不想升级，也可以继续使用 **1.x** ；请查看 [**1.x分支**](https://github.com/jenly1314/AppUpdater/tree/1.x)
 
 ---
 
 ### 快速使用
 
+如果没有特别需求，直接使用即可。（`AppUpdater`的默认配置，就是最推荐的配置。）
+
 ```Java
 // 一句代码，傻瓜式更新
 new AppUpdater(context, apkUrl).start();
 ```
-> 如果没有特别需求，直接使用即可。（`AppUpdater`的默认配置，就是最推荐的配置。）
 
 ```Java
 // 简单对话框升级示例
@@ -111,15 +114,15 @@ AppDialogConfig appDialogConfig = new AppDialogConfig(context)
 AppDialog.showDialog(appDialogConfig);
 ```
 
-> 以上便是基本的核心用法，简单易上手。如需了解完整的进阶功能和个性化配置，请继续阅读下方更详细的说明。
+> 以上便是基本的核心用法，简单易上手。如需了解更多个性化配置，请继续阅读下方更详细的说明。
 
-### **app-dialog**
+### **app-dialog** 使用说明
 
 `app-dialog` 是一个通用的 Dialog 和 DialogFragment 组件库，支持任意样式和交互的个性化实现，帮助开发者快速构建灵活的提示对话框。
 
 以下是传统链式调用与 Kotlin DSL 调用的对比示例：
 
-**传统链式调用方式** （`Java`或`Kotlin`）
+#### 传统链式调用方式 （`Java`或`Kotlin`）
 
 ```java
 // 对话框常规使用示例
@@ -166,7 +169,7 @@ AppDialog.showDialog(appDialogConfig);
 ```
 > 温馨小提示：使用`AppDialogConfig`可自定义任意对话框；当自定义对话框比较复杂时；记得使用`AppDialogConfig`中的`ViewHolder`。
 
-**Kotlin DSL 调用方式**
+#### Kotlin DSL 调用方式
 
 ```kotlin
 // 对话框常规使用示例
@@ -205,13 +208,13 @@ val appDialogConfig = appDialogConfig(context, R.layout.dialog_custom) {
 AppDialog.showDialog(appDialogConfig)
 ```
 
-#### **app-updater**
+### **app-updater** 使用说明
 
 **app-updater** 是一个轻量级App更新库，封装了完整的下载更新流程，提供开箱即用的一键更新功能。无需关注技术细节，简单调用即可完成更新，同时也支持自定义配置。
 
 以下是传统链式调用与 Kotlin DSL 调用的对比示例：
 
-**传统链式调用方式** （`Java`或`Kotlin`）
+#### 传统链式调用方式 （`Java`或`Kotlin`）
 
 ```java
 // AppUpdater相关配置示例（配置项除了url必填，其他配置项都可使用默认的）
@@ -256,7 +259,7 @@ AppUpdater appUpdater = new AppUpdater.Builder(context)
 appUpdater.start();
 ```
 
-**Kotlin DSL 调用方式**
+#### Kotlin DSL 调用方式
 
 ```kotlin
 // AppUpdater相关配置示例（配置项除了url必填，其他配置项都可使用默认的）
@@ -300,7 +303,7 @@ appUpdater.start()
 
 > 使用小技巧：在`Activity/Fragment`中使用`app-dialog`或`app-updater`的`Kotlin DSL`调用方式时，context也可以省略；（例如：`appUpdater { url = apkUrl }.start()`）
 
-### 综合使用
+### 综合使用示例
 
 **app-dialog** 与 **app-updater** 完美结合，为你提供从更新提示到下载安装的完整无缝体验。
 
@@ -344,25 +347,25 @@ AppDialog.showDialog(appDialogConfig)
 
 更多使用详情，请查看[app](app)中的源码使用示例或直接查看[API帮助文档](https://jenly1314.github.io/AppUpdater/api/)
 
-## 补充说明
+### 补充说明
 
-### app-updater
+#### app-updater
 
 *  不设置 **HttpManager** 时，默认使用 **HttpsURLConnection** 实现的 **HttpManager** 进行下载，如果想要使用 **OkHttpClient** 实现下载，需依赖 **okhttp** 库；（内部默认提供 **HttpManager** 和 **OkHttpManager** 两种实现）
-*  支持下载APK时，优先取本地缓存策略，避免多次重复下载相同的APK文件；（校验方式支持 **文件MD5** 或 **VersionCode** 比对）
+*  支持下载APK时，优先取本地缓存策略，避免多次重复下载相同的APK文件；（校验方式支持文件的 **MD5** 或 **VersionCode**）
 *  如需自定义更新App时通知栏中的相关文案信息；你只需在 **string.xml** 定义相同的名字进行覆盖即可（ **app-updater** 中的资源定义都是以 **app_updater** 开头）。
 *  不设置 **INotificationHandler** 时，默认使用 **NotificationHandler** 实现的，如果当前的通知栏的布局不满足你的需求，可通过参考 **NotificationHandler** 去自定义实现一个 **INotificationHandler** ；
 *  **AppUpdater** 的更多配置说明直接查看 **AppUpdaterConfig** 即可，每一项配置都有详细的注释说明。
 
-### app-dialog
+#### app-dialog
 
 * **AppDialogConfig** 主要提供一些对话框配置，内部提供了一套默认的配置，你也可以通过 **AppDialogConfig** 对外暴露的方法，自定义对话框配置；**AppDialog** 主要负责对话框的显示与消失；通过 **AppDialog** 和 **AppDialogConfig**，你可以很容易的实现一个自定义对话框；
 * **AppDialog** 足够通用，其内部实现了一套最常见对话框，并给予一系列的默认配置，让使用者可以尽可能的通过少的配置就能实现功能；**AppDialog** 也足够抽象，对话框布局样式是可随意定制；
-* 基于以上几点，这里列个特别的场景说明：如需你想不通过自定义布局的方式定义对话框布局，同时默认的对话框的文字或按钮颜色不太符合你的需求场景，只想修改 **AppDialog** 内置默认对话框提示文字的颜色（包括按钮文字），你可以通过在 **colors.xml** 定义相同的名字进行覆盖即可（ **app-dialog** 中的资源定义都是以 **app_dialog** 开头）。
+* 基于以上几点，这里说个特别的需求：如需你想不通过自定义布局的方式定义对话框布局，同时默认的对话框的文字或按钮颜色不太符合你的需求场景，只想修改 **AppDialog** 内置默认对话框提示文字的颜色（包括按钮文字），你可以通过在 **colors.xml** 定义相同的名字进行覆盖即可（ **app-dialog** 中的资源定义都是以 **app_dialog** 开头）。
 
-### 适配 **Android 13**
+#### 适配 **Android 13**
 
-对于Android 13以上版本，需要动态授权发送通知权限（`android.permission.POST_NOTIFICATIONS`）才能正常发送通知。
+对于Android 13以上版本，需要动态授权发送通知权限后才能正常发送通知。(`android.permission.POST_NOTIFICATIONS`)
 
 > 虽然没有通知栏权限，并不影响App下载，但如果想在通知栏看到App的下载进度的话，最好还是在下载前申请一下；这样用户体验会好很多。
 
