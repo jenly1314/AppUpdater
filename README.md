@@ -152,9 +152,9 @@ AppUpdater 是一个轻量级开源库，专注于实现 App 版本更新功能�
 
 更多使用详情，请查看[app](app)中的源码使用示例或直接查看[API帮助文档](https://jenly1314.github.io/AppUpdater/api/)
 
-## 补充说明
+### 补充说明
 
-### app-updater
+#### app-updater
 
 *  不设置 **HttpManager** 时，默认使用 **HttpsURLConnection** 实现的 **HttpManager** 进行下载，如果想要使用 **OkHttpClient** 实现下载，需依赖 **okhttp** 库；（内部默认提供 **HttpManager** 和 **OkHttpManager** 两种实现）
 *  支持下载APK时，优先取本地缓存策略，避免多次重复下载相同的APK文件；（校验方式支持文件的 **MD5** 或 **VersionCode** ）
@@ -163,7 +163,7 @@ AppUpdater 是一个轻量级开源库，专注于实现 App 版本更新功能�
 *  **AppUpdater** 中的日志统一使用 **LogUtils** 进行管理，通过 **LogUtils.setShowLog** 可以全局设置是否显示日志；需要定位 **AppUpdater** 内部日志信息时，只需过滤以 **AppUpdater** 开头的 **Log Tag** 即可。
 *  **AppUpdater** 的更多配置说明请查看 **AppUpdater.Builder** 或 **UpdateConfig**；方法上基本都有详细的说明。
 
-### app-dialog
+#### app-dialog
 
 * **AppDialogConfig** 主要提供一些对话框配置，内部提供了一套默认的配置，你也可以通过 **AppDialogConfig** 对外暴露的方法，自定义对话框配置；**AppDialog** 主要负责对话框的显示与消失；通过 **AppDialog** 和 **AppDialogConfig**，你可以很容易的实现一个自定义对话框；
 * **AppDialog** 足够通用，其内部实现了一套最常见对话框，并给予一系列的默认配置，让使用者可以尽可能的通过少的配置就能实现功能；**AppDialog** 也足够抽象，对话框布局样式是可随意定制；
