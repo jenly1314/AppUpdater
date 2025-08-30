@@ -383,9 +383,10 @@ AppDialog.showDialog(appDialogConfig)
 
 private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
     if (it) {
-        // TODO 开始下载更新
+        // TODO 授权通过；开始下载更新
         AppUpdater(this, apkUrl).start()
     } else {
+        // TODO 授权申请被拒绝
         showToast("Notification permission denied!")
     }
 }
@@ -398,7 +399,7 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
     val permission = Manifest.permission.POST_NOTIFICATIONS
     // 检测是否有 android.permission.POST_NOTIFICATIONS 权限
     if (PermissionUtils.checkPermission(this, permission)) {
-        // TODO 开始下载更新
+        // TODO 已授权；开始下载更新
         AppUpdater(this, apkUrl).start()
     } else {
         // 如果没有发送通知权限，则申请授权
