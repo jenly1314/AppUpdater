@@ -120,7 +120,7 @@ AppDialog.showDialog(appDialogConfig);
 
 ### **app-dialog** 使用说明
 
-`app-dialog` 是一个通用的 Dialog 和 DialogFragment 组件库，支持任意样式和交互的个性化实现，帮助开发者快速构建灵活的提示对话框。
+**app-dialog** 是一个通用的 Dialog 和 DialogFragment 组件库，支持任意样式和交互的个性化实现，帮助开发者快速构建灵活的提示对话框。
 
 以下是传统链式调用与 Kotlin DSL 调用的对比示例：
 
@@ -307,7 +307,7 @@ val appUpdater = appUpdater(conetxt) {
 appUpdater.start()
 ```
 
-> 使用小技巧：在`Activity/Fragment`中使用`app-dialog`或`app-updater`的`Kotlin DSL`调用方式时，context也可以省略；（例如：`appUpdater { url = apkUrl }.start()`）
+> 使用小技巧：在 Activity/Fragment 中使用 **app-dialog** 或 **app-updater** 的 Kotlin DSL 调用方式时，`context`也可以省略；（例如：`appUpdater { url = apkUrl }.start()`）
 
 ### 综合使用示例
 
