@@ -327,7 +327,6 @@ val appDialogConfig = AppDialogConfig(context)
             .setShowNotification(true) // 设置是否显示通知
             .setShowPercentage(true) // 设置是否显示百分比（通知更新进度）
             .setInstallApk(true) // 下载完成后是否自动请求安装APK
-            .setHttpManager(getInstance()) // 使用OkHttp的实现进行下载（需依赖okhttp）
             .setDownloadListener(object : SimpleDownloadListener() { // 下载监听
                 override fun onStart(url: String) {
                     // 开始下载
@@ -386,7 +385,7 @@ private val requestPermissionLauncher = registerForActivityResult(ActivityResult
         // TODO 授权通过；开始下载更新
         AppUpdater(this, apkUrl).start()
     } else {
-        // TODO 授权申请被拒绝
+        // TODO 授权被拒绝
         showToast("Notification permission denied!")
     }
 }
