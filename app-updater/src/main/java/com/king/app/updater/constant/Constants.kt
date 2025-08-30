@@ -1,32 +1,41 @@
-package com.king.app.updater.constant;
+package com.king.app.updater.constant
 
 /**
- * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * <p>
+ * <a href="https://github.com/jenly1314">Follow me</a>
  */
-public final class Constants {
+class Constants private constructor() {
 
-    public static final String TAG = "AppUpdater";
+    companion object {
 
-    public static final String KEY_UPDATE_CONFIG = "app_update_config";
+        const val DEFAULT_NOTIFICATION_ID = 0x66
 
-    public static final int DEFAULT_NOTIFICATION_ID = 0x66;
+        const val DEFAULT_NOTIFICATION_CHANNEL_ID = "0x66"
 
-    public static final String DEFAULT_NOTIFICATION_CHANNEL_ID = "0x66";
+        const val DEFAULT_NOTIFICATION_CHANNEL_NAME = "AppUpdater"
 
-    public static final String DEFAULT_NOTIFICATION_CHANNEL_NAME = "AppUpdater";
+        const val EXTRA_ACTION = "app_updater_extra_action"
 
-    public static final String KEY_STOP_DOWNLOAD_SERVICE = "stop_download_service";
+        const val ACTION_START_DOWNLOAD = "app_updater_action_start_download"
 
-    public static final String KEY_RE_DOWNLOAD = "app_update_re_download";
+        const val ACTION_CANCEL_DOWNLOAD = "app_updater_action_cancel_download"
 
-    public static final int RE_CODE_STORAGE_PERMISSION = 0x66;
+        const val ACTION_RETRY_DOWNLOAD = "app_updater_action_retry_download"
 
-    public static final int NONE = -1;
+        const val ACTION_CLEAR_LISTENER = "app_updater_action_clear_listener"
 
-    public static final String DEFAULT_FILE_PROVIDER = ".AppUpdaterFileProvider";
+        const val NONE = -1
 
-    public static final String DEFAULT_DIR = "apk";
+        const val DEFAULT_FILE_PROVIDER = ".AppUpdaterFileProvider"
 
-    public static final long MINIMUM_INTERVAL_MILLIS = 200L;
+        const val DEFAULT_DIR = "apk"
 
+        const val PROGRESS_UPDATE_INTERVAL = 50L
+
+        const val TIME_OUT_MILLIS = 20000
+
+        internal const val HTTP_TEMP_REDIRECT = 307
+        internal const val HTTP_PERM_REDIRECT = 308
+    }
 }

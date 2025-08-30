@@ -1,237 +1,149 @@
-package com.king.app.updater.http;
+package com.king.app.updater.http
 
-import android.os.AsyncTask;
-import android.os.Build;
-
-import com.king.app.updater.util.LogUtils;
-import com.king.app.updater.util.SSLSocketFactoryUtils;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.ConnectException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import androidx.annotation.Nullable;
+import android.os.Build
+import com.king.app.updater.constant.Constants
+import com.king.app.updater.exception.HttpException
+import com.king.logx.LogX
+import java.io.File
+import java.io.FileOutputStream
+import java.net.HttpURLConnection
+import java.net.URL
+import kotlin.concurrent.Volatile
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 /**
- * HttpManager使用 {@link HttpURLConnection} 实现的 {@link IHttpManager}
+ * HttpManager使用 [HttpURLConnection] 实现
  *
- * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * <p>
+ * <a href="https://github.com/jenly1314">Follow me</a>
  */
-public class HttpManager implements IHttpManager {
+class HttpManager @JvmOverloads constructor(
+    private val timeoutMillis: Int = Constants.TIME_OUT_MILLIS
+) : IHttpManager {
 
-    private static final int HTTP_TEMP_REDIRECT = 307;
-    private static final int HTTP_PERM_REDIRECT = 308;
+    @Volatile
+    private var isCancel = false
 
-    private static final int DEFAULT_TIME_OUT = 20000;
-
-    private int mTimeout;
-
-    private DownloadTask mDownloadTask;
-
-    private static volatile HttpManager INSTANCE;
-
-    public static HttpManager getInstance() {
-        if (INSTANCE == null) {
-            synchronized (HttpManager.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new HttpManager();
-                }
-            }
-        }
-        return INSTANCE;
+    override fun download(
+        url: String,
+        filepath: String,
+        headers: Map<String, String>?
+    ): Flow<DownloadState> {
+        return flow {
+            isCancel = false
+            emit(DownloadState.Start(url))
+            startDownload(url, filepath, headers)
+        }.catch {
+            LogX.w(it)
+            emit(DownloadState.Error(it))
+        }.flowOn(Dispatchers.IO)
     }
 
-    private HttpManager() {
-        this(DEFAULT_TIME_OUT);
-    }
+    private suspend fun FlowCollector<DownloadState>.startDownload(
+        url: String,
+        filepath: String,
+        headers: Map<String, String>?,
+    ) {
 
-    /**
-     * HttpManager对外暴露。如果没有特殊需求，推荐使用{@link HttpManager#getInstance()}
-     */
-    public HttpManager(int timeout) {
-        this.mTimeout = timeout;
-    }
+        val connection = (URL(url).openConnection() as HttpURLConnection).apply {
+            requestMethod = "GET"
+            setRequestProperty("Accept-Encoding", "identity")
 
-    @Override
-    public void download(String url, String saveFilePath, @Nullable Map<String, String> requestProperty, DownloadCallback callback) {
-        mDownloadTask = new DownloadTask(url, saveFilePath, mTimeout, requestProperty, callback);
-        mDownloadTask.execute();
-    }
+            readTimeout = timeoutMillis
+            connectTimeout = timeoutMillis
 
-    @Override
-    public void cancel() {
-        if (mDownloadTask != null) {
-            mDownloadTask.isCancel = true;
-        }
-    }
-
-    /**
-     * 异步下载任务
-     */
-    private static class DownloadTask extends AsyncTask<Void, Long, File> {
-
-        private String url;
-
-        private String saveFilePath;
-
-        private Map<String, String> requestProperty;
-
-        private DownloadCallback callback;
-
-        private Exception exception;
-
-        private int timeout;
-
-        private volatile boolean isCancel;
-
-        public DownloadTask(String url, String saveFilePath, int timeout, @Nullable Map<String, String> requestProperty, DownloadCallback callback) {
-            this.url = url;
-            this.saveFilePath = saveFilePath;
-            this.timeout = timeout;
-            this.callback = callback;
-            this.requestProperty = requestProperty;
-        }
-
-        private File download(String url) throws Exception {
-            HttpURLConnection connect = (HttpURLConnection) new URL(url).openConnection();
-            connect.setRequestMethod("GET");
-            connect.setRequestProperty("Accept-Encoding", "identity");
-
-            connect.setReadTimeout(timeout);
-            connect.setConnectTimeout(timeout);
-
-            if (requestProperty != null) {
-                for (Map.Entry<String, String> entry : requestProperty.entrySet()) {
-                    connect.setRequestProperty(entry.getKey(), entry.getValue());
-                }
-            }
-
-            connect.connect();
-
-            LogUtils.d("Content-Type: " + connect.getContentType());
-            int responseCode = connect.getResponseCode();
-            switch (responseCode) {
-                case HttpURLConnection.HTTP_OK: {
-                    InputStream is = connect.getInputStream();
-
-                    long length = connect.getContentLength();
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        length = connect.getContentLengthLong();
-                    }
-
-                    LogUtils.d("contentLength: " + length);
-
-                    long progress = 0;
-
-                    byte[] buffer = new byte[4096];
-
-                    int len;
-                    File file = new File(saveFilePath);
-                    FileOutputStream fos = new FileOutputStream(file);
-                    while ((len = is.read(buffer)) != -1) {
-                        if (isCancel) {
-                            cancel(true);
-                            break;
-                        }
-                        fos.write(buffer, 0, len);
-                        progress += len;
-                        // 更新进度
-                        publishProgress(progress, length);
-                    }
-
-                    fos.flush();
-                    fos.close();
-                    is.close();
-
-                    connect.disconnect();
-
-                    if (progress <= 0 && length <= 0) {
-                        throw new IllegalStateException(String.format("contentLength = %d", length));
-                    }
-
-                    return file;
-                }
-                case HttpURLConnection.HTTP_MULT_CHOICE:
-                case HttpURLConnection.HTTP_MOVED_PERM:
-                case HttpURLConnection.HTTP_MOVED_TEMP:
-                case HttpURLConnection.HTTP_SEE_OTHER:
-                case HTTP_TEMP_REDIRECT:
-                case HTTP_PERM_REDIRECT: {
-                    // 重定向
-                    String redirectUrl = connect.getHeaderField("Location");
-                    LogUtils.d("redirectUrl = " + redirectUrl);
-                    connect.disconnect();
-                    return download(redirectUrl);
-                }
-                default:
-                    // 连接失败
-                    throw new ConnectException(String.format("responseCode = %d", responseCode));
-
+            headers?.forEach { (key, value) ->
+                setRequestProperty(key, value)
             }
         }
 
-        @Override
-        protected File doInBackground(Void... voids) {
-            try {
-                if (url.startsWith("https")) {
-                    HttpsURLConnection.setDefaultSSLSocketFactory(SSLSocketFactoryUtils.createSSLSocketFactory());
-                    HttpsURLConnection.setDefaultHostnameVerifier(SSLSocketFactoryUtils.createAllowAllHostnameVerifier());
-                }
-                return download(url);
-            } catch (Exception e) {
-                this.exception = e;
-                e.printStackTrace();
-            }
+        LogX.d("Content-Type: ${connection.contentType}")
 
-            return null;
-        }
+        when (val responseCode = connection.responseCode) {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (callback != null) {
-                callback.onStart(url);
-            }
-        }
+            HttpURLConnection.HTTP_OK -> {
 
-        @Override
-        protected void onPostExecute(File file) {
-            super.onPostExecute(file);
-            if (callback != null) {
-                if (file != null) {
-                    callback.onFinish(file);
+                val length = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    connection.contentLengthLong.toInt()
                 } else {
-                    callback.onError(exception);
+                    connection.contentLength
                 }
+                val outputFile = File(filepath)
+                try {
+                    connection.inputStream.use { inputStream ->
+                        FileOutputStream(outputFile).use { outputStream ->
+                            val buffer = ByteArray(8192)
+                            var progress = 0
+                            while (true) {
+                                val bytesRead = inputStream.read(buffer)
+                                if (bytesRead == -1 || isCancel) break
 
-            }
-        }
+                                outputStream.write(buffer, 0, bytesRead)
+                                progress += bytesRead
 
-        @Override
-        protected void onProgressUpdate(Long... values) {
-            super.onProgressUpdate(values);
-            if (callback != null) {
-                if (!isCancelled()) {
-                    callback.onProgress(values[0], values[1]);
+                                emit(DownloadState.Progress(progress, length))
+                            }
+                            outputStream.flush()
+
+                            check(progress > 0 || length > 0) {
+                                "Invalid download state: progress=$progress, contentLength=$length"
+                            }
+                        }
+                    }
+
+                    if (isCancel) {
+                        emit(DownloadState.Cancel)
+                    } else {
+                        emit(DownloadState.Success(outputFile))
+                    }
+                } finally {
+                    connection.disconnect()
                 }
-
             }
-        }
 
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            if (callback != null) {
-                callback.onCancel();
+            HttpURLConnection.HTTP_MULT_CHOICE,
+            HttpURLConnection.HTTP_MOVED_PERM,
+            HttpURLConnection.HTTP_MOVED_TEMP,
+            HttpURLConnection.HTTP_SEE_OTHER,
+            Constants.HTTP_TEMP_REDIRECT,
+            Constants.HTTP_PERM_REDIRECT -> {
+                // 重定向
+                val redirectUrl = connection.getHeaderField("Location")
+                LogX.d("Redirect url: $redirectUrl")
+
+                connection.disconnect()
+
+                download(redirectUrl, filepath, headers)
+            }
+
+            else -> {
+                throw HttpException(responseCode, connection.responseMessage ?: "HTTP Error.")
             }
         }
     }
 
+    override fun cancel() {
+        isCancel = true
+    }
+
+    companion object {
+
+        private val INSTANCE by lazy {
+            HttpManager()
+        }
+
+        /**
+         * 获取实例
+         */
+        @JvmStatic
+        fun getInstance(): HttpManager {
+            return INSTANCE
+        }
+    }
 }

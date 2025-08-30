@@ -1,840 +1,394 @@
-package com.king.app.dialog;
+package com.king.app.dialog
 
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.text.util.Linkify;
-import android.util.SparseArray;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RatingBar;
-import android.widget.TextView;
-
-import java.util.regex.Pattern;
-
-import androidx.annotation.ColorInt;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.IdRes;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.WindowManager
+import android.widget.TextView
+import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
+import androidx.annotation.StyleRes
+import androidx.fragment.app.Fragment
 
 /**
- * App 对话框配置
+ * App对话框配置
  *
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * <p>
+ * <a href="https://github.com/jenly1314">Follow me</a>
  */
-public class AppDialogConfig extends BaseDialogConfig {
+open class AppDialogConfig @JvmOverloads constructor(
+    internal val context: Context,
+    @LayoutRes layoutId: Int = R.layout.app_dialog
+) : BaseDialogConfig(layoutId) {
 
-    private Context context;
-
-    private SparseArray<View> views;
-
-    private View view;
-
-    private ViewHolder viewHolder;
-
-    /**
-     * 构造
-     *
-     * @param context 上下文
-     */
-    public AppDialogConfig(@NonNull Context context) {
-        this(context, R.layout.app_dialog);
+    val viewHolder by lazy {
+        ViewHolder(getDialogView())
     }
 
-    /**
-     * 构造
-     *
-     * @param context  上下文
-     * @param layoutId 布局ID
-     */
-    public AppDialogConfig(@NonNull Context context, @LayoutRes int layoutId) {
-        super(layoutId);
-        this.context = context;
-        views = new SparseArray<>();
-    }
-
-    /**
-     * 获取上下文
-     *
-     * @return {@link #context}
-     */
-    public Context getContext() {
-        return context;
-    }
-
-    /**
-     * 获取对话框视图
-     *
-     * @param context 上下文
-     * @return 对话框视图
-     * @deprecated 即将废弃，下一个版本可能会移除此方法。
-     */
-    @Deprecated
-    public View getView(@NonNull Context context) {
-        return getDialogView();
-    }
+    private var dialogView: View? = null
 
     /**
      * 获取对话框视图
      *
      * @return 对话框视图
      */
-    private View getDialogView() {
-        if (view == null) {
-            view = LayoutInflater.from(context).inflate(getLayoutId(), null);
+    private fun getDialogView(): View {
+        if (dialogView == null) {
+            dialogView = LayoutInflater.from(context).inflate(layoutId, null)
         }
-        return view;
+        return dialogView!!
     }
 
     /**
-     * 通过视图ID查找对应的视图
+     * 根据视图ID查找对应的视图
      *
      * @param id  视图ID
      * @param <T> 对应的视图类
      * @return 视图ID对应的视图
      */
-    private <T extends View> T findView(@IdRes int id) {
-        return getDialogView().findViewById(id);
+    @Suppress("UNCHECKED_CAST")
+    fun <T : View?> findView(@IdRes id: Int): T? {
+        return viewHolder.getView<View?>(id) as? T
     }
 
     /**
-     * 根据视图ID获取对应的视图
+     * 通过[AppDialogConfig] 创建一个视图
      *
-     * @param id  视图ID
-     * @param <T> 对应的视图类
-     * @return 视图ID对应的视图
+     * @return [View]
      */
-    @SuppressWarnings("unchecked")
-    public <T extends View> T getView(@IdRes int id) {
-        View v = views.get(id);
-        if (v == null) {
-            v = findView(id);
-            views.put(id, v);
-        }
-
-        return (T) v;
-    }
-
-    /**
-     * 通过{@link AppDialogConfig} 创建一个视图
-     *
-     * @return {@link View}
-     */
-    View buildAppDialogView() {
-        TextView tvDialogTitle = getView(titleId);
-        if (tvDialogTitle != null) {
-            setText(tvDialogTitle, title);
-            tvDialogTitle.setVisibility(isHideTitle ? View.GONE : View.VISIBLE);
-        }
-
-        TextView tvDialogContent = getView(contentId);
-        if (tvDialogContent != null) {
-            setText(tvDialogContent, content);
-        }
-
-        Button btnDialogCancel = getView(cancelId);
-        if (btnDialogCancel != null) {
-            setText(btnDialogCancel, cancel);
-            btnDialogCancel.setOnClickListener(onClickCancel != null ? onClickCancel : AppDialog.INSTANCE.mOnClickDismissDialog);
-            btnDialogCancel.setVisibility(isHideCancel ? View.GONE : View.VISIBLE);
-        }
-
-        View line = getView(lineId);
-        if (line != null) {
-            line.setVisibility(isHideCancel ? View.GONE : View.VISIBLE);
-        }
-
-        Button btnDialogConfirm = getView(confirmId);
-        if (btnDialogConfirm != null) {
-            setText(btnDialogConfirm, confirm);
-            btnDialogConfirm.setOnClickListener(onClickConfirm != null ? onClickConfirm : AppDialog.INSTANCE.mOnClickDismissDialog);
-
-        }
-
-        return view;
-    }
-
-    /**
-     * 设置文本
-     *
-     * @param tv   {@link TextView}
-     * @param text {@link CharSequence}
-     */
-    private void setText(TextView tv, CharSequence text) {
-        if (text != null) {
-            tv.setText(text);
-        }
-    }
-
-    /**
-     * 获取 {@link ViewHolder}
-     *
-     * @return {@link ViewHolder}
-     */
-    public final ViewHolder getViewHolder() {
-        if (viewHolder == null) {
-            viewHolder = new ViewHolder();
-        }
-        return viewHolder;
-    }
-
-
-    /**
-     * ViewHolder主要提供视图控件的一些常用设置（适用于Dialog，不适用于DialogFragment）
-     */
-    public final class ViewHolder {
-
-        private ViewHolder() {
-
-        }
-
-        //---------------------- 控件常用设置
-
-        /**
-         * 设置视图的背景色
-         * {@link View#setBackgroundResource(int)}
-         *
-         * @param id    视图ID
-         * @param resId Drawable资源ID
-         * @return {@link View}
-         */
-        public View setBackgroundResource(@IdRes int id, @DrawableRes int resId) {
-            View v = getView(id);
-            v.setBackgroundResource(resId);
-            return v;
-        }
-
-        /**
-         * 设置视图的背景色
-         * {@link View#setBackground(Drawable)}
-         *
-         * @param id       视图ID
-         * @param drawable {@link Drawable}
-         * @return {@link View}
-         */
-        @TargetApi(16)
-        public View setBackground(@IdRes int id, Drawable drawable) {
-            View v = getView(id);
-            v.setBackground(drawable);
-            return v;
-        }
-
-        /**
-         * 设置视图的背景色
-         * {@link View#setBackgroundColor(int)}
-         *
-         * @param id    视图ID
-         * @param color 颜色
-         * @return {@link View}
-         */
-        public View setBackgroundColor(@IdRes int id, @ColorInt int color) {
-            View v = getView(id);
-            v.setBackgroundColor(color);
-            return v;
-        }
-
-        /**
-         * 设置视图的标签
-         * {@link View#setTag(Object)}
-         *
-         * @param id  视图ID
-         * @param tag 标签
-         * @return {@link View}
-         */
-        public View setTag(@IdRes int id, Object tag) {
-            View v = getView(id);
-            v.setTag(tag);
-            return v;
-        }
-
-        /**
-         * 设置视图的标签
-         * {@link View#setTag(int, Object)}
-         *
-         * @param id  视图ID
-         * @param key 标签的key
-         * @param tag 标签
-         * @return {@link View}
-         */
-        public View setTag(@IdRes int id, int key, Object tag) {
-            View v = getView(id);
-            v.setTag(key, tag);
-            return v;
-        }
-
-        /**
-         * 设置视图的可见性
-         * {@link View#setVisibility(int)}
-         *
-         * @param id         视图ID
-         * @param visibility 可见性
-         * @return {@link View}
-         */
-        public View setVisibility(@IdRes int id, int visibility) {
-            View v = getView(id);
-            v.setVisibility(visibility);
-            return v;
-        }
-
-        /**
-         * 设置视图的可见性
-         * {@link View#setVisibility(int)}
-         *
-         * @param id        视图ID
-         * @param isVisible 是否可见；true时设置为：{@link View#VISIBLE}；false时设置为：{@link View#GONE}
-         * @return {@link View}
-         */
-        public View setVisibility(@IdRes int id, boolean isVisible) {
-            View v = getView(id);
-            if (isVisible) {
-                v.setVisibility(View.VISIBLE);
-            } else {
-                v.setVisibility(View.GONE);
+    fun buildAppDialogView(): View {
+        if (title != null) {
+            findView<TextView>(titleId)?.apply {
+                text = title
+                visibility = if (hideTitle) View.GONE else View.VISIBLE
             }
-            return v;
         }
 
-        /**
-         * 设置视图的可见性
-         * {@link View#setVisibility(int)}
-         *
-         * @param id        视图ID
-         * @param isVisible 是否可见；true时设置为：{@link View#VISIBLE}；false时设置为：{@link View#INVISIBLE}
-         * @return {@link View}
-         */
-        public View setInVisibility(@IdRes int id, boolean isVisible) {
-            View v = getView(id);
-            if (isVisible) {
-                v.setVisibility(View.VISIBLE);
-            } else {
-                v.setVisibility(View.INVISIBLE);
+        if (content != null) {
+            findView<TextView>(contentId)?.apply {
+                text = content
             }
-            return v;
         }
 
-        /**
-         * 设置视图的透明度
-         * {@link View#setAlpha(float)}
-         *
-         * @param id    视图ID
-         * @param alpha 透明度
-         * @return {@link View}
-         */
-        public View setAlpha(@IdRes int id, float alpha) {
-            View v = getView(id);
-            v.setAlpha(alpha);
-            return v;
+        findView<TextView>(cancelId)?.apply {
+            if (cancel != null) {
+                text = cancel
+            }
+            visibility = if (hideCancel) View.GONE else View.VISIBLE
+            setOnClickListener(if (onClickCancel != null) onClickCancel else AppDialog.onClickDismissDialog)
         }
 
-        /**
-         * 设置视图左方的复合绘图 {@link Drawable}
-         * {@link #setCompoundDrawables(int, Drawable, Drawable, Drawable, Drawable)}
-         *
-         * @param id       视图ID
-         * @param drawable {@link Drawable}
-         * @return {@link TextView}
-         */
-        public TextView setCompoundDrawableLeft(@IdRes int id, Drawable drawable) {
-            return setCompoundDrawables(id, drawable, null, null, null);
+        findView<View>(lineId)?.apply {
+            visibility = if (hideCancel) View.GONE else View.VISIBLE
         }
 
-        /**
-         * 设置视图上方的复合绘图 {@link Drawable}
-         * {@link #setCompoundDrawables(int, Drawable, Drawable, Drawable, Drawable)}
-         *
-         * @param id       视图ID
-         * @param drawable {@link Drawable}
-         * @return {@link TextView}
-         */
-        public TextView setCompoundDrawableTop(@IdRes int id, Drawable drawable) {
-            return setCompoundDrawables(id, null, drawable, null, null);
+        findView<TextView>(confirmId)?.apply {
+            if (confirm != null) {
+                text = confirm
+            }
+            setOnClickListener(if (onClickConfirm != null) onClickConfirm else AppDialog.onClickDismissDialog)
         }
 
-        /**
-         * 设置视图右方的复合绘图 {@link Drawable}
-         * {@link #setCompoundDrawables(int, Drawable, Drawable, Drawable, Drawable)}
-         *
-         * @param id       视图ID
-         * @param drawable {@link Drawable}
-         * @return {@link TextView}
-         */
-        public TextView setCompoundDrawableRight(@IdRes int id, Drawable drawable) {
-            return setCompoundDrawables(id, null, null, drawable, null);
-        }
-
-        /**
-         * 设置视图下方的复合绘图 {@link Drawable}
-         * {@link #setCompoundDrawables(int, Drawable, Drawable, Drawable, Drawable)}
-         *
-         * @param id       视图ID
-         * @param drawable {@link Drawable}
-         * @return {@link TextView}
-         */
-        public TextView setCompoundDrawableBottom(@IdRes int id, Drawable drawable) {
-            return setCompoundDrawables(id, null, null, null, drawable);
-        }
-
-        /**
-         * 设置视图的复合绘图 {@link Drawable}
-         * {@link TextView#setCompoundDrawables(Drawable, Drawable, Drawable, Drawable)}
-         *
-         * @param id     视图ID
-         * @param left   左方的Drawable
-         * @param top    上方的Drawable
-         * @param right  右方的Drawable
-         * @param bottom 下方的Drawable
-         * @return {@link TextView}
-         */
-        public TextView setCompoundDrawables(@IdRes int id, Drawable left, Drawable top, Drawable right, Drawable bottom) {
-            TextView tv = getView(id);
-            tv.setCompoundDrawables(left, top, right, bottom);
-            return tv;
-        }
-
-        /**
-         * 设置视图的可填充内距
-         * {@link TextView#setCompoundDrawablePadding(int)}
-         *
-         * @param id      视图ID
-         * @param padding 内填充间距
-         * @return
-         */
-        public TextView setCompoundDrawablePadding(@IdRes int id, int padding) {
-            TextView tv = getView(id);
-            tv.setCompoundDrawablePadding(padding);
-            return tv;
-        }
-
-        /**
-         * 设置视图的内在的复合绘图 {@link Drawable}
-         * {@link TextView#setCompoundDrawablesWithIntrinsicBounds(int, int, int, int)}
-         *
-         * @param id     视图ID
-         * @param left   左方的Drawable
-         * @param top    上方的Drawable
-         * @param right  右方的Drawable
-         * @param bottom 下方的Drawable
-         * @return {@link TextView}
-         */
-        public TextView setCompoundDrawablesWithIntrinsicBounds(@IdRes int id, @Nullable Drawable left, @Nullable Drawable top, @Nullable Drawable right, @Nullable Drawable bottom) {
-            TextView tv = getView(id);
-            tv.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
-            return tv;
-        }
-
-        /**
-         * 设置文本内容
-         * {@link TextView#setText(int)}
-         *
-         * @param id    视图ID
-         * @param resId 字符串资源ID
-         * @return {@link TextView}
-         */
-        public TextView setText(@IdRes int id, @StringRes int resId) {
-            TextView tv = getView(id);
-            tv.setText(resId);
-            return tv;
-        }
-
-        /**
-         * 设置文本内容
-         * {@link TextView#setText(CharSequence)}
-         *
-         * @param id   视图ID
-         * @param text 文本
-         * @return {@link TextView}
-         */
-        public TextView setText(@IdRes int id, CharSequence text) {
-            TextView tv = getView(id);
-            tv.setText(text);
-            return tv;
-        }
-
-        /**
-         * 设置字体颜色
-         * {@link TextView#setTextColor(int)}
-         *
-         * @param id    视图ID
-         * @param color 颜色
-         * @return {@link TextView}
-         */
-        public TextView setTextColor(@IdRes int id, int color) {
-            TextView tv = getView(id);
-            tv.setTextColor(color);
-            return tv;
-        }
-
-        /**
-         * 设置字体颜色
-         * {@link TextView#setTextColor(ColorStateList)}
-         *
-         * @param id     视图ID
-         * @param colors 颜色状态列表
-         * @return {@link TextView}
-         */
-        public TextView setTextColor(@IdRes int id, @NonNull ColorStateList colors) {
-            TextView tv = getView(id);
-            tv.setTextColor(colors);
-            return tv;
-        }
-
-        /**
-         * 设置字体大小
-         * {@link TextView#setTextSize(float)}
-         *
-         * @param id   视图ID
-         * @param size 字体大小（单位：sp）
-         * @return {@link TextView}
-         */
-        public TextView setTextSize(@IdRes int id, float size) {
-            return setTextSize(id, size);
-        }
-
-        /**
-         * 设置字体大小
-         * {@link TextView#setTextSize(int, float)}
-         *
-         * @param id   视图ID
-         * @param unit 单位；推荐使用 {@link TypedValue#COMPLEX_UNIT_SP}
-         * @param size 字体大小
-         * @return {@link TextView}
-         */
-        public TextView setTextSize(@IdRes int id, int unit, float size) {
-            TextView tv = getView(id);
-            tv.setTextSize(unit, size);
-            return tv;
-        }
-
-        /**
-         * 设置字体
-         * {@link TextView#setTypeface(Typeface)}
-         *
-         * @param id 视图ID
-         * @param tf 字体
-         * @return {@link TextView}
-         */
-        public TextView setTypeface(@IdRes int id, @Nullable Typeface tf) {
-            TextView tv = getView(id);
-            tv.setTypeface(tf);
-            return tv;
-        }
-
-        /**
-         * 设置字体
-         * {@link TextView#setTypeface(Typeface, int)}
-         *
-         * @param id    视图ID
-         * @param tf    字体
-         * @param style 字体样式
-         * @return {@link TextView}
-         */
-        public TextView setTypeface(@IdRes int id, @Nullable Typeface tf, int style) {
-            TextView tv = getView(id);
-            tv.setTypeface(tf, style);
-            return tv;
-        }
-
-        /**
-         * 添加链接
-         * {@link #addLinks(int, int)}
-         *
-         * @param id 视图ID
-         * @return {@link TextView}
-         */
-        public TextView addLinks(@IdRes int id) {
-            return addLinks(id, Linkify.ALL);
-        }
-
-        /**
-         * 添加链接
-         * {@link Linkify#addLinks(TextView, int)}
-         *
-         * @param id   视图ID
-         * @param mask 连接掩码；如：{@link Linkify#ALL}
-         * @return {@link TextView}
-         */
-        public TextView addLinks(@IdRes int id, int mask) {
-            TextView tv = getView(id);
-            Linkify.addLinks(tv, mask);
-            return tv;
-        }
-
-        /**
-         * 添加链接
-         * {@link Linkify#addLinks(TextView, Pattern, String)}
-         *
-         * @param id      视图ID
-         * @param pattern 正则表达式模式
-         * @param scheme  方案
-         * @return {@link TextView}
-         */
-        public TextView addLinks(@IdRes int id, @NonNull Pattern pattern, @Nullable String scheme) {
-            TextView tv = getView(id);
-            Linkify.addLinks(tv, pattern, scheme);
-            return tv;
-        }
-
-        /**
-         * 根据Drawable资源ID设置图像
-         * {@link ImageView#setImageResource(int)}
-         *
-         * @param id    视图ID
-         * @param resId Drawable资源ID
-         * @return {@link ImageView}
-         */
-        public ImageView setImageResource(@IdRes int id, @DrawableRes int resId) {
-            ImageView iv = getView(id);
-            iv.setImageResource(resId);
-            return iv;
-        }
-
-        /**
-         * 根据位图设置图像
-         * {@link ImageView#setImageBitmap(Bitmap)}
-         *
-         * @param id     视图ID
-         * @param bitmap 位图
-         * @return {@link ImageView}
-         */
-        public ImageView setImageBitmap(@IdRes int id, Bitmap bitmap) {
-            ImageView iv = getView(id);
-            iv.setImageBitmap(bitmap);
-            return iv;
-        }
-
-        /**
-         * 根据 {@link Drawable} 设置图像
-         * {@link ImageView#setImageResource(int)}
-         *
-         * @param id       视图ID
-         * @param drawable {@link Drawable}
-         * @return {@link ImageView}
-         */
-        public ImageView setImageDrawable(@IdRes int id, Drawable drawable) {
-            ImageView iv = getView(id);
-            iv.setImageDrawable(drawable);
-            return iv;
-        }
-
-        /**
-         * 设置是否选中
-         * {@link CompoundButton#setChecked(boolean)}
-         *
-         * @param id        视图ID
-         * @param isChecked 是否选中
-         * @return {@link CompoundButton}
-         */
-        public CompoundButton setChecked(@IdRes int id, boolean isChecked) {
-            CompoundButton cb = getView(id);
-            cb.setChecked(isChecked);
-            return cb;
-        }
-
-        /**
-         * 是否选中
-         * {@link CompoundButton#isChecked()}
-         *
-         * @param id 视图ID
-         * @return {@code true} or {@code false}
-         */
-        public boolean isChecked(@IdRes int id) {
-            CompoundButton cb = getView(id);
-            return cb.isChecked();
-        }
-
-        /**
-         * 切换
-         * {@link CompoundButton#toggle()}
-         *
-         * @param id 视图ID
-         * @return {@link CompoundButton}
-         */
-        public CompoundButton toggle(@IdRes int id) {
-            CompoundButton cb = getView(id);
-            cb.toggle();
-            return cb;
-        }
-
-        /**
-         * 设置进度值
-         * {@link ProgressBar#setProgress(int)}
-         *
-         * @param id       视图ID
-         * @param progress 进度
-         * @return {@link ProgressBar}
-         */
-        public ProgressBar setProgress(@IdRes int id, int progress) {
-            ProgressBar progressBar = getView(id);
-            progressBar.setProgress(progress);
-            return progressBar;
-        }
-
-        /**
-         * 设置最大进度值
-         * {@link ProgressBar#setMax(int)}
-         *
-         * @param id  视图ID
-         * @param max 最大进度值
-         * @return {@link ProgressBar}
-         */
-        public ProgressBar setMax(@IdRes int id, int max) {
-            ProgressBar progressBar = getView(id);
-            progressBar.setMax(max);
-            return progressBar;
-        }
-
-        /**
-         * 设置评分
-         * {@link RatingBar#setRating(float)}
-         *
-         * @param id     视图ID
-         * @param rating 评分
-         * @return {@link RatingBar}
-         */
-        public RatingBar setRating(@IdRes int id, float rating) {
-            RatingBar ratingBar = getView(id);
-            ratingBar.setRating(rating);
-            return ratingBar;
-        }
-
-        /**
-         * 设置评分和最大评分值
-         * {@link RatingBar#setRating(float)} and {@link RatingBar#setMax(int)}
-         *
-         * @param id     视图ID
-         * @param rating 评分
-         * @param max    最大评分值
-         * @return {@link RatingBar}
-         */
-        public RatingBar setRating(@IdRes int id, float rating, int max) {
-            RatingBar ratingBar = getView(id);
-            ratingBar.setRating(rating);
-            ratingBar.setMax(max);
-            return ratingBar;
-        }
-
-        /**
-         * 设置星星数量
-         * {@link RatingBar#setNumStars(int)}
-         *
-         * @param id       视图ID
-         * @param numStars 星星数量
-         * @return {@link RatingBar}
-         */
-        public RatingBar setNumStars(@IdRes int id, int numStars) {
-            RatingBar ratingBar = getView(id);
-            ratingBar.setNumStars(numStars);
-            return ratingBar;
-        }
-
-        /**
-         * 设置是否选择
-         * {@link View#setSelected(boolean)}
-         *
-         * @param id       视图ID
-         * @param selected 是否选择
-         * @return {@link View}
-         */
-        public View setSelected(@IdRes int id, boolean selected) {
-            View view = getView(id);
-            view.setSelected(selected);
-            return view;
-        }
-
-        /**
-         * 是否选择
-         * {@link View#isSelected()}
-         *
-         * @param id 视图ID
-         * @return {@code true} or {@code false}
-         */
-        public boolean isSelected(@IdRes int id) {
-            return getView(id).isSelected();
-        }
-
-        /**
-         * 设置是否启用
-         * {@link View#setEnabled(boolean)}
-         *
-         * @param id      视图ID
-         * @param enabled 是否启用
-         * @return {@link View}
-         */
-        public View setEnabled(@IdRes int id, boolean enabled) {
-            View view = getView(id);
-            view.setEnabled(enabled);
-            return view;
-        }
-
-        /**
-         * 是否启用
-         * {@link View#isEnabled()}
-         *
-         * @param id 视图ID
-         * @return {@code true} or {@code false}
-         */
-        public boolean isEnabled(@IdRes int id) {
-            return getView(id).isEnabled();
-        }
-
-
-        //---------------------- 监听事件
-
-        /**
-         * 设置点击监听事
-         * {@link View#setOnClickListener(View.OnClickListener)}
-         *
-         * @param id              视图ID
-         * @param onClickListener {@link View.OnClickListener}
-         */
-        public void setOnClickListener(@IdRes int id, View.OnClickListener onClickListener) {
-            getView(id).setOnClickListener(onClickListener);
-        }
-
-        /**
-         * 设置触摸监听
-         * {@link View#setOnTouchListener(View.OnTouchListener)}
-         *
-         * @param id              视图ID
-         * @param onTouchListener {@link View.OnTouchListener}
-         */
-        public void setOnTouchListener(@IdRes int id, View.OnTouchListener onTouchListener) {
-            getView(id).setOnTouchListener(onTouchListener);
-        }
-
-        /**
-         * 设置长按监听
-         * {@link View#setOnLongClickListener(View.OnLongClickListener)}
-         *
-         * @param id                  视图ID
-         * @param onLongClickListener {@link View.OnLongClickListener}
-         */
-        public void setOnLongClickListener(@IdRes int id, View.OnLongClickListener onLongClickListener) {
-            getView(id).setOnLongClickListener(onLongClickListener);
-        }
-
-        /**
-         * 设置按键监听
-         * {@link View#setOnKeyListener(View.OnKeyListener)}
-         *
-         * @param id            视图ID
-         * @param onKeyListener {@link View.OnKeyListener}
-         */
-        public void setOnKeyListener(@IdRes int id, View.OnKeyListener onKeyListener) {
-            getView(id).setOnKeyListener(onKeyListener);
-        }
-
+        return dialogView!!
     }
 
+    /**
+     * 设置标题视图ID
+     *
+     * @param titleId 视图ID
+     * @return [BaseDialogConfig]
+     */
+    override fun setTitleId(@IdRes titleId: Int) = apply {
+        this.titleId = titleId
+    }
+
+    /**
+     * 设置Dialog样式ID(仅对Dialog有效，如果使用的是DialogFragment，请使用[.setAnimationStyleId])
+     *
+     * @param styleId
+     * @return [BaseDialogConfig]
+     */
+    override fun setStyleId(@StyleRes styleId: Int) = apply {
+        this.styleId = styleId
+    }
+
+    /**
+     * 对话框动画样式ID (仅对DialogFragment有效，如果使用的是Dialog，请使用[.setStyleId])
+     *
+     * @param animationStyleId
+     * @return [BaseDialogConfig]
+     */
+    override fun setAnimationStyleId(@StyleRes animationStyleId: Int) = apply {
+        this.animationStyleId = animationStyleId
+    }
+
+    /**
+     * 设置内容视图ID
+     *
+     * @param contentId 内容视图ID
+     * @return [BaseDialogConfig]
+     */
+    override fun setContentId(@IdRes contentId: Int) = apply {
+        this.contentId = contentId
+    }
+
+    /**
+     * 设置取消按钮视图ID
+     *
+     * @param cancelId 取消按钮视图ID
+     * @return [BaseDialogConfig]
+     */
+    override fun setCancelId(@IdRes cancelId: Int) = apply {
+        this.cancelId = cancelId
+    }
+
+    /**
+     * 设置确定按钮视图ID
+     *
+     * @param confirmId 确定按钮视图ID
+     * @return [BaseDialogConfig]
+     */
+    override fun setConfirmId(@IdRes confirmId: Int) = apply {
+        this.confirmId = confirmId
+    }
+
+    /**
+     * 设置分割线视图ID
+     *
+     * @param lineId 分割线视图ID
+     * @return [BaseDialogConfig]
+     */
+    override fun setLineId(@IdRes lineId: Int) = apply {
+        this.lineId = lineId
+    }
+
+    /**
+     * 设置标题
+     *
+     * @param title 标题
+     * @return [BaseDialogConfig]
+     */
+    override fun setTitle(title: CharSequence?) = apply {
+        this.title = title
+    }
+
+    /**
+     * 设置标题
+     *
+     * @param context 上下文
+     * @param resId   标题资源ID
+     * @return [BaseDialogConfig]
+     */
+    override fun setTitle(context: Context, @StringRes resId: Int) = apply {
+        this.title = context.getString(resId)
+    }
+
+    /**
+     * 设置文本内容
+     *
+     * @param content 文本内容
+     * @return [BaseDialogConfig]
+     */
+    override fun setContent(content: CharSequence?) = apply {
+        this.content = content
+    }
+
+    /**
+     * 设置取消按钮文本内容
+     *
+     * @param cancel 取消按钮文本内容
+     * @return [BaseDialogConfig]
+     */
+    override fun setCancel(cancel: CharSequence?) = apply {
+        this.cancel = cancel
+    }
+
+    /**
+     * 设置取消按钮文本内容
+     *
+     * @param context 上下文
+     * @param resId   取消按钮文本内容资源ID
+     * @return [BaseDialogConfig]
+     */
+    override fun setCancel(context: Context, @StringRes resId: Int) = apply {
+        this.cancel = context.getString(resId)
+    }
+
+    /**
+     * 设置确定按钮文本内容
+     *
+     * @param confirm 确定按钮文本内容
+     * @return [BaseDialogConfig]
+     */
+    override fun setConfirm(confirm: CharSequence?) = apply {
+        this.confirm = confirm
+    }
+
+    /**
+     * 设置确定按钮文本内容
+     *
+     * @param context 上下文
+     * @param resId   确定按钮文本内容资源ID
+     * @return [BaseDialogConfig]
+     */
+    override fun setConfirm(context: Context, @StringRes resId: Int) = apply {
+        this.confirm = context.getString(resId)
+    }
+
+    /**
+     * 设置是否隐藏取消按钮
+     *
+     * @param hideCancel 是否隐藏取消按钮
+     * @return [BaseDialogConfig]
+     */
+    override fun setHideCancel(hideCancel: Boolean) = apply {
+        this.hideCancel = hideCancel
+    }
+
+    /**
+     * 设置是否隐藏标题
+     *
+     * @param hideTitle 是否隐藏标题
+     * @return [BaseDialogConfig]
+     */
+    override fun setHideTitle(hideTitle: Boolean) = apply {
+        this.hideTitle = hideTitle
+    }
+
+    /**
+     * 设置Dialog的宽度比例，根据屏幕宽度计算得来
+     *
+     * @param widthRatio Dialog的宽度比例；默认值：[AppDialog.DEFAULT_WIDTH_RATIO]
+     * @return [BaseDialogConfig]
+     */
+    override fun setWidthRatio(widthRatio: Float) = apply {
+        this.widthRatio = widthRatio
+    }
+
+    /**
+     * 设置Dialog的对齐方式  [WindowManager.LayoutParams.gravity]
+     *
+     * @param gravity Dialog的对齐方式
+     * @return [BaseDialogConfig]
+     */
+    override fun setGravity(gravity: Int) = apply {
+        this.gravity = gravity
+    }
+
+    /**
+     * 设置“取消”按钮点击监听，不设置默认点击关闭对话框
+     *
+     * @param onClickCancel “取消”按钮点击监听
+     * @return [BaseDialogConfig]
+     */
+    override fun setOnClickCancel(onClickCancel: View.OnClickListener?) = apply {
+        this.onClickCancel = onClickCancel
+    }
+
+    /**
+     * 设置“确定”按钮点击监听，不设置默认点击关闭对话框
+     *
+     * @param onClickConfirm “确定”按钮点击监听
+     * @return [BaseDialogConfig]
+     */
+    override fun setOnClickConfirm(onClickConfirm: View.OnClickListener?) = apply {
+        this.onClickConfirm = onClickConfirm
+    }
+
+    /**
+     * [WindowManager.LayoutParams.x]
+     *
+     * @param x x轴坐标
+     */
+    override fun setX(x: Int) = apply {
+        this.x = x
+    }
+
+    /**
+     * [WindowManager.LayoutParams.y]
+     *
+     * @param y y轴坐标
+     * @return [BaseDialogConfig]
+     */
+    override fun setY(y: Int) = apply {
+        this.y = y
+    }
+
+    /**
+     * [WindowManager.LayoutParams.verticalMargin]
+     *
+     * @param verticalMargin 垂直边距
+     */
+    override fun setVerticalMargin(verticalMargin: Float) = apply {
+        this.verticalMargin = verticalMargin
+    }
+
+    /**
+     * [WindowManager.LayoutParams.horizontalMargin]
+     *
+     * @param horizontalMargin 水平边距
+     * @return [BaseDialogConfig]
+     */
+    override fun setHorizontalMargin(horizontalMargin: Float) = apply {
+        this.horizontalMargin = horizontalMargin
+    }
+
+    /**
+     * [WindowManager.LayoutParams.horizontalWeight]
+     *
+     * @param horizontalWeight 水平方向权重
+     * @return [BaseDialogConfig]
+     */
+    override fun setHorizontalWeight(horizontalWeight: Float) = apply {
+        this.horizontalWeight = horizontalWeight
+    }
+
+    /**
+     * [WindowManager.LayoutParams.verticalWeight]
+     *
+     * @param verticalWeight 垂直方向权重
+     * @return [BaseDialogConfig]
+     */
+    override fun setVerticalWeight(verticalWeight: Float) = apply {
+        this.verticalWeight = verticalWeight
+    }
+
+}
+
+/**
+ * DSL
+ */
+@JvmSynthetic
+fun appDialogConfig(
+    context: Context,
+    @LayoutRes layoutId: Int = R.layout.app_dialog,
+    block: AppDialogConfig.() -> Unit
+): AppDialogConfig {
+    return AppDialogConfig(context, layoutId).apply(block)
+}
+
+/**
+ * 扩展DSL
+ */
+@JvmName("appDialogConfigWithContext")
+@JvmSynthetic
+fun Context.appDialogConfig(
+    @LayoutRes layoutId: Int = R.layout.app_dialog,
+    block: AppDialogConfig.() -> Unit
+): AppDialogConfig {
+    return AppDialogConfig(this, layoutId).apply(block)
+}
+
+/**
+ * 扩展DSL
+ */
+@JvmName("appDialogConfigWithContext")
+@JvmSynthetic
+fun Fragment.appDialogConfig(
+    @LayoutRes layoutId: Int = R.layout.app_dialog,
+    block: AppDialogConfig.() -> Unit
+): AppDialogConfig {
+    return AppDialogConfig(requireContext(), layoutId).apply(block)
 }

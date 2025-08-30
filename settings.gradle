@@ -1,23 +1,24 @@
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        maven {
-            url "https://maven.aliyun.com/repository/public"
-        }
+//        maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+        maven { url "https://maven.aliyun.com/repository/central" }
+        maven { url "https://maven.aliyun.com/repository/google" }
         google()
         mavenCentral()
+
     }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        maven {
-            url "https://maven.aliyun.com/repository/public"
-        }
+        maven { url "https://maven.aliyun.com/repository/central" }
+        maven { url "https://maven.aliyun.com/repository/google" }
         google()
         mavenCentral()
     }
 }
+
 rootProject.name = "AppUpdater"
 include ':app'
 include ':app-updater'

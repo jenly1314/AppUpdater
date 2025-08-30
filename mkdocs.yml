@@ -11,7 +11,7 @@ repo_name: AppUpdater
 repo_url: https://github.com/jenly1314/AppUpdater
 
 # Copyright
-copyright: 'Copyright &copy; 2016 - 2024 Jenly'
+copyright: 'Copyright &copy; 2016 - 2025 Jenly'
 
 # Configuration
 theme:
@@ -43,6 +43,7 @@ theme:
     - content.code.copy
 
 extra:
+  generator: false
   social:
     - icon: material/home-circle
       link: https://jenly1314.github.io/

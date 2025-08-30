@@ -2,10 +2,12 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.dokka'
+    id 'kotlin-parcelize'
     id 'com.vanniktech.maven.publish'
 }
 
 android {
+    namespace 'com.king.app.updater'
     compileSdk build_versions.compileSdk
 
     defaultConfig {
@@ -27,9 +29,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
-    lintOptions {
+    lint {
         abortOnError false
     }
 }
@@ -39,7 +41,14 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$versions.androidExtJunit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espressoCore"
 
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
+
+    api "com.github.jenly1314:logx:$versions.logx"
+
     compileOnly "androidx.appcompat:appcompat:$versions.appcompat"
     compileOnly "com.squareup.okhttp3:okhttp:$versions.okhttp"
+
+
 
 }

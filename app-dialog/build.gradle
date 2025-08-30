@@ -2,10 +2,12 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.dokka'
+    id 'kotlin-parcelize'
     id 'com.vanniktech.maven.publish'
 }
 
 android {
+    namespace 'com.king.app.dialog'
     compileSdk build_versions.compileSdk
 
     defaultConfig {
@@ -27,9 +29,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
-    lintOptions {
+    lint {
         abortOnError false
     }
 }

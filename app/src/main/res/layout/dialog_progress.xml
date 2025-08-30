@@ -22,14 +22,14 @@
         android:layout_toEndOf="@+id/ivIcon"
         android:textSize="14sp"
         android:textColor="@color/app_dialog_title_color"
-        android:text="@string/app_updater_progress_notification_title"/>
+        android:text="@string/app_updater_notification_progress_title"/>
     <TextView
         android:id="@+id/tvProgress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvDialogTitle"
         android:layout_marginTop="10dp"
-        android:text="@string/app_updater_start_notification_content"
+        android:text="@string/app_updater_notification_start_content"
         android:textSize="14sp"
         android:textColor="@color/app_dialog_content_color"
         android:lineSpacingMultiplier="1.2" />

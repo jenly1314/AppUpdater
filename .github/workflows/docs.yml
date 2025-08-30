@@ -6,7 +6,7 @@ on:
       - master
 
 env:
-  JAVA_VERSION: 11
+  JAVA_VERSION: 17
   PYTHON_VERSION: 3.x
   GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
 

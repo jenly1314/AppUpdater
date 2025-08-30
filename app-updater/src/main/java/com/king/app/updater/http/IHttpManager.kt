@@ -1,66 +1,66 @@
-package com.king.app.updater.http;
+package com.king.app.updater.http
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.Map;
-
-import androidx.annotation.Nullable;
+import java.io.File
+import kotlinx.coroutines.flow.Flow
 
 /**
- * IHttpManager 默认提供 {@link HttpManager} 和 {@link OkHttpManager} 两种实现。
+ * Http下载管理器 默认提供 [HttpManager] 和 [OkHttpManager] 两种实现。
  *
- * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * <p>
+ * <a href="https://github.com/jenly1314">Follow me</a>
  */
-public interface IHttpManager {
+interface IHttpManager {
 
     /**
      * 下载
      *
-     * @param url
-     * @param saveFilePath
-     * @param requestProperty
-     * @param callback
+     * @param url 下载地址
+     * @param filepath 文件路径
+     * @param headers 请求头
      */
-    void download(String url, String saveFilePath, @Nullable Map<String, String> requestProperty, DownloadCallback callback);
+    fun download(
+        url: String,
+        filepath: String,
+        headers: Map<String, String>? = null,
+    ): Flow<DownloadState>
 
     /**
      * 取消下载
      */
-    void cancel();
+    fun cancel()
 
-    interface DownloadCallback extends Serializable {
-        /**
-         * 开始
-         *
-         * @param url
-         */
-        void onStart(String url);
+}
 
-        /**
-         * 加载进度…
-         *
-         * @param progress
-         * @param total
-         */
-        void onProgress(long progress, long total);
+/**
+ * 下载状态
+ */
+sealed class DownloadState {
+    /**
+     * 开始下载
+     */
+    data class Start(val url: String) : DownloadState()
 
-        /**
-         * 完成
-         *
-         * @param file
-         */
-        void onFinish(File file);
+    /**
+     * 下载进度
+     */
+    data class Progress(
+        val progress: Int,
+        val total: Int,
+    ) : DownloadState()
 
-        /**
-         * 错误
-         *
-         * @param e
-         */
-        void onError(Exception e);
+    /**
+     * 下载成功
+     */
+    data class Success(val file: File) : DownloadState()
 
-        /**
-         * 取消
-         */
-        void onCancel();
-    }
+    /**
+     * 下载出错
+     */
+    data class Error(val cause: Throwable) : DownloadState()
+
+    /**
+     * 下载取消
+     */
+    data object Cancel : DownloadState()
 }

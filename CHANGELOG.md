@@ -1,5 +1,12 @@
 ## 版本日志
 
+#### v2.0.0：2025-8-30
+* 统一采用Kotlin进行了重构
+* 更新minSdk至21
+* 更新compileSdk至34
+* 更新Gradle至v8.5
+* 使用[LogX](https://github.com/jenly1314/LogX) 统一管理日志
+
 #### v1.2.0：2023-7-9
 * 更新Gradle至v7.3.3
 * 优化lint检测

@@ -1,4 +1,4 @@
-package com.king.app.dialog
+package com.king.appupdater
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
@@ -10,12 +10,12 @@ import org.junit.Test
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-class ExampleInstrumentedTest {
+class ExampleInstrumentedTest1 {
     @Test
     fun useAppContext() {
         // Context of the app under test.
         val appContext = ApplicationProvider.getApplicationContext<Context>()
 
-        Assert.assertEquals("com.king.app.dialog.test", appContext.packageName)
+        Assert.assertEquals("com.king.appupdater", appContext.packageName)
     }
 }

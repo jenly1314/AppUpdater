@@ -1,120 +1,106 @@
-package com.king.app.updater.util;
+package com.king.app.updater.util
 
-import android.annotation.SuppressLint;
-
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.Arrays;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
+import android.annotation.SuppressLint
+import java.security.KeyStore
+import java.security.KeyStoreException
+import java.security.NoSuchAlgorithmException
+import java.security.cert.CertificateException
+import java.security.cert.X509Certificate
+import javax.net.ssl.*
 
 /**
- * SSLSocketFactory 工具
+ * SSLSocketFactory 工具类
  *
- * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * <p>
+ * <a href="https://github.com/jenly1314">Follow me</a>
  */
-public final class SSLSocketFactoryUtils {
-
-    private SSLSocketFactoryUtils() {
-        throw new AssertionError();
-    }
+object SSLSocketFactoryUtils {
 
     /**
      * 创建 SSLSocketFactory
      *
-     * @return {@link SSLSocketFactory}
+     * @return [SSLSocketFactory]
      */
-    public static SSLSocketFactory createSSLSocketFactory() {
-        try {
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, new TrustManager[]{new TrustAllX509TrustManager(true, null)}, null);
-            return sslContext.getSocketFactory();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    @JvmStatic
+    fun createSSLSocketFactory(): SSLSocketFactory {
+        return try {
+            val sslContext = SSLContext.getInstance("TLS")
+            sslContext.init(null, arrayOf(TrustAllX509TrustManager(true, null)), null)
+            sslContext.socketFactory
+        } catch (e: Exception) {
+            throw RuntimeException(e)
         }
     }
 
     /**
      * 信任所有 X509TrustManager
-     *
-     * @return {@link X509TrustManager}
      */
     @SuppressLint("CustomX509TrustManager")
-    public static class TrustAllX509TrustManager implements X509TrustManager {
-        private X509TrustManager standardTrustManager;
-        private boolean isTrustAll;
+    class TrustAllX509TrustManager(
+        private val isTrustAll: Boolean,
+        keystore: KeyStore?
+    ) : X509TrustManager {
 
-        public TrustAllX509TrustManager(Boolean trustAll, KeyStore keystore) {
-            this.isTrustAll = trustAll;
+        private val standardTrustManager: X509TrustManager
+
+        init {
             try {
-                TrustManagerFactory factory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-                factory.init(keystore);
-                TrustManager[] trustManagers = factory.getTrustManagers();
-                if (trustManagers.length == 0 || !(trustManagers[0] instanceof X509TrustManager)) {
-                    throw new IllegalStateException("Unexpected default trust managers:" + Arrays.toString(trustManagers));
+                val factory =
+                    TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+                factory.init(keystore)
+                val trustManagers = factory.trustManagers
+                if (trustManagers.isEmpty() || trustManagers[0] !is X509TrustManager) {
+                    throw IllegalStateException("Unexpected default trust managers: ${trustManagers.contentToString()}")
                 }
-                this.standardTrustManager = (X509TrustManager) trustManagers[0];
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (KeyStoreException e) {
-                e.printStackTrace();
+                standardTrustManager = trustManagers[0] as X509TrustManager
+            } catch (e: NoSuchAlgorithmException) {
+                throw RuntimeException(e)
+            } catch (e: KeyStoreException) {
+                throw RuntimeException(e)
             }
         }
 
-        @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        @Throws(CertificateException::class)
+        override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
             if (!isTrustAll) {
-                standardTrustManager.checkClientTrusted(chain, authType);
+                standardTrustManager.checkClientTrusted(chain, authType)
             }
         }
 
-        @Override
-        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        @Throws(CertificateException::class)
+        override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {
             if (!isTrustAll) {
-                if (chain != null && chain.length == 1) {
-                    chain[0].checkValidity();
+                if (chain.size == 1) {
+                    chain[0].checkValidity()
                 } else {
-                    standardTrustManager.checkServerTrusted(chain, authType);
+                    standardTrustManager.checkServerTrusted(chain, authType)
                 }
             }
         }
 
-        @Override
-        public X509Certificate[] getAcceptedIssuers() {
-            return standardTrustManager.getAcceptedIssuers();
+        override fun getAcceptedIssuers(): Array<X509Certificate> {
+            return standardTrustManager.acceptedIssuers
         }
     }
 
     /**
      * 创建一个信任所有证书的 X509TrustManager
      *
-     * @return {@link X509TrustManager}
+     * @return [X509TrustManager]
      */
-    public static X509TrustManager createTrustAllX509TrustManager() {
-        return new TrustAllX509TrustManager(true, null);
+    @JvmStatic
+    fun createTrustAllX509TrustManager(): X509TrustManager {
+        return TrustAllX509TrustManager(true, null)
     }
 
     /**
      * 创建一个忽略校验信任所有主机地址的 HostnameVerifier
      *
-     * @return {@link HostnameVerifier}
+     * @return [HostnameVerifier]
      */
-    public static HostnameVerifier createAllowAllHostnameVerifier() {
-        return new HostnameVerifier() {
-            @Override
-            public boolean verify(String hostname, SSLSession session) {
-                return hostname != null;
-            }
-        };
+    @JvmStatic
+    fun createAllowAllHostnameVerifier(): HostnameVerifier {
+        return HostnameVerifier { hostname, _ -> hostname != null }
     }
-
 }

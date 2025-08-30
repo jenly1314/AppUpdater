@@ -2,7 +2,7 @@
 <resources>
 
     <dimen name="app_dialog_line">0.5dp</dimen>
-    <dimen name="app_dialog_radius">10dp</dimen>
+    <dimen name="app_dialog_radius">16dp</dimen>
 
     <dimen name="app_dialog_title_text_size">16sp</dimen>
     <dimen name="app_dialog_content_text_size">16sp</dimen>

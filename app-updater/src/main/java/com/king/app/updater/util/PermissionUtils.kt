@@ -1,65 +1,58 @@
-package com.king.app.updater.util;
+package com.king.app.updater.util
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationManagerCompat;
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
+import com.king.logx.LogX
 
 /**
- * 权限工具
+ * 权限工具类
  *
- * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * <p>
+ * <a href="https://github.com/jenly1314">Follow me</a>
  */
-public final class PermissionUtils {
-
-    private PermissionUtils() {
-        throw new AssertionError();
-    }
-
-    /**
-     * 校验权限
-     *
-     * @param activity
-     * @param requestCode
-     * @return
-     */
-    public static boolean verifyReadAndWritePermissions(@NonNull Activity activity, int requestCode) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int readResult = checkPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE);
-            int writeResult = checkPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            if (readResult != PackageManager.PERMISSION_GRANTED || writeResult != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, new String[]{
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
-                return false;
-            }
-        }
-        return true;
-    }
+object PermissionUtils {
 
     /**
      * 检查权限
      *
-     * @param context
-     * @param permission
+     * @param context [Context]
+     * @param permission 权限
      * @return
      */
-    public static int checkPermission(@NonNull Context context, @NonNull String permission) {
-        return ActivityCompat.checkSelfPermission(context, permission);
+    @JvmStatic
+    fun checkPermission(context: Context, permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(
+            context,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     /**
-     * 通知栏是否启用
+     * 检查是否具有发送通知的权限
      *
-     * @param context
+     * @param context [Context]
      */
-    public static boolean isNotificationEnabled(Context context) {
-        return NotificationManagerCompat.from(context).areNotificationsEnabled();
+    @JvmStatic
+    fun checkNotificationPermission(context: Context): Boolean {
+        // Android 13以上版本：检测是否有发送通知的权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val granted = checkPermission(
+                context,
+                android.Manifest.permission.POST_NOTIFICATIONS
+            )
+            if (granted) {
+                LogX.d("POST_NOTIFICATIONS permission granted.")
+            } else {
+                LogX.w("POST_NOTIFICATIONS permission denied.")
+            }
+            return granted
+        }
+
+        return NotificationManagerCompat.from(context).areNotificationsEnabled()
     }
 
 }

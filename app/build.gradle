@@ -4,6 +4,7 @@ plugins {
 }
 
 android {
+    namespace 'com.king.appupdater'
     compileSdk build_versions.compileSdk
 
     defaultConfig {
@@ -24,15 +25,25 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            minifyEnabled false
+        }
     }
+
+    buildFeatures {
+        viewBinding true
+        buildConfig = true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
-    lintOptions {
+    lint {
         abortOnError false
     }
 
@@ -46,6 +57,8 @@ dependencies {
 
     implementation "androidx.appcompat:appcompat:$versions.appcompat"
     implementation "androidx.constraintlayout:constraintlayout:$versions.constraintLayout"
+
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$versions.lifecycle"
 
     implementation "com.squareup.okhttp3:okhttp:$versions.okhttp"
 

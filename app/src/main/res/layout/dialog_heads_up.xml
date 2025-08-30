@@ -22,6 +22,6 @@
         android:layout_toEndOf="@+id/ivIcon"
         android:textSize="14sp"
         android:textColor="@color/app_dialog_title_color"
-        android:text="@string/app_updater_start_notification_content"/>
+        android:text="@string/app_updater_notification_start_content"/>
 
 </RelativeLayout>

@@ -1,46 +1,44 @@
-package com.king.app.dialog.fragment;
+package com.king.app.dialog.fragment
 
-import android.app.Dialog;
-import android.content.Context;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-
-import com.king.app.dialog.BaseDialogConfig;
-import com.king.app.dialog.R;
+import android.app.Dialog
+import android.content.Context
+import android.os.Build
+import android.os.Bundle
+import android.view.View
+import android.widget.TextView
+import com.king.app.dialog.BaseDialogConfig
+import com.king.app.dialog.R
 
 /**
- * App对话框 Fragment：封装便捷的对话框API，使用时更简单
+ * App对话框：封装便捷的对话框API，使用时更简单
  *
- * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * <p>
+ * <a href="https://github.com/jenly1314">Follow me</a>
  */
-public class AppDialogFragment extends BaseDialogFragment {
+open class AppDialogFragment : BaseDialogFragment() {
+
     /**
      * 对话框配置
      */
-    private BaseDialogConfig config;
+    private var config: BaseDialogConfig? = null
 
-    /**
-     * 新建一个 {@link AppDialogFragment} 实例
-     *
-     * @param config
-     * @return
-     */
-    public static AppDialogFragment newInstance(BaseDialogConfig config) {
-        Bundle args = new Bundle();
-        AppDialogFragment fragment = new AppDialogFragment();
-        fragment.config = config;
-        fragment.setArguments(args);
-        return fragment;
+    override fun getRootLayoutId(): Int {
+        return config?.layoutId ?: R.layout.app_dialog
     }
 
-    @Override
-    public int getRootLayoutId() {
-        if (config != null) {
-            return config.getLayoutId();
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.also {
+            config = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                it.getParcelable(
+                    BaseDialogConfig::class.java.simpleName,
+                    BaseDialogConfig::class.java
+                )
+            } else {
+                it.getParcelable(BaseDialogConfig::class.java.simpleName)
+            }
         }
-        return R.layout.app_dialog;
     }
 
     /**
@@ -48,37 +46,39 @@ public class AppDialogFragment extends BaseDialogFragment {
      *
      * @param rootView
      */
-    public void init(View rootView) {
-        if (config != null) {
-            TextView tvDialogTitle = rootView.findViewById(config.getTitleId());
-            if (tvDialogTitle != null) {
-                setText(tvDialogTitle, config.getTitle());
-                tvDialogTitle.setVisibility(config.isHideTitle() ? View.GONE : View.VISIBLE);
+    override fun init(rootView: View) {
+        config?.apply {
+            if (title != null) {
+                getView<TextView>(titleId)?.apply {
+                    text = title
+                    visibility = if (hideTitle) View.GONE else View.VISIBLE
+                }
             }
 
-            TextView tvDialogContent = rootView.findViewById(config.getContentId());
-            if (tvDialogContent != null) {
-                setText(tvDialogContent, config.getContent());
+            if (content != null) {
+                getView<TextView>(contentId)?.apply {
+                    text = content
+                }
             }
 
-            Button btnDialogCancel = rootView.findViewById(config.getCancelId());
-            if (btnDialogCancel != null) {
-                setText(btnDialogCancel, config.getCancel());
-                btnDialogCancel.setOnClickListener(config.getOnClickCancel() != null ? config.getOnClickCancel() : getOnClickDismiss());
-                btnDialogCancel.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
+            getView<TextView>(cancelId)?.apply {
+                if (cancel != null) {
+                    text = cancel
+                }
+                visibility = if (hideCancel) View.GONE else View.VISIBLE
+                setOnClickListener(if (onClickCancel != null) onClickCancel else onClickDismissDialog)
             }
 
-            View line = rootView.findViewById(config.getLineId());
-            if (line != null) {
-                line.setVisibility(config.isHideCancel() ? View.GONE : View.VISIBLE);
+            getView<View>(lineId)?.apply {
+                visibility = if (hideCancel) View.GONE else View.VISIBLE
             }
 
-            Button btnDialogConfirm = rootView.findViewById(config.getConfirmId());
-            if (btnDialogConfirm != null) {
-                setText(btnDialogConfirm, config.getConfirm());
-                btnDialogConfirm.setOnClickListener(config.getOnClickConfirm() != null ? config.getOnClickConfirm() : getOnClickDismiss());
+            getView<TextView>(confirmId)?.apply {
+                if (confirm != null) {
+                    text = confirm
+                }
+                setOnClickListener(if (onClickConfirm != null) onClickConfirm else onClickDismissDialog)
             }
-
         }
     }
 
@@ -88,20 +88,72 @@ public class AppDialogFragment extends BaseDialogFragment {
      * @param dialog           对话框
      * @param gravity          对齐方式
      * @param widthRatio       宽度比例，根据屏幕宽度计算得来
-     * @param x                x轴偏移量，需与 gravity 结合使用
-     * @param y                y轴偏移量，需与 gravity 结合使用
+     * @param x                x轴偏移量，需与 [gravity] 结合使用
+     * @param y                y轴偏移量，需与 [gravity] 结合使用
      * @param horizontalMargin 水平方向边距
      * @param verticalMargin   垂直方向边距
      * @param horizontalWeight 水平方向权重
      * @param verticalWeight   垂直方向权重
      * @param animationStyleId 话框动画样式ID
      */
-    @Override
-    protected void initDialogWindow(Context context, Dialog dialog, int gravity, float widthRatio, int x, int y, float horizontalMargin, float verticalMargin, float horizontalWeight, float verticalWeight, int animationStyleId) {
-        if (config != null) {
-            super.initDialogWindow(context, dialog, config.getGravity(), config.getWidthRatio(), config.getX(), config.getY(), config.getHorizontalMargin(), config.getVerticalMargin(), config.getHorizontalWeight(), config.getVerticalWeight(), config.getAnimationStyleId());
-        } else {
-            super.initDialogWindow(context, dialog, gravity, widthRatio, x, y, horizontalMargin, verticalMargin, horizontalWeight, verticalWeight, animationStyleId);
+    override fun initDialogWindow(
+        context: Context,
+        dialog: Dialog,
+        gravity: Int,
+        widthRatio: Float,
+        x: Int,
+        y: Int,
+        horizontalMargin: Float,
+        verticalMargin: Float,
+        horizontalWeight: Float,
+        verticalWeight: Float,
+        animationStyleId: Int
+    ) {
+        config?.let {
+            super.initDialogWindow(
+                context,
+                dialog,
+                it.gravity,
+                it.widthRatio,
+                it.x,
+                it.y,
+                it.horizontalMargin,
+                it.verticalMargin,
+                it.horizontalWeight,
+                it.verticalWeight,
+                it.animationStyleId
+            )
+        } ?: run {
+            super.initDialogWindow(
+                context,
+                dialog,
+                gravity,
+                widthRatio,
+                x,
+                y,
+                horizontalMargin,
+                verticalMargin,
+                horizontalWeight,
+                verticalWeight,
+                animationStyleId
+            )
+        }
+    }
+
+    companion object {
+        /**
+         * 新建一个 [AppDialogFragment] 实例
+         *
+         * @param config
+         * @return
+         */
+        fun newInstance(config: BaseDialogConfig): AppDialogFragment {
+            val args = Bundle().apply {
+                putParcelable(BaseDialogConfig::class.java.simpleName, config)
+            }
+            val fragment = AppDialogFragment()
+            fragment.arguments = args
+            return fragment
         }
     }
 }

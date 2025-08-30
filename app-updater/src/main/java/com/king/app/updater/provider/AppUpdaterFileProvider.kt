@@ -1,10 +1,12 @@
-package com.king.app.updater.provider;
+package com.king.app.updater.provider
 
-import androidx.core.content.FileProvider;
+import androidx.core.content.FileProvider
 
 /**
- * @author Jenly <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * AppUpdater FileProvider
+ *
+ * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * <p>
+ * <a href="https://github.com/jenly1314">Follow me</a>
  */
-public class AppUpdaterFileProvider extends FileProvider {
-
-}
+class AppUpdaterFileProvider : FileProvider()
