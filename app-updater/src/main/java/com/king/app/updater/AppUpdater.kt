@@ -215,6 +215,7 @@ class AppUpdater private constructor(builder: Builder) {
         /**
          * 是否正在下载
          */
+        @JvmStatic
         fun isDownloading() = internalDownloadState.value
 
     }
