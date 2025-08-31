@@ -103,16 +103,14 @@ class AppUpdater private constructor(builder: Builder) {
     internal val progressUpdateInterval = builder.progressUpdateInterval
 
     /** HTTP管理器 */
-    @set:JvmSynthetic
-    var httpManager = builder.httpManager
+    internal val httpManager = builder.httpManager
 
     /** 通知栏处理器实现 */
-    @set:JvmSynthetic
-    var notificationHandler = builder.notificationHandler
+    internal val notificationHandler = builder.notificationHandler
 
     /** 下载监听 */
     @set:JvmSynthetic
-    var downloadListener = builder.downloadListener
+    internal var downloadListener = builder.downloadListener
 
     private var isServiceBound = false
 
