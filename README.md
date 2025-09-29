@@ -34,9 +34,6 @@ AppUpdater 是一个轻量级开源库，专注于实现 App 版本更新功能�
 - ✅ 支持通知栏提示内容和流程全部可配置
 - ✅ 支持取消下载
 - ✅ 支持使用HttpsURLConnection或OkHttpClient进行下载
-- ✅ 支持Android 10(Q)
-- ✅ 支持Android 11(R)
-- ✅ 支持Android 12(S)
 
 ## 效果展示
 ![Image](GIF.gif)
@@ -404,6 +401,9 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         // 如果没有发送通知权限，则申请授权
         requestPermissionLauncher.launch(permission)
     }
+} else {
+    // TODO 开始下载更新
+    AppUpdater(this, apkUrl).start()
 }
 
 ```
