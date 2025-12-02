@@ -22,7 +22,7 @@ interface DownloadListener {
      * @param progress  当前进度大小
      * @param total     总文件大小
      */
-    fun onProgress(progress: Int, total: Int)
+    fun onProgress(progress: Long, total: Long)
 
     /**
      * 下载成功

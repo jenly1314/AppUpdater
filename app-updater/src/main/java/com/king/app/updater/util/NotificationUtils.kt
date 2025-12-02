@@ -106,8 +106,8 @@ object NotificationUtils {
         @DrawableRes smallIcon: Int,
         title: CharSequence,
         content: CharSequence,
-        progress: Int,
-        total: Int,
+        progress: Long,
+        total: Long,
         supportCancelDownload: Boolean
     ) {
         val builder = buildNotification(
@@ -308,16 +308,21 @@ object NotificationUtils {
         @DrawableRes smallIcon: Int,
         title: CharSequence,
         content: CharSequence,
-        progress: Int = Constants.NONE,
-        total: Int = Constants.NONE,
+        progress: Long = 0,
+        total: Long = 0,
     ): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, channelId).apply {
             setSmallIcon(smallIcon)
             setContentTitle(title)
             setContentText(content)
             setOngoing(true)
-            if (progress != Constants.NONE) {
-                setProgress(total, progress, total <= 0)
+            if (progress > 0) {
+                if(total > 0) {
+                    val progressPercentage = (progress * 100L / total).toInt()
+                    setProgress(100, progressPercentage, false)
+                } else {
+                    setProgress(0,0,  true)
+                }
             }
         }
     }

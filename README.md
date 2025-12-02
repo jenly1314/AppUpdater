@@ -419,6 +419,10 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 
 ## 版本日志
 
+#### 待发布版本（[提前体验](test.md)）
+* 优化细节 (progress,total 变更 int -> long)
+* 优化进度显示（[#44](https://github.com/jenly1314/AppUpdater/issues/44)）
+
 #### v2.0.1：2025-8-31
 * 优化AppUpdater中属性的访问权限
 

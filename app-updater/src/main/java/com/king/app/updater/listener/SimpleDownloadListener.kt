@@ -15,7 +15,7 @@ open class SimpleDownloadListener : DownloadListener {
 
     }
 
-    override fun onProgress(progress: Int, total: Int) {
+    override fun onProgress(progress: Long, total: Long) {
 
     }
 

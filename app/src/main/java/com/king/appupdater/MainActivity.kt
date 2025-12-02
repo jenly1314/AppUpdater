@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
 
-                override fun onProgress(progress: Int, total: Int) {
+                override fun onProgress(progress: Long, total: Long) {
                     updateProgress(progress, total)
 
                 }
@@ -155,9 +155,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun updateProgress(progress: Int, total: Int) {
+    private fun updateProgress(progress: Long, total: Long) {
         if (progress > 0) {
-            val currProgress = progress * 100 / total
+            val currProgress = (progress * 100 / total).toInt()
             tvProgress?.text = "正在下载… $currProgress%"
             progressBar?.progress = currProgress
         } else {
@@ -301,7 +301,7 @@ class MainActivity : AppCompatActivity() {
                             // 开始下载
                         }
 
-                        override fun onProgress(progress: Int, total: Int) {
+                        override fun onProgress(progress: Long, total: Long) {
                             // 下载进度更新
                         }
 

@@ -61,8 +61,8 @@ interface INotificationHandler {
         @DrawableRes smallIcon: Int,
         title: CharSequence,
         content: CharSequence,
-        progress: Int,
-        total: Int,
+        progress: Long,
+        total: Long,
         supportCancelDownload: Boolean
     )
 

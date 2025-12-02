@@ -199,7 +199,7 @@ class DownloadService : Service() {
                         lastTime = currentTime
                         var progressPercentage = 0
                         if (it.total > 0) {
-                            progressPercentage = it.progress * 100 / it.total
+                            progressPercentage = (it.progress * 100L / it.total).toInt()
                             LogX.format(LogFormat.PLAIN)
                                 .d(
                                     "%-4s | %d/%d",

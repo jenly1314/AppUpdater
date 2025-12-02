@@ -45,8 +45,8 @@ sealed class DownloadState {
      * 下载进度
      */
     data class Progress(
-        val progress: Int,
-        val total: Int,
+        val progress: Long,
+        val total: Long,
     ) : DownloadState()
 
     /**

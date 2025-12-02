@@ -70,16 +70,16 @@ class HttpManager @JvmOverloads constructor(
             HttpURLConnection.HTTP_OK -> {
 
                 val length = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    connection.contentLengthLong.toInt()
+                    connection.contentLengthLong
                 } else {
-                    connection.contentLength
+                    connection.contentLength.toLong()
                 }
                 val outputFile = File(filepath)
                 try {
                     connection.inputStream.use { inputStream ->
                         FileOutputStream(outputFile).use { outputStream ->
                             val buffer = ByteArray(8192)
-                            var progress = 0
+                            var progress = 0L
                             while (true) {
                                 val bytesRead = inputStream.read(buffer)
                                 if (bytesRead == -1 || isCancel) break

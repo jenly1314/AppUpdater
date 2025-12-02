@@ -80,13 +80,13 @@ class OkHttpManager(private val okHttpClient: OkHttpClient) : IHttpManager {
             try {
                 val body = response.body ?: throw IllegalStateException("Response body is null.")
 
-                val length = body.contentLength().toInt()
+                val length = body.contentLength()
                 val outputFile = File(filepath)
 
                 body.byteStream().use { inputStream ->
                     FileOutputStream(outputFile).use { outputStream ->
                         val buffer = ByteArray(8192)
-                        var progress = 0
+                        var progress = 0L
                         while (true) {
                             val bytesRead = inputStream.read(buffer)
                             if (bytesRead == -1 || isCancel) break
