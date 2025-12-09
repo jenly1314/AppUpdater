@@ -120,7 +120,7 @@ class DownloadService : Service() {
      *
      */
     private fun startDownload(appUpdater: AppUpdater) = coroutineScope.launch {
-
+        val url = appUpdater.url
         val path = AppUtils.getApkCacheFilesDir(context)
 
         val dirFile = File(path)
@@ -148,9 +148,41 @@ class DownloadService : Service() {
                 isExistApk = AppUtils.apkExists(context, versionCode, apkFile)
             }
 
+            // 本地已经存在要下载的APK
             if (isExistApk) {
-                // 本地已经存在要下载的APK
+                AppUpdater.internalDownloadState.emit(true)
+                if (appUpdater.showNotification) {
+                    appUpdater.notificationHandler.onStart(
+                        context,
+                        appUpdater.notificationId,
+                        appUpdater.channelId,
+                        appUpdater.channelName,
+                        appUpdater.notificationIcon,
+                        context.getString(R.string.app_updater_notification_start_title),
+                        context.getString(R.string.app_updater_notification_start_content),
+                        appUpdater.isVibrate,
+                        appUpdater.isSound,
+                        appUpdater.cancelDownloadOnNotification
+                    )
+                }
+                downloadListener?.onStart(url)
+
                 LogX.d("CacheFile: $apkFile")
+
+                AppUpdater.internalDownloadState.emit(false)
+                retryCount.set(0)
+                if (appUpdater.showNotification) {
+                    appUpdater.notificationHandler.onSuccess(
+                        context,
+                        appUpdater.notificationId,
+                        appUpdater.channelId,
+                        appUpdater.notificationIcon,
+                        context.getString(R.string.app_updater_notification_success_title),
+                        context.getString(R.string.app_updater_notification_success_content),
+                        apkFile,
+                        appUpdater.authority
+                    )
+                }
                 if (appUpdater.installApk) {
                     AppUtils.installApk(context, apkFile, appUpdater.authority)
                 }
@@ -165,7 +197,6 @@ class DownloadService : Service() {
 
         val allowRetry =
             appUpdater.retryOnNotification && retryCount.get() < appUpdater.maxRetryCount
-        val url = appUpdater.url
 
         appUpdater.httpManager.download(
             url = url, filepath = apkFile.absolutePath, headers = appUpdater.headers

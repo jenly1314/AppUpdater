@@ -58,9 +58,9 @@ AppUpdater 是一个轻量级开源库，专注于实现 App 版本更新功能�
     ```gradle
 
     //app-updater
-    implementation 'com.github.jenly1314.AppUpdater:app-updater:2.0.1'
+    implementation 'com.github.jenly1314.AppUpdater:app-updater:2.1.0'
     //app-dialog
-    implementation 'com.github.jenly1314.AppUpdater:app-dialog:2.0.1'
+    implementation 'com.github.jenly1314.AppUpdater:app-dialog:2.1.0'
 
     ```
 
@@ -237,7 +237,7 @@ AppUpdater appUpdater = new AppUpdater.Builder(context)
         }
 
         @Override
-        public void onProgress(int progress, int total) {
+        public void onProgress(long progress, long total) {
             // 下载进度更新
         }
 
@@ -282,7 +282,7 @@ val appUpdater = appUpdater(conetxt) {
             // 开始下载
         }
 
-        override fun onProgress(progress: Int, total: Int) {
+        override fun onProgress(progress: Long, total: Long) {
             // 下载进度更新
         }
 
@@ -329,7 +329,7 @@ val appDialogConfig = AppDialogConfig(context)
                     // 开始下载
                 }
 
-                override fun onProgress(progress: Int, total: Int) {
+                override fun onProgress(progress: Long, total: Long) {
                     // 下载进度更新
                 }
 
@@ -419,12 +419,10 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 
 ## 版本日志
 
-#### 待发布版本（[提前体验](test.md)）
+#### v2.1.0：2025-12-9
 * 优化细节 (progress,total 变更 int -> long)
 * 优化进度显示（[#44](https://github.com/jenly1314/AppUpdater/issues/44)）
-
-#### v2.0.1：2025-8-31
-* 优化AppUpdater中属性的访问权限
+* 更新Gradle至v8.5
 
 #### [查看更多版本日志](CHANGELOG.md)
 

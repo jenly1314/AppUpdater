@@ -1,5 +1,10 @@
 ## 版本日志
 
+#### v2.1.0：2025-12-9
+* 优化细节 (progress,total 变更 int -> long)
+* 优化进度显示（[#44](https://github.com/jenly1314/AppUpdater/issues/44)）
+* 更新Gradle至v8.5
+
 #### v2.0.1：2025-8-31
 * 优化AppUpdater中属性的访问权限
 
