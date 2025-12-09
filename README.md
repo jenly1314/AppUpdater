@@ -422,7 +422,7 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 #### v2.1.0：2025-12-9
 * 优化细节 (progress,total 变更 int -> long)
 * 优化进度显示（[#44](https://github.com/jenly1314/AppUpdater/issues/44)）
-* 更新Gradle至v8.5
+* 更新Gradle至v8.6
 
 #### [查看更多版本日志](CHANGELOG.md)
 
