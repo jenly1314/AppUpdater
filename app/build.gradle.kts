@@ -1,10 +1,10 @@
-val versionCodeProvider = providers.gradleProperty("VERSION_CODE").orElse(libs.versions.versionCode)
-val versionNameProvider = providers.gradleProperty("VERSION_NAME").orElse(libs.versions.versionName)
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
 }
+
+val versionCodeProvider = providers.gradleProperty("VERSION_CODE").orElse(libs.versions.versionCode)
+val versionNameProvider = providers.gradleProperty("VERSION_NAME").orElse(libs.versions.versionName)
 
 android {
     namespace = "com.king.appupdater"
