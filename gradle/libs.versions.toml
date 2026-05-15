@@ -2,13 +2,11 @@
 compileSdk = "34"
 minSdk = "21"
 targetSdk = "34"
-versionCode = "27"
-versionName = "2.1.0"
 
 agp = "8.2.0"
 kotlin = "1.9.20"
 dokka = "1.9.20"
-vanniktechMavenPublish = "0.34.0"
+mavenPublish = "0.34.0"
 appcompat = "1.3.0"
 constraintLayout = "2.0.4"
 lifecycle = "2.8.7"
@@ -37,4 +35,4 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktechMavenPublish" }
+vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "mavenPublish" }

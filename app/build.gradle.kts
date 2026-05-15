@@ -3,9 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
 }
 
-val versionCodeProvider = providers.gradleProperty("VERSION_CODE").orElse(libs.versions.versionCode)
-val versionNameProvider = providers.gradleProperty("VERSION_NAME").orElse(libs.versions.versionName)
-
 android {
     namespace = "com.king.appupdater"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -14,8 +11,8 @@ android {
         applicationId = "com.king.appupdater"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = versionCodeProvider.get().toInt()
-        versionName = versionNameProvider.get()
+        versionCode = properties["VERSION_CODE"].toString().toInt()
+        versionName = properties["VERSION_NAME"].toString()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
