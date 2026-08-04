@@ -58,9 +58,9 @@ AppUpdater 是一个轻量级开源库，专注于实现 App 版本更新功能�
     ```gradle
 
     //app-updater
-    implementation 'com.github.jenly1314.AppUpdater:app-updater:2.1.0'
+    implementation 'com.github.jenly1314.AppUpdater:app-updater:2.2.0'
     //app-dialog
-    implementation 'com.github.jenly1314.AppUpdater:app-dialog:2.1.0'
+    implementation 'com.github.jenly1314.AppUpdater:app-dialog:2.2.0'
 
     ```
 
@@ -419,10 +419,9 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 
 ## 版本日志
 
-#### v2.1.0：2025-12-9
-* 优化细节 (progress,total 变更 int -> long)
-* 优化进度显示（[#44](https://github.com/jenly1314/AppUpdater/issues/44)）
-* 更新Gradle至v8.6
+#### v2.2.0：2026-8-4
+- 更新LogX至v1.3.0
+- 源码目录调整（src/main/java -> src/main/kotlin）
 
 #### [查看更多版本日志](CHANGELOG.md)
 
