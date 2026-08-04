@@ -1,5 +1,6 @@
 package com.king.app.dialog
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import androidx.fragment.app.Fragment
  * <p>
  * <a href="https://github.com/jenly1314">Follow me</a>
  */
+@SuppressLint("ParcelCreator")
 open class AppDialogConfig @JvmOverloads constructor(
     internal val context: Context,
     @LayoutRes layoutId: Int = R.layout.app_dialog
